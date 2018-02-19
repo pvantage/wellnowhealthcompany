@@ -125,7 +125,6 @@ document.addEventListener("deviceready", onDeviceReady2, false);
 function onDeviceReady2(){
 	var deviceplatform=device.platform;
 	var uid=localStorage.getItem('Company_ID');
-	alert(deviceplatform);
 	if(deviceplatform=='Android'){
 		
 		if(typeof uid!='undefined' && uid!='' && uid!=null){
