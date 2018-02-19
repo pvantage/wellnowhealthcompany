@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+<meta name="description" content="">
+<meta name="author" content="">
+<title>Wellnowhealth</title>
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<!-- /Bootstrap CSS -->
+
+<!-- Font Awesome CSS -->
+<link rel="stylesheet" href="css/font-awesome.min.css">
+<!-- /Font Awesome CSS -->
+
+<!-- Custom Style CSS -->
+<link rel="stylesheet" href="css/slidenav.css">
+<!-- /Custom Style CSS -->
+
+<!-- Common Style CSS -->
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/mycss.css">
+<!-- /Common Style CSS -->
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<div class="sidenav" id="mySidenav" >
+    <div  class="navigation"> <a  class="closebtn" href="javascript:void(0)" onClick="closeNav()">×</a>
+        <div class="menu_section">
+            <ul class="nav side-menu">
+                <li><a  href="my-account.html">Update Info </a> </li>
+                <li><a  href="past-emergencies.html">Past Emergencies </a> </li>
+				<li><a href="logout.html">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="full-height background-layer"> 
+    
+    <!-----Header Start------->
+    <header class="header container-fluid">
+        <div class="container">
+            <div class="nav-icon" onClick="openNav()"> <a id="menu_toggle"><img src="images/hamburger.png" alt=""></a> </div>
+            <div class="logo"><a href="#"><img src="images/logo.png"  alt=""></a></div>
+        </div>
+    </header>
+    <!-----Header End-------> 
+    
+    <!-----Main wrapper Start------->
+    <div class="main-wrapper mt-5">
+        <div class="container">
+            <h1 class="entry-title text-white text-center">DASHBOARD</h1>
+            <div class="dashbord-wrap ">
+                <ul>
+                    <li><a href="#" data-toggle="modal" class="reportinjury" data-target="#emergency"><img src="images/icon1.png" alt=""><br>
+                       REPORT INJURY</a></li>
+                    <li><a href="my-account.html"><img src="images/icon2.png" alt=""><br>
+                        MANAGE ACCOUNT</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-----Main wrapper End-------> 
+    
+</div>
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="emergency" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bg-primary emergency-popup"> 
+            
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            
+            <div class="modal-body">
+                <form id="loginuser" action="" method="post">
+					<input type="hidden" name="company_id" value="0">
+                    <div class="clinics"></div>
+                    <div class="input-group mb-3">
+                       <label>Notes <span>(Optional)</span></label>
+					   <div>
+						<textarea name="note" rows="4" cols="50" class="form-control"></textarea>
+					  </div>
+                    </div>
+                    <div  class="submitwrap">
+                        <div class="pull-left">
+                            <button type="submit" class="btn btn-primary">SEND</button>
+                        </div>
+                        <!--<div class="pull-right"> <a href="#" class="btn btn-dark">REGISTER</a></div>-->
+                    </div>
+                </form>  
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal  2-->
+<div class="modal fade" id="calling" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bg-primary emergency-popup"> 
+            
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            
+            <div class="modal-body">
+                
+                 <h2> <a href="emergancy.html"> <i class="fa fa-phone"></i> <br>
+                   Calling Emergency </a> </h2>   
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="js/jquery-3.2.1.min.js" ></script>
+<script src="js/popper.min.js" ></script>
+<script type="text/javascript" src="js/config.js"></script>
+<script src="js/bootstrap.min.js"></script> 
+<script src="js/validate.js"></script>
+<script>
+  function openNav() {
+      document.getElementById("mySidenav").style.width = "100%";
+  }
+
+  function closeNav() {
+      document.getElementById("mySidenav").style.width = "0";
+  }
+  var uid=localStorage.getItem('Company_ID');
+if(typeof uid=='undefined' || uid=='' || uid=='undefined' || uid==null){
+	setTimeout(function(){
+		window.location='login.html';
+	},1000);
+}
+jQuery(document).ready(function(){
+	jQuery('#loginuser').validate();
+	jQuery('input[name="company_id"]').val(uid);
+	var url=siteurl+'/api/emergencies/clinics';
+	jQuery.ajax({  
+	 type: 'POST',  
+	 url: url,           
+	 dataType: 'json',  
+	 data: {}, 
+	 beforeSend: function() {
+		
+	 },		
+	 complete: function() {
+	 }, 
+	 crossDomain: true,  
+	 success: function(res) { 
+		if(res['clinics'])
+		{
+			var html='<ul>';
+			jQuery(res['clinics']).each(function(index){
+				html+='<li><input type="radio" name="clinic_id" value="'+res['clinics'][index]['id']+'" /> '+res['clinics'][index]['name']+' ('+res['clinics'][index]['address']+')</li>';
+			});
+			html+='<ul>';
+			jQuery('.clinics').html(html);
+			jQuery('.clinics input:first').attr('checked',true);
+			jQuery('.clinics input:first').prop('checked',true);
+		}
+		return false; 
+	 },  
+	 error: function(response, d, a){
+		
+		jQuery('body .showmessage').remove();
+		var html='<div class="showmessage">Server Error.</div>';
+		jQuery('body').append(html);
+		setTimeout(function(){jQuery('.showmessage').slideUp();},1000);
+		return false; 
+	 }
+			
+   });
+   jQuery('a.reportinjury').click(function(){
+   		getLocation();
+		jQuery('input[name="company_id"]').val(uid);
+   });
+   jQuery('#loginuser').submit( function(){	
+		var error=false;
+		jQuery('#loginuser input').each(function(){
+			if(jQuery(this).hasClass('error')){
+				error=true;
+			}
+		});
+		
+		var url=siteurl+'/api/emergencies/addemergency';
+		if(error)
+		{
+			return false;
+		}
+		else
+		{
+			 jQuery.ajax({  
+			 type: 'POST',  
+			 url: url,           
+			 dataType: 'json',  
+			 data: jQuery('#loginuser').serialize(), 
+			 beforeSend: function() {
+			 	
+			 },		
+			 complete: function() {
+			 }, 
+			 crossDomain: true,  
+			 success: function(res) { 
+				if(res['msg'])
+				{
+					jQuery('body .showmessage').remove();
+					var html='<div class="showmessage">'+res['msg']+'</div>';
+					jQuery('body').append(html);
+					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
+					jQuery('#loginuser')[0].reset();
+					jQuery('#emergency').modal('hide');
+				
+				}else if(res['errors']){				
+					jQuery('body .showmessage').remove();
+					var html='<div class="showmessage">'+res['error']+'</div>';
+					jQuery('body').append(html);
+					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
+				}
+				else
+				{
+					alert('Server error');
+				}
+				return false; 
+			 },  
+			 error: function(response, d, a){
+				
+				jQuery('body .showmessage').remove();
+				var html='<div class="showmessage">Server Error.</div>';
+				jQuery('body').append(html);
+				setTimeout(function(){jQuery('.showmessage').slideUp();},1000);
+				return false; 
+			 }
+			        
+		   });
+		 }	
+		 return false;   
+	});
+   //getLocation();
+});
+</script>
+</body>
+</html>
