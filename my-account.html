@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 <meta name="description" content="">
 <meta name="author" content="">
@@ -52,42 +53,42 @@
             <div class="login-form">
                <form id="loginuser" action="" method="post">
 			   	<input type="hidden" name="id" value="" />
-                    <div class="input-group mb-3">
-						<label>Company Name</label>
+                    <div class="mb-3">
+						<label class="text-white">Company Name</label>
 						<div>
-						  <input type="text" class="form-control" name="fname" required="" value="" placeholder="Company Name">
+						  <input type="text" class="form-control" name="fname" required value="" placeholder="Company Name">
 						</div>
                     </div>
-                    <div class="input-group mb-3">
-                        <label>Phone No</label>
+                    <div class="mb-3">
+                        <label class="text-white">Phone No</label>
 						<div>
-						  <input type="text" class="form-control" name="phone" required="" value="" placeholder="Phone No">
+						  <input type="text" class="form-control" name="phone" required value="" placeholder="Phone No">
 						</div>
                     </div>
-					 <div class="input-group mb-3">
-                        <label>Fax</label>
+					 <div class=" mb-3">
+                        <label class="text-white">Fax</label>
 						<div>
 						  <input type="text" class="form-control" value="" name="fax" placeholder="Fax">
 						</div>
                     </div>
-					 <div class="input-group mb-3">
-                        <label>Email Id</label>
+					 <div class="mb-3">
+                        <label class="text-white">Email Id</label>
 						<div>
-						  <input type="email" class="form-control" required="" value="" name="email" placeholder="Email Id">
+						  <input type="email" class="form-control" required value="" name="email" placeholder="Email Id">
 						</div>
                     </div>
-					 <div class="input-group mb-3">
-                        <label>Address</label>
+					 <div class="mb-3">
+                        <label class="text-white">Address</label>
 						<div>
-						  <textarea name="address" rows="2" cols="50" class="form-control" required="" placeholder="Address"></textarea>
+						  <textarea name="address" rows="2" cols="50" class="form-control" required placeholder="Address"></textarea>
 						</div>
                     </div>
-					<div class="input-group mb-3">
-                        <label>Total Employees: <span class="total_employees"></span></label>
+					<div class="mb-3">
+                        <label class="text-white">Total Employees: <span class="total_employees"></span></label>
                     </div>
 					
-					 <div class="input-group mb-3">
-                       <label>Password</label>
+					 <div class="mb-3">
+                       <label class="text-white">Password</label>
 						<div>
 						  <input type="password" class="form-control" placeholder="Old Password" name="oldpwd" />
 						  <br>
@@ -225,6 +226,13 @@ if(typeof uid=='undefined' || uid=='' || uid=='undefined' || uid==null){
 		window.location='login.html';
 	},1000);
 }
+
+
+
+
+
+
+
 	
 </script>
 </body>

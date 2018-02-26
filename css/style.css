@@ -21,23 +21,33 @@ header.header {
 }
 .logo {
 	text-align: center;
+
+	
 }
 .logo a {
 	display: inline-block;
+	position:relative;
 	background-color: #fff;
 	border-radius: 100%;
 	width: 200px;
 	height: 200px;
 	padding: 30px;
-	line-height: 230px;
-	margin-top: -100px;
+	margin-top:-100px;
 	margin-bottom: -25px;
 	-webkit-box-shadow: 0px 0px 28px -7px rgba(209,209,209,1);
 	-moz-box-shadow: 0px 0px 28px -7px rgba(209,209,209,1);
 	box-shadow: 0px 0px 28px -7px rgba(209,209,209,1);
 }
+
+.logo a img{ bottom: 18px;
+    left: 26px;
+    position: absolute;
+    vertical-align: top;
+    width: 150px;}
 .full-height {
 	min-height: calc(100vh - 0px);
+	width:100%;
+	float:left;
 }
 .full-height.center {
 	display: flex;
@@ -151,7 +161,7 @@ header.header {
 	font-size: 20px;
 	height: 30px;
 	left: 0;
-	line-height: 25px;
+	line-height: 27px;
 	position: absolute;
 	text-align: center;
 	top: 22px;
@@ -248,3 +258,14 @@ background-color:#fff;
 border-radius:100%;
 z-index:10;	
 }
+
+.modal-content .clinics ul{
+	
+margin:0px;
+padding:0px;
+list-style:none;
+text-align:left;	
+}
+.modal-content .clinics ul li{ padding-bottom:15px; position:relative; padding-left:20px;}
+
+.modal-content .clinics ul li input[type="radio"]{position:absolute; left:0px; top:5px;}
