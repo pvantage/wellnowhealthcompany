@@ -91,9 +91,12 @@
             <div class="modal-body">
                 <form id="loginuser" action="" method="post">
 					<input type="hidden" name="company_id" value="0">
+					<input type="hidden" name="emergency_id" value="0">
+					<input type="hidden" name="add_by" value="company">
                     <div class="clinics"></div>
+					<div class="notelists"></div>
                     <div class="mb-3">
-                       <label>Notes <span>(Optional)</span></label>
+                       <label>Notes <span class="note_optional">(Optional)</span></label>
 					   <div>
 						<textarea name="note" rows="4" cols="50" class="form-control"></textarea>
 					  </div>
@@ -151,6 +154,42 @@ if(typeof uid=='undefined' || uid=='' || uid=='undefined' || uid==null){
 		window.location='login.html';
 	},1000);
 }
+function notes(){
+	var emergency_id=jQuery('input[name="emergency_id"]').val();
+	var url=siteurl+'/api/emergencies/getsinglemsgs';
+	 jQuery.ajax({  
+	 type: 'POST',  
+	 url: url,           
+	 dataType: 'json',  
+	 data: {emergency_id:emergency_id,seeby:'company'}, 
+	 beforeSend: function() {
+		
+	 },		
+	 complete: function() {
+	 }, 
+	 crossDomain: true,  
+	 success: function(res) { 
+		if(res['notes'] && jQuery.trim(res['notes'])!='')
+		{
+			jQuery(res['notes']).each(function(index){
+				jQuery('.notelists').append('<div class="note-content">'+res['notes'][index]['note']+'</div>');
+			});
+			jQuery('#emergency').modal();
+		
+		}
+		return false; 
+	 },  
+	 error: function(response, d, a){
+		
+		jQuery('body .showmessage').remove();
+		var html='<div class="showmessage">Server Error.</div>';
+		jQuery('body').append(html);
+		setTimeout(function(){jQuery('.showmessage').slideUp();},1000);
+		return false; 
+	 }
+			
+   });
+}
 jQuery(document).ready(function(){
 	jQuery('#loginuser').validate();
 	jQuery('input[name="company_id"]').val(uid);
@@ -196,9 +235,24 @@ jQuery(document).ready(function(){
    });
    jQuery('#loginuser').submit( function(){	
 		var error=false;
-		jQuery('#loginuser input').each(function(){
-			if(jQuery(this).hasClass('error')){
+		jQuery('#loginuser input.required').each(function(){
+			var v=jQuery(this).val();
+			if(jQuery.trim(v)==''){
+				jQuery(this).addClass('error');
 				error=true;
+			}
+			else{
+				jQuery(this).removeClass('error');
+			}
+		});
+		jQuery('#loginuser textarea.required').each(function(){
+			var v=jQuery(this).val();
+			if(jQuery.trim(v)==''){
+				jQuery(this).addClass('error');
+				error=true;
+			}
+			else{
+				jQuery(this).removeClass('error');
 			}
 		});
 		
@@ -209,6 +263,11 @@ jQuery(document).ready(function(){
 		}
 		else
 		{
+			var msg=jQuery('#loginuser textarea[name="note"]').val();
+			var emergency_id=jQuery('#loginuser input[name="emergency_id"]').val();
+			if(parseInt(emergency_id)!='' && parseInt(emergency_id)>0){
+				url=siteurl+'/api/emergencies/addemergencymsg';
+			}
 			 jQuery.ajax({  
 			 type: 'POST',  
 			 url: url,           
@@ -223,12 +282,23 @@ jQuery(document).ready(function(){
 			 success: function(res) { 
 				if(res['msg'])
 				{
+					jQuery('.notelists').append('<div class="note-content">'+msg+'</div>');
 					jQuery('body .showmessage').remove();
 					var html='<div class="showmessage">'+res['msg']+'</div>';
 					jQuery('body').append(html);
 					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
-					jQuery('#loginuser')[0].reset();
-					jQuery('#emergency').modal('hide');
+					jQuery('#loginuser textarea[name="note"]').val('');
+					if(parseInt(emergency_id)==0){
+						jQuery('.note_optional').remove();
+						jQuery('#loginuser textarea[name="note"]').addClass('required');
+						jQuery('input[name="emergency_id"]').val(res['emergency_id']);
+					}
+					if(typeof inter!='undefined'){
+						clearInterval(inter);
+					}
+					var inter=setInterval(notes,10000);
+					//jQuery('#loginuser')[0].reset();
+					//jQuery('#emergency').modal('hide');
 				
 				}else if(res['errors']){				
 					jQuery('body .showmessage').remove();
