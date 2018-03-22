@@ -68,10 +68,21 @@
             
             <div class="modal-body">
                 <form id="loginuser" action="" method="post">
-					<input type="hidden" name="manager_id" value="0">
+					<input type="hidden" name="company_id" value="0">
 					<input type="hidden" name="emergency_id" value="0">
-					<input type="hidden" name="add_by" value="manager">
+					<input type="hidden" name="add_by" value="company">
 					<div class="notelists"></div>
+                    <div class="mb-3">
+					   <div>
+						<textarea name="note" rows="4" cols="50" class="form-control required"></textarea>
+					  </div>
+                    </div>
+                    <div  class="submitwrap">
+                        <div class="pull-left">
+                            <button type="submit" class="btn btn-primary">SEND</button>
+                        </div>
+                        <!--<div class="pull-right"> <a href="#" class="btn btn-dark">REGISTER</a></div>-->
+                    </div>
                 </form>  
             </div>
         </div>
@@ -130,7 +141,7 @@ function getdistance(fromlati,fromlongi,fromaddress,tolati,tolongi,toaddress){
 		}
 	}
 }
-function opennotes(){
+function opennotes(showmsg){
 	var emergency_id=gup('id');
 	var url=siteurl+'/api/emergencies/getmsgs';
 	 jQuery.ajax({  
@@ -139,7 +150,9 @@ function opennotes(){
 	 dataType: 'json',  
 	 data: {emergency_id:emergency_id,seeby:'company'}, 
 	 beforeSend: function() {
-		jQuery('#emergency').modal();
+	 	if(showmsg=='yes'){
+			jQuery('#emergency').modal();
+		}
 	 },		
 	 complete: function() {
 	 }, 
@@ -175,7 +188,54 @@ function opennotes(){
 	 }
 			
    });
-   
+   if(typeof inter!='undefined'){
+		clearInterval(inter);
+	}
+	var inter=setInterval(notes,10000);
+}
+function notes(){
+	var emergency_id=gup('id');
+	var url=siteurl+'/api/emergencies/getsinglemsgs';
+	 jQuery.ajax({  
+	 type: 'POST',  
+	 url: url,           
+	 dataType: 'json',  
+	 data: {emergency_id:emergency_id,seeby:'company'}, 
+	 beforeSend: function() {
+		
+	 },		
+	 complete: function() {
+	 }, 
+	 crossDomain: true,  
+	 success: function(res) { 
+		if(res['notes'] && jQuery.trim(res['notes'])!='')
+		{
+			jQuery(res['notes']).each(function(index){
+				var msgg='Me: '+res['notes'][index]['note'];
+				if(jQuery.trim(res['notes'][index]['manager'])!=''){
+					msgg=res['notes'][index]['manager']+': '+res['notes'][index]['note'];
+				}
+				else{
+					msgg='Me: '+res['notes'][index]['note'];
+				}
+				jQuery('.notelists').append('<div class="note-content">'+msgg+'</div>');
+				//jQuery('.notelists').append('<div class="note-content">'+res['notes'][index]['note']+'</div>');
+			});
+			jQuery('#emergency').modal();
+		
+		}
+		return false; 
+	 },  
+	 error: function(response, d, a){
+		
+		jQuery('body .showmessage').remove();
+		var html='<div class="showmessage">Server Error.</div>';
+		jQuery('body').append(html);
+		setTimeout(function(){jQuery('.showmessage').slideUp();},1000);
+		return false; 
+	 }
+			
+   });
 }
 jQuery(document).ready(function(){
 	jQuery( document ).on( "mobileinit", function() {
@@ -185,6 +245,9 @@ jQuery(document).ready(function(){
     if(window.XDomainRequest){contentType = "text/plain";}
 	jQuery.support.cors = true;
 	var id=gup('id');
+	var uid=localStorage.getItem('Company_ID');
+	jQuery('input[name="emergency_id"]').val(id);
+	jQuery('input[name="company_id"]').val(uid);
 	var Staff_Lat= '';
 	var Staff_Long= '';
 	var our_address='';
@@ -270,7 +333,7 @@ jQuery(document).ready(function(){
 			var html='';
 			jQuery(res['data']).each(function(index){
 				if(jQuery.trim(res['data'][index]['staff_phone'])!=''){
-				jQuery('.main-wrapper').append('<div class="btm-btn-sctn"><div class="text-center mb-3"><a href="tel:'+res['data'][index]['staff_phone']+'" class="btn btn-primary">CONTACT EMERGENCY</a></div><div class="text-center mb-3"><a href="javascript:;" onclick="return opennotes();" class="btn btn-primary">MESSAGES</a></div></div>');
+				jQuery('.main-wrapper').append('<div class="btm-btn-sctn"><div class="text-center mb-3"><a href="tel:'+res['data'][index]['staff_phone']+'" class="btn btn-primary">CONTACT EMERGENCY</a></div><div class="text-center mb-3"><a href="javascript:;" onclick="return opennotes(\'yes\');" class="btn btn-primary">MESSAGES</a></div></div>');
 				}
 				Staff_Lat= localStorage.setItem('Current_Manager_clinic_lati',res['data'][index]['clinic_lati']);
 				Staff_Long= localStorage.setItem('Current_Manager_clinic_longi',res['data'][index]['clinic_longi']);
@@ -284,6 +347,7 @@ jQuery(document).ready(function(){
 				address=res['data'][index]['companyaddress'], 
 				mapid='ourgmap';
 				setgooglepath(lati,longi, address,our_address, mapid);
+				opennotes('no');
 				},1000);
 			});
 			
@@ -301,7 +365,83 @@ jQuery(document).ready(function(){
 		return false; 
 		}
 	});
-	
+	jQuery('#loginuser').submit( function(){	
+		var error=false;
+		jQuery('#loginuser input.required').each(function(){
+			var v=jQuery(this).val();
+			if(jQuery.trim(v)==''){
+				jQuery(this).addClass('error');
+				error=true;
+			}
+			else{
+				jQuery(this).removeClass('error');
+			}
+		});
+		jQuery('#loginuser textarea.required').each(function(){
+			var v=jQuery(this).val();
+			if(jQuery.trim(v)==''){
+				jQuery(this).addClass('error');
+				error=true;
+			}
+			else{
+				jQuery(this).removeClass('error');
+			}
+		});
+		var url=siteurl+'/api/emergencies/addemergencymsg';
+		if(error)
+		{
+			return false;
+		}
+		else
+		{
+			var msg=jQuery('#loginuser textarea[name="note"]').val();
+			 jQuery.ajax({  
+			 type: 'POST',  
+			 url: url,           
+			 dataType: 'json',  
+			 data: jQuery('#loginuser').serialize(), 
+			 beforeSend: function() {
+			 	
+			 },		
+			 complete: function() {
+			 }, 
+			 crossDomain: true,  
+			 success: function(res) { 
+				if(res['msg'])
+				{
+					jQuery('.notelists').append('<div class="note-content">Me: '+msg+'</div>');
+					jQuery('body .showmessage').remove();
+					var html='<div class="showmessage">'+res['msg']+'</div>';
+					jQuery('body').append(html);
+					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
+					jQuery('#loginuser textarea[name="note"]').val('');
+					
+				
+				}else if(res['errors']){				
+					jQuery('body .showmessage').remove();
+					var html='<div class="showmessage">'+res['error']+'</div>';
+					jQuery('body').append(html);
+					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
+				}
+				else
+				{
+					alert('Server error');
+				}
+				return false; 
+			 },  
+			 error: function(response, d, a){
+				
+				jQuery('body .showmessage').remove();
+				var html='<div class="showmessage">Server Error.</div>';
+				jQuery('body').append(html);
+				setTimeout(function(){jQuery('.showmessage').slideUp();},1000);
+				return false; 
+			 }
+			        
+		   });
+		 }	
+		 return false;   
+	});
 });
 
 </script>

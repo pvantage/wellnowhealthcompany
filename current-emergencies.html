@@ -48,7 +48,7 @@
     <!-----Main wrapper Start------->
     <div class="title-wrap">
         <div class="container">
-            <h1 class="entry-title text-center">Past Emergencies</h1>
+            <h1 class="entry-title text-center">Current Emergencies</h1>
         </div>
     </div>
     <div class="main-wrapper mt-4">
@@ -76,7 +76,7 @@ jQuery(document).ready(function(){
 	 type: 'POST',  
 	 url: url,           
 	 dataType: 'json',  
-	 data: {company_id:uid,status:'completed'}, 
+	 data: {company_id:uid,status:'pending'}, 
 	 beforeSend: function() {
 		
 	 },		
@@ -90,7 +90,7 @@ jQuery(document).ready(function(){
 			jQuery(res['data']).each(function(index){
 				html+='<div class="row mb-3"><div class="col-4"><div class="meta-date h-100 justify-content-center flex-column"><div class="date-circle">'+res['data'][index]['showdate']+'</div></div></div>';
                 /*html+='<div class="col-8"><div class="past-detail h-100 justify-content-center flex-column"><ul><li><a href="emergancy-detail.html?id='+res['data'][index]['id']+'">Clinic: <strong>'+res['data'][index]['clinic']+' ('+res['data'][index]['clinicaddress']+')</strong></a></li><li>Note: <strong>'+res['data'][index]['note']+'</strong></li></ul></div></div></div>';*/
-				html+='<div class="col-8"><div class="past-detail h-100 justify-content-center flex-column"><ul><li><a href="emergancy-detail.html?id='+res['data'][index]['id']+'">Clinic: <strong>'+res['data'][index]['clinic']+' ('+res['data'][index]['clinicaddress']+')</strong></a></li>';
+				html+='<div class="col-8"><div class="past-detail h-100 justify-content-center flex-column"><ul><li><a href="current-emergancy-detail.html?id='+res['data'][index]['id']+'">Clinic: <strong>'+res['data'][index]['clinic']+' ('+res['data'][index]['clinicaddress']+')</strong></a></li>';
 				if(jQuery.trim(res['data'][index]['note'])!=''){
 					html+='<li>Note: <strong>'+res['data'][index]['note']+'</strong></li>';
 				}
