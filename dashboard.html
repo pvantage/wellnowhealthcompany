@@ -155,6 +155,46 @@ if(typeof uid=='undefined' || uid=='' || uid=='undefined' || uid==null){
 		window.location='login.html';
 	},1000);
 }
+function getemdetail(){
+	var emergency_id=jQuery('input[name="emergency_id"]').val();
+	var url=siteurl+'/api/emergencies/ergencydetail';
+	jQuery.ajax({  
+		type: 'POST',  
+		url: url,           
+		dataType: 'json',  
+		crossDomain: true,
+		data: {id:emergency_id}, 
+		beforeSend: function() {
+		
+		},		
+		complete: function() {
+		}, 
+		crossDomain: true,  
+		success: function(res) { 
+		if(res['data'])
+		{
+			var html='';
+			jQuery(res['data']).each(function(index){
+				if(res['data'][index]['status']=='completed')
+				{
+					window.location='emergancy-detail.html?id='+emergency_id;
+				}
+			});
+			
+		}else if(res['nodata']){				
+			//jQuery('.activity-map-wrap').append(res['nodata']);
+		}
+		
+		},  
+		error: function(response, d, a){
+			jQuery('body .showmessage').remove();
+			var html='<div class="showmessage">Server Error.</div>';
+			jQuery('body').append(html);
+			setTimeout(function(){jQuery('.showmessage').slideUp();},1000);
+			return false; 
+		}
+	});
+}
 function notes(){
 	var emergency_id=jQuery('input[name="emergency_id"]').val();
 	var url=siteurl+'/api/emergencies/getsinglemsgs';
@@ -305,6 +345,7 @@ jQuery(document).ready(function(){
 						clearInterval(inter);
 					}
 					var inter=setInterval(notes,10000);
+					setInterval(getemdetail,5000);
 					//jQuery('#loginuser')[0].reset();
 					//jQuery('#emergency').modal('hide');
 				
