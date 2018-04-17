@@ -175,8 +175,7 @@ function getemdetail(){
 		{
 			var html='';
 			jQuery(res['data']).each(function(index){
-				if(res['data'][index]['status']=='completed')
-				{
+				if(res['data'][index]['status']=='completed'){
 					window.location='emergancy-detail.html?id='+emergency_id;
 				}
 			});
