@@ -114,7 +114,20 @@
     </div>
 </div>
 
-
+<div class="modal fade" id="managerdetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bg-primary text-white"> 
+            
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            
+            <div class="modal-body">
+                 <div class="managerlists"></div>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- Modal  2-->
 <div class="modal fade" id="calling" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -257,12 +270,45 @@ jQuery(document).ready(function(){
 		{
 			var html='<ul>';
 			jQuery(res['clinics']).each(function(index){
-				html+='<li><input type="radio" name="clinic_id" value="'+res['clinics'][index]['id']+'" /> '+res['clinics'][index]['name']+' ('+res['clinics'][index]['address']+')</li>';
+				html+='<li><input type="radio" name="clinic_id" value="'+res['clinics'][index]['id']+'" /> '+res['clinics'][index]['name']+' ('+res['clinics'][index]['address']+')';
+				if(typeof res['clinics'][index]['managers']!='undefined'){
+					var manager=res['clinics'][index]['managers'];
+					html+='<ul class="showmanagerlist" style="display:none;">';
+					jQuery(manager).each(function(index2){
+						html+='<li><a href="javascript:;" class="showmanagerdetail" data-id="'+manager[index2]['id']+'" data-fname="'+manager[index2]['fname']+'" data-email="'+manager[index2]['email']+'" data-phone="'+manager[index2]['phone']+'" data-image="'+manager[index2]['image']+'">'+manager[index2]['fname']+'</a></li>';
+					});
+					html+='</ul>';
+				}
+				html+='</li>';
+				
 			});
 			html+='<ul>';
 			jQuery('.clinics').html(html);
 			jQuery('.clinics input:first').attr('checked',true);
 			jQuery('.clinics input:first').prop('checked',true);
+			jQuery('.clinics li:first ul').show();
+			
+			jQuery('.showmanagerdetail').click(function(){
+				var ht='<ul>';
+				var img=jQuery(this).attr('data-image');
+				if(jQuery.trim(img)!=''){
+					ht+='<li><img src="'+img+'" alt="" style="max-height:100px;" /></li>';
+				}
+				ht+='<li><label>Name: </label> <span>'+jQuery(this).attr('data-fname')+'</span></li>';
+				ht+='<li><label>Phone: </label> <span>'+jQuery(this).attr('data-phone')+'</span></li>';
+				ht+='<li><label>Email: </label> <span>'+jQuery(this).attr('data-email')+'</span></li>';
+				if(jQuery(this).attr('data-phone')!=''){
+					ht+='<li><h2 class="emcalling"><i class="fa fa-phone"></i> <a href="tel:'+jQuery(this).attr('data-phone')+'">Calling Emergency</a></h2></li>';
+				}
+				ht+'</ul>';
+				jQuery('.managerlists').html(ht);
+				jQuery('#managerdetail').modal();
+			});
+			jQuery('input[name="clinic_id"]').change(function(){
+				var $t=jQuery('input[name="clinic_id"]:checked');
+				jQuery('.showmanagerlist').slideUp();
+				jQuery($t).next('ul.showmanagerlist').slideDown();
+			});
 		}
 		return false; 
 	 },  
