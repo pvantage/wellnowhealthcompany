@@ -29,7 +29,8 @@ h2.emcalling{font-size:20px;}
 #managerdetail .modal-content h2.emcalling a, #managerdetail .modal-content h2.emcalling i {
     color: green;
 }
-
+.note-content .seenmsg{background:url(../images/g.png) no-repeat; width:20px; height:17px; display:block;background-size:20px auto;}
+.note-content .notseenmsg{background:url(../images/w.png) no-repeat; width:20px; height:17px; display:block;background-size:20px auto;}
 
 #managerdetail .modal-content {
     background: #fff !important;

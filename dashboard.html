@@ -250,6 +250,71 @@ function notes(){
 			
    });
 }
+function addcalls(phone,manager_id,clinic_id){
+	var url=siteurl+'/api/emergencies/addemergencyphonecall';
+	jQuery.ajax({  
+		type: 'POST',  
+		url: url,           
+		data: {phone:phone,manager_id:manager_id,clinic_id:clinic_id,uid:uid}, 
+		beforeSend: function() {
+			
+		},		
+		complete: function() {
+		}, 
+		crossDomain: true,  
+		success: function(res) { 
+			
+		},  
+		error: function(response, d, a){
+			//alert(JSON.stringify(response));
+			/*jQuery('body .showmessage').remove();
+			var html='<div class="showmessage">Server Error.</div>';
+			jQuery('body').append(html);
+			setTimeout(function(){jQuery('.showmessage').slideUp();},1000);
+			return false; */
+		}
+	});
+}
+function checkseenmsg(){
+	var seenmsgs=localStorage.getItem('seenmsgs');
+	var seenmsgs_ids='';
+	if(typeof seenmsgs!='undefined' && seenmsgs!='' && seenmsgs!=null){
+		seenmsgs_ids=seenmsgs;
+	}
+	var emergency_id=jQuery('#loginuser input[name="emergency_id"]').val();
+	if(emergency_id!='' && emergency_id!='0'){
+		var url=siteurl+'/api/emergencies/checkseenmsgs';
+		jQuery.ajax({  
+		 type: 'POST',  
+		 url: url,           
+		 dataType: 'json',  
+		 data: {seenmsgs_ids:seenmsgs_ids,emergency_id:emergency_id,seeby:'manager'}, 
+		 beforeSend: function() {
+			
+		 },		
+		 complete: function() {
+		 }, 
+		 crossDomain: true,  
+		 success: function(res) { 
+			if(res['seenids']){
+				jQuery(res['seenids']).each(function(index){
+					jQuery('.seen_'+res['seenids'][index]['em_msg_id']).removeClass('notseenmsg');
+					jQuery('.seen_'+res['seenids'][index]['em_msg_id']).addClass('seenmsg');
+				});
+			}
+		 },  
+		 error: function(response, d, a){
+			
+			jQuery('body .showmessage').remove();
+			var html='<div class="showmessage">Server Error.</div>';
+			jQuery('body').append(html);
+			setTimeout(function(){jQuery('.showmessage').slideUp();},1000);
+			return false; 
+		 }
+				
+	   });
+	 }
+}
 jQuery(document).ready(function(){
 	jQuery('#loginuser').validate();
 	jQuery('input[name="company_id"]').val(uid);
@@ -275,7 +340,7 @@ jQuery(document).ready(function(){
 					var manager=res['clinics'][index]['managers'];
 					html+='<ul class="showmanagerlist" style="display:none;">';
 					jQuery(manager).each(function(index2){
-						html+='<li><a href="javascript:;" class="showmanagerdetail" data-id="'+manager[index2]['id']+'" data-fname="'+manager[index2]['fname']+'" data-email="'+manager[index2]['email']+'" data-phone="'+manager[index2]['phone']+'" data-image="'+manager[index2]['image']+'">'+manager[index2]['fname']+'</a></li>';
+						html+='<li><a href="javascript:;" class="showmanagerdetail" data-id="'+manager[index2]['id']+'" data-fname="'+manager[index2]['fname']+'" data-email="'+manager[index2]['email']+'" data-phone="'+manager[index2]['phone']+'" data-image="'+manager[index2]['image']+'" data-clinic_id="'+manager[index2]['clinic_id']+'">'+manager[index2]['fname']+'</a></li>';
 					});
 					html+='</ul>';
 				}
@@ -298,7 +363,7 @@ jQuery(document).ready(function(){
 				ht+='<li><label>Phone: </label> <span>'+jQuery(this).attr('data-phone')+'</span></li>';
 				ht+='<li><label>Email: </label> <span>'+jQuery(this).attr('data-email')+'</span></li>';
 				if(jQuery(this).attr('data-phone')!=''){
-					ht+='<li><h2 class="emcalling"><i class="fa fa-phone"></i> <a href="tel:'+jQuery(this).attr('data-phone')+'">Call Emergency</a></h2></li>';
+					ht+='<li><h2 class="emcalling"><i class="fa fa-phone"></i> <a href="tel:'+jQuery(this).attr('data-phone')+'" onclick="addcalls(\''+jQuery(this).attr('data-phone')+'\','+jQuery(this).attr('data-id')+','+jQuery(this).attr('data-clinic_id')+')">Call Emergency</a></h2></li>';
 				}
 				ht+'</ul>';
 				jQuery('.managerlists').html(ht);
@@ -375,7 +440,11 @@ jQuery(document).ready(function(){
 			 success: function(res) { 
 				if(res['msg'])
 				{
-					jQuery('.notelists').append('<div class="note-content">Me: '+msg+'</div>');
+					var cls='';
+					if(parseInt(emergency_id)==0){
+						cls=' emergencystart';
+					}
+					jQuery('.notelists').append('<div class="note-content">Me: '+msg+'<span class="seen_'+res['emergency_id']+cls+' notseenmsg"></span></div>');
 					jQuery('body .showmessage').remove();
 					var html='<div class="showmessage">'+res['msg']+'</div>';
 					jQuery('body').append(html);
@@ -393,6 +462,7 @@ jQuery(document).ready(function(){
 					setInterval(getemdetail,5000);
 					//jQuery('#loginuser')[0].reset();
 					//jQuery('#emergency').modal('hide');
+					setInterval(checkseenmsg,6000);
 				
 				}else if(res['errors']){				
 					jQuery('body .showmessage').remove();
