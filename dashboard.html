@@ -94,6 +94,7 @@
 					<input type="hidden" name="company_id" value="0">
 					<input type="hidden" name="emergency_id" value="0">
 					<input type="hidden" name="add_by" value="company">
+					<input type="hidden" name="manager_id" value="0">
                     <div class="clinics"></div>
 					<div class="notelists"></div>
                     <div class="mb-3">
@@ -250,6 +251,11 @@ function notes(){
 			
    });
 }
+function startchatwithmanager(manager_id,clinic_id){
+	jQuery('input[name="manager_id"]').val(manager_id);
+	jQuery('#managerdetail').modal('hide');
+	jQuery('textarea[name="note"]').focus();
+}
 function addcalls(phone,manager_id,clinic_id){
 	var url=siteurl+'/api/emergencies/addemergencyphonecall';
 	jQuery.ajax({  
@@ -340,7 +346,7 @@ jQuery(document).ready(function(){
 					var manager=res['clinics'][index]['managers'];
 					html+='<ul class="showmanagerlist" style="display:none;">';
 					jQuery(manager).each(function(index2){
-						html+='<li><a href="javascript:;" class="showmanagerdetail" data-id="'+manager[index2]['id']+'" data-fname="'+manager[index2]['fname']+'" data-email="'+manager[index2]['email']+'" data-phone="'+manager[index2]['phone']+'" data-image="'+manager[index2]['image']+'" data-clinic_id="'+manager[index2]['clinic_id']+'">'+manager[index2]['fname']+'</a></li>';
+						html+='<li><a href="javascript:;" class="showmanagerdetail" data-id="'+manager[index2]['id']+'" data-fname="'+manager[index2]['fname']+'" data-email="'+manager[index2]['email']+'" data-phone="'+manager[index2]['phone']+'" data-bioinfo="'+manager[index2]['bioinfo']+'" data-image="'+manager[index2]['image']+'" data-clinic_id="'+manager[index2]['clinic_id']+'">'+manager[index2]['fname']+'</a></li>';
 					});
 					html+='</ul>';
 				}
@@ -357,13 +363,15 @@ jQuery(document).ready(function(){
 				var ht='<ul>';
 				var img=jQuery(this).attr('data-image');
 				if(jQuery.trim(img)!=''){
-					ht+='<li><img src="'+img+'" alt="" style="max-height:100px;" /></li>';
+					ht+='<li><img src="'+img+'" alt="" style="max-height:100px; float:left; margin:0 5px 5px 0;" />'+jQuery(this).attr('data-bioinfo')+'</li>';
 				}
-				ht+='<li><label>Name: </label> <span>'+jQuery(this).attr('data-fname')+'</span></li>';
-				ht+='<li><label>Phone: </label> <span>'+jQuery(this).attr('data-phone')+'</span></li>';
-				ht+='<li><label>Email: </label> <span>'+jQuery(this).attr('data-email')+'</span></li>';
+				else{
+					ht+='<li><span>'+jQuery(this).attr('data-bioinfo')+'</span></li>';
+				}
+				/*ht+='<li><label>Phone: </label> <span>'+jQuery(this).attr('data-phone')+'</span></li>';
+				ht+='<li><label>Email: </label> <span>'+jQuery(this).attr('data-email')+'</span></li>';*/
 				if(jQuery(this).attr('data-phone')!=''){
-					ht+='<li><h2 class="emcalling"><i class="fa fa-phone"></i> <a href="tel:'+jQuery(this).attr('data-phone')+'" onclick="addcalls(\''+jQuery(this).attr('data-phone')+'\','+jQuery(this).attr('data-id')+','+jQuery(this).attr('data-clinic_id')+')">Call Emergency</a></h2></li>';
+					ht+='<li><h2 class="emcalling"><i class="fa fa-phone"></i> <a href="tel:'+jQuery(this).attr('data-phone')+'" onclick="addcalls(\''+jQuery(this).attr('data-phone')+'\','+jQuery(this).attr('data-id')+','+jQuery(this).attr('data-clinic_id')+')">Call Emergency</a></h2><h2 class="emcalling"><i class="fa fa-comment"></i> <a href="javascript:;" onclick="startchatwithmanager('+jQuery(this).attr('data-id')+','+jQuery(this).attr('data-clinic_id')+')">Start Message</a></h2></li>';
 				}
 				ht+'</ul>';
 				jQuery('.managerlists').html(ht);
@@ -454,6 +462,7 @@ jQuery(document).ready(function(){
 						jQuery('.note_optional').remove();
 						jQuery('#loginuser textarea[name="note"]').addClass('required');
 						jQuery('input[name="emergency_id"]').val(res['emergency_id']);
+						jQuery('.submitwrap').append('<div class="pull-right"><a href="current-emergancy-detail.html?id='+res['emergency_id']+'" class="btn btn-primary">Manager\'s Location on Map</a></div>');
 					}
 					if(typeof inter!='undefined'){
 						clearInterval(inter);
