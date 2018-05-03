@@ -357,7 +357,7 @@ jQuery(document).ready(function(){
 					html+='</ul>';
 				}
 				if(jQuery.trim(res['clinics'][index]['phone'])!='' && res['clinics'][index]['phone']!='undefined'){
-					html+='<ul><li><h2 class="emcalling"><i class="fa fa-phone"></i> <a href="tel:'+res['clinics'][index]['phone']+'" onclick="addcalls(\''+res['clinics'][index]['phone']+'\',0,'+res['clinics'][index]['id']+')">Call Emergency</a></h2></li></ul>';
+					html+='<ul class="emcall"><li><h2 class="emcalling"><i class="fa fa-phone"></i> <a href="tel:'+res['clinics'][index]['phone']+'" onclick="addcalls(\''+res['clinics'][index]['phone']+'\',0,'+res['clinics'][index]['id']+')">Call Emergency</a></h2></li></ul>';
 				}
 				html+='</li>';
 				

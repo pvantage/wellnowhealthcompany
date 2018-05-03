@@ -291,6 +291,7 @@ padding:0px;
 list-style:none;
 text-align:left;	
 }
+.modal-content .clinics ul .emcall li{margin:10px 0px 0px 0px; padding:0px;}
 .modal-content .clinics ul a{color:#FFFFFF;}
 .modal-content .clinics ul li{ padding-bottom:15px; position:relative; padding-left:20px;}
 
