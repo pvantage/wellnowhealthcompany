@@ -40,3 +40,18 @@ h2.emcalling{font-size:20px;}
     box-shadow: 0px 0px 14px 0px #464646;
 	border-radius: 0px;
 }
+a.locationlink{
+    background-color: #96c61c;
+    border-color: #96c61c;
+	border-radius: 0.25rem;
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    padding: 0.375rem 0.75rem;
+    text-align: center;
+    transition: color 0.15s ease-in-out 0s, background-color 0.15s ease-in-out 0s, border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+    vertical-align: middle;
+    white-space: nowrap;
+	color:#FFFFFF;
+}

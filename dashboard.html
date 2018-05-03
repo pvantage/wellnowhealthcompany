@@ -258,6 +258,7 @@ function startchatwithmanager(manager_id,clinic_id){
 }
 function addcalls(phone,manager_id,clinic_id){
 	var url=siteurl+'/api/emergencies/addemergencyphonecall';
+	setTimeout(function(){
 	jQuery.ajax({  
 		type: 'POST',  
 		url: url,           
@@ -280,6 +281,7 @@ function addcalls(phone,manager_id,clinic_id){
 			return false; */
 		}
 	});
+	},2000);
 }
 function checkseenmsg(){
 	var seenmsgs=localStorage.getItem('seenmsgs');
@@ -350,6 +352,9 @@ jQuery(document).ready(function(){
 					});
 					html+='</ul>';
 				}
+				if(jQuery.trim(res['clinics'][index]['phone'])!='' && res['clinics'][index]['phone']!='undefined'){
+					html+='<ul><li><h2 class="emcalling"><i class="fa fa-phone"></i> <a href="tel:'+res['clinics'][index]['phone']+'" onclick="addcalls(\''+res['clinics'][index]['phone']+'\',0,'+res['clinics'][index]['id']+')">Call Emergency</a></h2></li></ul>';
+				}
 				html+='</li>';
 				
 			});
@@ -370,9 +375,9 @@ jQuery(document).ready(function(){
 				}
 				/*ht+='<li><label>Phone: </label> <span>'+jQuery(this).attr('data-phone')+'</span></li>';
 				ht+='<li><label>Email: </label> <span>'+jQuery(this).attr('data-email')+'</span></li>';*/
-				if(jQuery(this).attr('data-phone')!=''){
+				/*if(jQuery(this).attr('data-phone')!=''){
 					ht+='<li><h2 class="emcalling"><i class="fa fa-phone"></i> <a href="tel:'+jQuery(this).attr('data-phone')+'" onclick="addcalls(\''+jQuery(this).attr('data-phone')+'\','+jQuery(this).attr('data-id')+','+jQuery(this).attr('data-clinic_id')+')">Call Emergency</a></h2><h2 class="emcalling"><i class="fa fa-comment"></i> <a href="javascript:;" onclick="startchatwithmanager('+jQuery(this).attr('data-id')+','+jQuery(this).attr('data-clinic_id')+')">Start Message</a></h2></li>';
-				}
+				}*/
 				ht+'</ul>';
 				jQuery('.managerlists').html(ht);
 				jQuery('#managerdetail').modal();
@@ -462,7 +467,7 @@ jQuery(document).ready(function(){
 						jQuery('.note_optional').remove();
 						jQuery('#loginuser textarea[name="note"]').addClass('required');
 						jQuery('input[name="emergency_id"]').val(res['emergency_id']);
-						jQuery('.submitwrap').append('<div class="pull-right"><a href="current-emergancy-detail.html?id='+res['emergency_id']+'" class="btn btn-primary">Manager\'s Location on Map</a></div>');
+						jQuery('.submitwrap').append('<div class="pull-right"><a href="current-emergancy-detail.html?id='+res['emergency_id']+'" class="locationlink">Location on Map</a></div>');
 					}
 					if(typeof inter!='undefined'){
 						clearInterval(inter);
