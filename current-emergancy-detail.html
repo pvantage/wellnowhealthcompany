@@ -167,6 +167,10 @@ function checkseenmsg(){
 					jQuery('.seen_'+res['seenids'][index]['em_msg_id']).removeClass('notseenmsg');
 					jQuery('.seen_'+res['seenids'][index]['em_msg_id']).addClass('seenmsg');
 				});
+				if(jQuery('.notelists .note-content:first span').hasClass('notseenmsg')){
+					jQuery('.notelists .note-content:first span').removeClass('notseenmsg');
+					jQuery('.notelists .note-content:first span').addClass('seenmsg');
+				}
 			}
 		 },  
 		 error: function(response, d, a){

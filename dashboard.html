@@ -309,6 +309,10 @@ function checkseenmsg(){
 					jQuery('.seen_'+res['seenids'][index]['em_msg_id']).removeClass('notseenmsg');
 					jQuery('.seen_'+res['seenids'][index]['em_msg_id']).addClass('seenmsg');
 				});
+				if(jQuery('.notelists .note-content .notseenmsg').hasClass('emergencystart')){
+					jQuery('.notelists .note-content .emergencystart').removeClass('notseenmsg');
+					jQuery('.notelists .note-content .emergencystart').addClass('seenmsg');
+				}
 			}
 		 },  
 		 error: function(response, d, a){
