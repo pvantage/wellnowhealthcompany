@@ -57,3 +57,5 @@ a.locationlink{
 }
 .currentonline{color:#96c61c;}
 .currentoffline{color:#930000;}
+.img-wrape{float:right;}
+.img-wrape img{ max-width:80%;}

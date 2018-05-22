@@ -70,7 +70,9 @@
                 <form id="loginuser" action="" method="post">
 					<input type="hidden" name="company_id" value="0">
 					<input type="hidden" name="emergency_id" value="0">
+					<input type="hidden" name="clinic_id" value="0">
 					<input type="hidden" name="add_by" value="company">
+					<input type="hidden" name="manager_id" value="0">
 					<div class="notelists"></div>
                     <div class="mb-3">
 					   <div>
@@ -81,7 +83,8 @@
                         <div class="pull-left">
                             <button type="submit" class="btn btn-primary">SEND</button>
                         </div>
-                        <!--<div class="pull-right"> <a href="#" class="btn btn-dark">REGISTER</a></div>-->
+                        <div class="pull-right"><a class="phone-anch" href="javascript:;" id="uploadphoto1"><i class="fa fa-camera"></i></a>
+				<a class="phone-anch" href="javascript:;" id="uploadphoto12"><i class="fa fa-picture-o"></i></a></div>
                     </div>
                 </form>  
             </div>
@@ -380,6 +383,9 @@ jQuery(document).ready(function(){
 				if(jQuery.trim(res['data'][index]['staff_phone'])!=''){
 				jQuery('.main-wrapper').append('<div class="btm-btn-sctn"><div class="text-center mb-3"><a href="tel:'+res['data'][index]['staff_phone']+'" class="btn btn-primary">CONTACT EMERGENCY</a></div><div class="text-center mb-3"><a href="javascript:;" onclick="return opennotes(\'yes\');" class="btn btn-primary">MESSAGES</a></div></div>');
 				}
+				jQuery('input[name="company_id"]').val(res['data'][index]['company_id']);
+				jQuery('input[name="manager_id"]').val(res['data'][index]['manager_id']);
+			  	jQuery('input[name="clinic_id"]').val(res['data'][index]['clinic_id']);
 				Staff_Lat= localStorage.setItem('Current_Manager_clinic_lati',res['data'][index]['clinic_lati']);
 				Staff_Long= localStorage.setItem('Current_Manager_clinic_longi',res['data'][index]['clinic_longi']);
 				our_address=localStorage.setItem('Current_Manager_clinicaddress',res['data'][index]['clinic_address']);
@@ -488,6 +494,138 @@ jQuery(document).ready(function(){
 		 return false;   
 	});
 });
+var platform='';
+function fail(error) {
+	jQuery('body .showmessage').remove();
+	var html='<div class="showmessage" style="width:100%">Uploading error: Code = ' + error.code+', upload error source ' + error.source+', upload error target ' + error.target+'</div>';
+	jQuery('body').append(html);
+	setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
+}
+function uploadgallerypic() {
+	navigator.camera.getPicture(function(f) {
+        var filetrasfer=f;
+		if(filetrasfer!=''){
+			jQuery('.submitwrap img.justloading').remove();
+			jQuery('.submitwrap').append('<img src="images/ajax-loader.gif" class="justloading" />');
+			var company_id=jQuery('input[name="company_id"]').val();
+			var emergency_id=gup('id');
+			var add_by=jQuery('input[name="add_by"]').val();
+			var manager_id=jQuery('input[name="manager_id"]').val();
+			var clinic_id=jQuery('input[name="clinic_id"]').val();
+			
+			resolveLocalFileSystemURL(filetrasfer, function(entry) {
+			var filetrasfer2= entry.toURL();
+			var uri = encodeURI(siteurl+'/api/emergencies/saveemergencyimg?company_id='+company_id+'&emergency_id='+emergency_id+'&add_by='+add_by+'&manager_id='+manager_id+'&clinic_id='+clinic_id);
+			var options = new FileUploadOptions();
+			options.fileKey="file";
+			options.fileName=filetrasfer2.substr(filetrasfer2.lastIndexOf('/')+1);
+			//options.mimeType="image/jpeg";
+			var params = new Object();
+			 params.value1 = "test";
+			 params.value2 = "param";
+			 options.params = params;
+			 options.chunkedMode = false;
+			var headers={'headerParam':'headerValue'};
+			options.headers = headers;
+			
+			var ft = new FileTransfer();
+			
+			var t=ft.upload(filetrasfer2, uri, function(r){
+					jQuery('.submitwrap img.justloading').remove();
+					var cntents=r.response.split('||emg||');
+					jQuery('.notelists').append('<div class="note-content">'+cntents[0]);
+					jQuery('body .showmessage').remove();
+					var html='<div class="showmessage">'+cntents[2]+'</div>';
+					jQuery('body').append(html);
+					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
+					if(typeof inter!='undefined'){
+						clearInterval(inter);
+					}
+					var inter=setInterval(notes,10000);
+					setInterval(getemdetail,5000);
+					setInterval(checkseenmsg,6000);
+						
+			}, fail, options);
+			});
+		}
+    }, function(e) {
+    }, { 
+        quality: 1,
+        sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+        destinationType: Camera.DestinationType.FILE_URI
+    });
+    
+}
+function uploadcamerapic() {
+	var captureSuccess = function(mediaFiles) {
+		var i, path, len;
+		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+			path = mediaFiles[i].fullPath;
+			if(platform!='Android'){
+				var htt = "file:///";
+				if(path.indexOf(htt) == '-1'){path=htt+path;}
+			}
+			var job_id=gup('job_id');
+			var filetrasfer=path;
+			
+			if(filetrasfer!=''){
+				jQuery('.submitwrap img.justloading').remove();
+				jQuery('.submitwrap').append('<img src="images/ajax-loader.gif" class="justloading" />');
+				var company_id=jQuery('input[name="company_id"]').val();
+				var emergency_id=gup('id');
+				var add_by=jQuery('input[name="add_by"]').val();
+				var manager_id=jQuery('input[name="manager_id"]').val();
+				var clinic_id=jQuery('input[name="clinic_id"]').val();	
+				resolveLocalFileSystemURL(filetrasfer, function(entry) {
+				var filetrasfer2= entry.toURL();
+				var uri = encodeURI(siteurl+'/api/emergencies/saveemergencyimg?company_id='+company_id+'&emergency_id='+emergency_id+'&add_by='+add_by+'&manager_id='+manager_id+'&clinic_id='+clinic_id);
+				var options = new FileUploadOptions();
+				options.fileKey="file";
+				options.fileName=filetrasfer2.substr(filetrasfer2.lastIndexOf('/')+1);
+				//options.mimeType="image/jpeg";
+				var params = new Object();
+				 params.value1 = "test";
+				 params.value2 = "param";
+				 options.params = params;
+				 options.chunkedMode = false;
+				var headers={'headerParam':'headerValue'};
+				options.headers = headers;
+				
+				var ft = new FileTransfer();
+				
+				var t=ft.upload(filetrasfer2, uri, function(r){
+					jQuery('.submitwrap img.justloading').remove();
+					var cntents=r.response.split('||emg||');
+					jQuery('.notelists').append('<div class="note-content">'+cntents[0]);
+					jQuery('body .showmessage').remove();
+					var html='<div class="showmessage">'+cntents[2]+'</div>';
+					jQuery('body').append(html);
+					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
+					if(typeof inter!='undefined'){
+						clearInterval(inter);
+					}
+					var inter=setInterval(notes,10000);
+					setInterval(getemdetail,5000);
+					setInterval(checkseenmsg,6000);
+				}, fail, options);
+				});
+			}
+		}
+	};
+	// capture error callback
+	var captureError = function(error) {
+		navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
+	};
+	navigator.device.capture.captureImage(captureSuccess, captureError, {limit:1});
+    
+    
+}
+document.addEventListener("deviceready", uploadpic, false);
+function uploadpic() {
+	platform=device.platform;
+	jQuery("#uploadphoto1").on("touchend", uploadcamerapic);
+	jQuery("#uploadphoto12").on("touchend", uploadgallerypic);
+}
 
 </script>
 </body>

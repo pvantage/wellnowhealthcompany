@@ -328,7 +328,6 @@ function checkseenmsg(){
 	   });
 	 }
 }
-var uploadfile=0;
 jQuery(document).ready(function(){
 	jQuery('#loginuser').validate();
 	jQuery('input[name="company_id"]').val(uid);
@@ -521,10 +520,11 @@ function fail(error) {
 	setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
 }
 function uploadgallerypic() {
-	alert('startupload 2');
 	navigator.camera.getPicture(function(f) {
         var filetrasfer=f;
 		if(filetrasfer!=''){
+			jQuery('.submitwrap img.justloading').remove();
+			jQuery('.submitwrap').append('<img src="images/ajax-loader.gif" class="justloading" />');
 			var company_id=jQuery('input[name="company_id"]').val();
 			var emergency_id=jQuery('input[name="emergency_id"]').val();
 			var add_by=jQuery('input[name="add_by"]').val();
@@ -549,9 +549,9 @@ function uploadgallerypic() {
 			var ft = new FileTransfer();
 			
 			var t=ft.upload(filetrasfer2, uri, function(r){
-				
+					jQuery('.submitwrap img.justloading').remove();
 					var cntents=r.response.split('||emg||');
-					jQuery('.notelists').append('<div class="note-content">Me: '+cntents[0]);
+					jQuery('.notelists').append('<div class="note-content">'+cntents[0]);
 					jQuery('body .showmessage').remove();
 					var html='<div class="showmessage">'+cntents[2]+'</div>';
 					jQuery('body').append(html);
@@ -579,7 +579,6 @@ function uploadgallerypic() {
     
 }
 function uploadcamerapic() {
-	alert('startupload 1');
 	var captureSuccess = function(mediaFiles) {
 		var i, path, len;
 		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
@@ -592,6 +591,8 @@ function uploadcamerapic() {
 			var filetrasfer=path;
 			
 			if(filetrasfer!=''){
+				jQuery('.submitwrap img.justloading').remove();
+				jQuery('.submitwrap').append('<img src="images/ajax-loader.gif" class="justloading" />');
 				var company_id=jQuery('input[name="company_id"]').val();
 				var emergency_id=jQuery('input[name="emergency_id"]').val();
 				var add_by=jQuery('input[name="add_by"]').val();
@@ -615,9 +616,9 @@ function uploadcamerapic() {
 				var ft = new FileTransfer();
 				
 				var t=ft.upload(filetrasfer2, uri, function(r){
-					
+					jQuery('.submitwrap img.justloading').remove();
 					var cntents=r.response.split('||emg||');
-					jQuery('.notelists').append('<div class="note-content">Me: '+cntents[0]);
+					jQuery('.notelists').append('<div class="note-content">'+cntents[0]);
 					jQuery('body .showmessage').remove();
 					var html='<div class="showmessage">'+cntents[2]+'</div>';
 					jQuery('body').append(html);
@@ -648,10 +649,8 @@ function uploadcamerapic() {
 document.addEventListener("deviceready", uploadpic, false);
 function uploadpic() {
 	platform=device.platform;
-	alert('start');
 	jQuery("#uploadphoto1").on("touchend", uploadcamerapic);
 	jQuery("#uploadphoto12").on("touchend", uploadgallerypic);
-	
 }
 </script>
 </body>
