@@ -649,8 +649,8 @@ document.addEventListener("deviceready", uploadpic, false);
 function uploadpic() {
 	platform=device.platform;
 	alert('start');
-	jQuery("#uploadphoto1").on("touchend", 'uploadcamerapic');
-	jQuery("#uploadphoto12").on("touchend", 'uploadgallerypic');
+	jQuery("#uploadphoto1").on("touchend", uploadcamerapic);
+	jQuery("#uploadphoto12").on("touchend", uploadgallerypic);
 	
 }
 </script>
