@@ -98,7 +98,7 @@
                     <div class="clinics"></div>
 					<div class="notelists"></div>
                     <div class="mb-3">
-                       <label>Notes <span class="note_optional">(Optional)</span></label>
+                       <label>Provider injury details <span class="note_optional">(Optional)</span></label>
 					   <div>
 						<textarea name="note" rows="4" cols="50" class="form-control"></textarea>
 					  </div>
@@ -107,7 +107,8 @@
                         <div class="pull-left">
                             <button type="submit" class="btn btn-primary">SEND</button>
                         </div>
-                        <!--<div class="pull-right"> <a href="#" class="btn btn-dark">REGISTER</a></div>-->
+                        <div class="pull-right"><a class="phone-anch" href="javascript:;" id="uploadphoto1"><i class="fa fa-camera"></i></a>
+				<a class="phone-anch" href="javascript:;" id="uploadphoto12"><i class="fa fa-picture-o"></i></a></div>
                     </div>
                 </form>  
             </div>
@@ -327,6 +328,7 @@ function checkseenmsg(){
 	   });
 	 }
 }
+var uploadfile=0;
 jQuery(document).ready(function(){
 	jQuery('#loginuser').validate();
 	jQuery('input[name="company_id"]').val(uid);
@@ -350,9 +352,11 @@ jQuery(document).ready(function(){
 				html+='<li><input type="radio" name="clinic_id" value="'+res['clinics'][index]['id']+'" /> '+res['clinics'][index]['name']+' ('+res['clinics'][index]['address']+')';
 				if(typeof res['clinics'][index]['managers']!='undefined'){
 					var manager=res['clinics'][index]['managers'];
-					html+='<ul class="showmanagerlist" style="display:none;">';
+					html+='<ul class="showmanagerlist" style="display:none;"><li>Click on provider name for bio.</li>';
 					jQuery(manager).each(function(index2){
-						html+='<li><a href="javascript:;" class="showmanagerdetail" data-id="'+manager[index2]['id']+'" data-fname="'+manager[index2]['fname']+'" data-email="'+manager[index2]['email']+'" data-phone="'+manager[index2]['phone']+'" data-bioinfo="'+manager[index2]['bioinfo']+'" data-image="'+manager[index2]['image']+'" data-clinic_id="'+manager[index2]['clinic_id']+'">'+manager[index2]['fname']+'</a></li>';
+						var activestatus='&nbsp;&nbsp;<span class="currentoffline">Offline</span>';
+						if(manager[index2]['loggedin']=='1'){activestatus='&nbsp;&nbsp;<span class="currentonline">Online</span>';}
+						html+='<li><a href="javascript:;" class="showmanagerdetail" data-id="'+manager[index2]['id']+'" data-fname="'+manager[index2]['fname']+'" data-email="'+manager[index2]['email']+'" data-phone="'+manager[index2]['phone']+'" data-bioinfo="'+manager[index2]['bioinfo']+'" data-image="'+manager[index2]['image']+'" data-clinic_id="'+manager[index2]['clinic_id']+'">'+manager[index2]['fname']+'</a>'+activestatus+'</li>';
 					});
 					html+='</ul>';
 				}
@@ -509,6 +513,139 @@ jQuery(document).ready(function(){
 	});
    //getLocation();
 });
+var platform='';
+function uploadgallerypic(img) {
+	navigator.camera.getPicture(function(f) {
+        var filetrasfer=f;
+		if(filetrasfer!=''){
+			var company_id=jQuery('input[name="company_id"]').val();
+			var emergency_id=jQuery('input[name="emergency_id"]').val();
+			var add_by=jQuery('input[name="add_by"]').val();
+			var manager_id=jQuery('input[name="manager_id"]').val();
+			var clinic_id=jQuery('input[name="clinic_id"]').val();
+			
+			resolveLocalFileSystemURL(filetrasfer, function(entry) {
+			var filetrasfer2= entry.toURL();
+			var uri = encodeURI(siteurl+'/api/emergencies/saveemergencyimg?company_id='+company_id+'&emergency_id='+emergency_id+'&add_by='+add_by+'&manager_id='+manager_id+'&clinic_id='+clinic_id);
+			var options = new FileUploadOptions();
+			options.fileKey="file";
+			options.fileName=filetrasfer2.substr(filetrasfer2.lastIndexOf('/')+1);
+			//options.mimeType="image/jpeg";
+			var params = new Object();
+			 params.value1 = "test";
+			 params.value2 = "param";
+			 options.params = params;
+			 options.chunkedMode = false;
+			var headers={'headerParam':'headerValue'};
+			options.headers = headers;
+			
+			var ft = new FileTransfer();
+			
+			var t=ft.upload(filetrasfer2, uri, function(r){
+				
+					var cntents=r.response.split('||emg||');
+					jQuery('.notelists').append('<div class="note-content">Me: '+cntents[0]);
+					jQuery('body .showmessage').remove();
+					var html='<div class="showmessage">'+cntents[2]+'</div>';
+					jQuery('body').append(html);
+					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
+					if(parseInt(emergency_id)==0){
+						jQuery('input[name="emergency_id"]').val(cntents[1]);
+						jQuery('.submitwrap').append('<div class="pull-right"><a href="current-emergancy-detail.html?id='+cntents[1]+'" class="locationlink">Location on Map</a></div>');
+					}
+					if(typeof inter!='undefined'){
+						clearInterval(inter);
+					}
+					var inter=setInterval(notes,10000);
+					setInterval(getemdetail,5000);
+					setInterval(checkseenmsg,6000);
+						
+				}
+			}, fail, options);
+			});
+		}
+    }, function(e) {
+    }, { 
+        quality: 1,
+        sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+        destinationType: Camera.DestinationType.FILE_URI
+    });
+    
+}
+function uploadcamerapic(img) {
+	
+	var captureSuccess = function(mediaFiles) {
+		var i, path, len;
+		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+			path = mediaFiles[i].fullPath;
+			if(platform!='Android'){
+				var htt = "file:///";
+				if(path.indexOf(htt) == '-1'){path=htt+path;}
+			}
+			var job_id=gup('job_id');
+			var filetrasfer=path;
+			
+			if(filetrasfer!=''){
+				var company_id=jQuery('input[name="company_id"]').val();
+				var emergency_id=jQuery('input[name="emergency_id"]').val();
+				var add_by=jQuery('input[name="add_by"]').val();
+				var manager_id=jQuery('input[name="manager_id"]').val();
+				var clinic_id=jQuery('input[name="clinic_id"]').val();	
+				resolveLocalFileSystemURL(filetrasfer, function(entry) {
+				var filetrasfer2= entry.toURL();
+				var uri = encodeURI(siteurl+'/api/emergencies/saveemergencyimg?company_id='+company_id+'&emergency_id='+emergency_id+'&add_by='+add_by+'&manager_id='+manager_id+'&clinic_id='+clinic_id);
+				var options = new FileUploadOptions();
+				options.fileKey="file";
+				options.fileName=filetrasfer2.substr(filetrasfer2.lastIndexOf('/')+1);
+				//options.mimeType="image/jpeg";
+				var params = new Object();
+				 params.value1 = "test";
+				 params.value2 = "param";
+				 options.params = params;
+				 options.chunkedMode = false;
+				var headers={'headerParam':'headerValue'};
+				options.headers = headers;
+				
+				var ft = new FileTransfer();
+				
+				var t=ft.upload(filetrasfer2, uri, function(r){
+					
+					var cntents=r.response.split('||emg||');
+					jQuery('.notelists').append('<div class="note-content">Me: '+cntents[0]);
+					jQuery('body .showmessage').remove();
+					var html='<div class="showmessage">'+cntents[2]+'</div>';
+					jQuery('body').append(html);
+					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
+					if(parseInt(emergency_id)==0){
+						jQuery('input[name="emergency_id"]').val(cntents[1]);
+						jQuery('.submitwrap').append('<div class="pull-right"><a href="current-emergancy-detail.html?id='+cntents[1]+'" class="locationlink">Location on Map</a></div>');
+					}
+					if(typeof inter!='undefined'){
+						clearInterval(inter);
+					}
+					var inter=setInterval(notes,10000);
+					setInterval(getemdetail,5000);
+					setInterval(checkseenmsg,6000);
+				}, fail, options);
+				});
+			}
+		}
+	};
+	// capture error callback
+	var captureError = function(error) {
+		navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
+	};
+	navigator.device.capture.captureImage(captureSuccess, captureError, {limit:1});
+    
+    
+}
+document.addEventListener("deviceready", init, false);
+function init() {
+	platform=device.platform;
+	jQuery("#uploadphoto1").on("touchend", 'uploadcamerapic');
+	jQuery("#uploadphoto12").on("touchend", 'uploadgallerypic');
+	
+}
 </script>
 </body>
 </html>
