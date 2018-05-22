@@ -514,7 +514,7 @@ jQuery(document).ready(function(){
    //getLocation();
 });
 var platform='';
-function uploadgallerypic(img) {
+function uploadgallerypic() {
 	navigator.camera.getPicture(function(f) {
         var filetrasfer=f;
 		if(filetrasfer!=''){
@@ -571,7 +571,7 @@ function uploadgallerypic(img) {
     });
     
 }
-function uploadcamerapic(img) {
+function uploadcamerapic() {
 	
 	var captureSuccess = function(mediaFiles) {
 		var i, path, len;
