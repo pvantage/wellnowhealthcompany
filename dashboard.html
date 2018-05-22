@@ -514,7 +514,14 @@ jQuery(document).ready(function(){
    //getLocation();
 });
 var platform='';
+function fail(error) {
+	jQuery('body .showmessage').remove();
+	var html='<div class="showmessage" style="width:100%">Uploading error: Code = ' + error.code+', upload error source ' + error.source+', upload error target ' + error.target+'</div>';
+	jQuery('body').append(html);
+	setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
+}
 function uploadgallerypic() {
+	alert('startupload 2');
 	navigator.camera.getPicture(function(f) {
         var filetrasfer=f;
 		if(filetrasfer!=''){
@@ -572,7 +579,7 @@ function uploadgallerypic() {
     
 }
 function uploadcamerapic() {
-	
+	alert('startupload 1');
 	var captureSuccess = function(mediaFiles) {
 		var i, path, len;
 		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
@@ -638,9 +645,10 @@ function uploadcamerapic() {
     
     
 }
-document.addEventListener("deviceready", init, false);
-function init() {
+document.addEventListener("deviceready", uploadpic, false);
+function uploadpic() {
 	platform=device.platform;
+	alert('start');
 	jQuery("#uploadphoto1").on("touchend", 'uploadcamerapic');
 	jQuery("#uploadphoto12").on("touchend", 'uploadgallerypic');
 	
