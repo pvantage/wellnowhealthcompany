@@ -505,8 +505,11 @@ function uploadgallerypic() {
 	navigator.camera.getPicture(function(f) {
         var filetrasfer=f;
 		if(filetrasfer!=''){
-			jQuery('.submitwrap img.justloading').remove();
-			jQuery('.submitwrap').append('<img src="images/ajax-loader.gif" class="justloading" />');
+			//jQuery('.submitwrap img.justloading').remove();
+			//jQuery('.submitwrap').append('<img src="images/ajax-loader.gif" class="justloading" />');
+			jQuery('body .showmessage').remove();
+			var html='<div class="showmessage">Please while uploading image...</div>';
+			jQuery('body').append(html);
 			var company_id=jQuery('input[name="company_id"]').val();
 			var emergency_id=gup('id');
 			var add_by=jQuery('input[name="add_by"]').val();
@@ -534,7 +537,7 @@ function uploadgallerypic() {
 			var ft = new FileTransfer();
 			
 			var t=ft.upload(filetrasfer2, uri, function(r){
-					jQuery('.submitwrap img.justloading').remove();
+					//jQuery('.submitwrap img.justloading').remove();
 					var cntents=r.response.split('||emg||');
 					jQuery('.notelists').append('<div class="note-content">'+cntents[0]);
 					jQuery('body .showmessage').remove();
@@ -572,8 +575,11 @@ function uploadcamerapic() {
 			var filetrasfer=path;
 			
 			if(filetrasfer!=''){
-				jQuery('.submitwrap img.justloading').remove();
-				jQuery('.submitwrap').append('<img src="images/ajax-loader.gif" class="justloading" />');
+				//jQuery('.submitwrap img.justloading').remove();
+				//jQuery('.submitwrap').append('<img src="images/ajax-loader.gif" class="justloading" />');
+				jQuery('body .showmessage').remove();
+				var html='<div class="showmessage">Please while uploading image...</div>';
+				jQuery('body').append(html);
 				var company_id=jQuery('input[name="company_id"]').val();
 				var emergency_id=gup('id');
 				var add_by=jQuery('input[name="add_by"]').val();
@@ -600,7 +606,7 @@ function uploadcamerapic() {
 				var ft = new FileTransfer();
 				
 				var t=ft.upload(filetrasfer2, uri, function(r){
-					jQuery('.submitwrap img.justloading').remove();
+					//jQuery('.submitwrap img.justloading').remove();
 					var cntents=r.response.split('||emg||');
 					jQuery('.notelists').append('<div class="note-content">'+cntents[0]);
 					jQuery('body .showmessage').remove();
