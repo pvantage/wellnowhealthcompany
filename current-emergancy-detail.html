@@ -516,6 +516,9 @@ function uploadgallerypic() {
 			resolveLocalFileSystemURL(filetrasfer, function(entry) {
 			var filetrasfer2= entry.toURL();
 			var uri = encodeURI(siteurl+'/api/emergencies/saveemergencyimg?company_id='+company_id+'&emergency_id='+emergency_id+'&add_by='+add_by+'&manager_id='+manager_id+'&clinic_id='+clinic_id);
+			if(parseInt(emergency_id)!='' && parseInt(emergency_id)>0){
+				uri = encodeURI(siteurl+'/api/emergencies/addemergencyimgmsg?company_id='+company_id+'&emergency_id='+emergency_id+'&add_by='+add_by+'&manager_id='+manager_id+'&clinic_id='+clinic_id);
+			}
 			var options = new FileUploadOptions();
 			options.fileKey="file";
 			options.fileName=filetrasfer2.substr(filetrasfer2.lastIndexOf('/')+1);
@@ -579,6 +582,9 @@ function uploadcamerapic() {
 				resolveLocalFileSystemURL(filetrasfer, function(entry) {
 				var filetrasfer2= entry.toURL();
 				var uri = encodeURI(siteurl+'/api/emergencies/saveemergencyimg?company_id='+company_id+'&emergency_id='+emergency_id+'&add_by='+add_by+'&manager_id='+manager_id+'&clinic_id='+clinic_id);
+				if(parseInt(emergency_id)!='' && parseInt(emergency_id)>0){
+					uri = encodeURI(siteurl+'/api/emergencies/addemergencyimgmsg?company_id='+company_id+'&emergency_id='+emergency_id+'&add_by='+add_by+'&manager_id='+manager_id+'&clinic_id='+clinic_id);
+				}
 				var options = new FileUploadOptions();
 				options.fileKey="file";
 				options.fileName=filetrasfer2.substr(filetrasfer2.lastIndexOf('/')+1);
