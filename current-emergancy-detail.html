@@ -343,6 +343,17 @@ jQuery(document).ready(function(){
 			infoWindow.setContent(our_address);
 			infoWindow.open(map, marker);
 		});*/
+		geocoder.geocode({'location': latlng}, function(results, status) {
+          if (status === 'OK') {
+            if (results[0]) {
+			  google.maps.event.addListener(marker, "click", function (e) {
+				var infoWindow = new google.maps.InfoWindow();
+				infoWindow.setContent(results[0].formatted_address);
+				infoWindow.open(map, marker);
+			});
+            }
+          } 
+        });
 		var imgommap='images/mapicon.png';
 		var latlng2=jobaddress;
 		var marker2 = new google.maps.Marker({
@@ -352,6 +363,17 @@ jQuery(document).ready(function(){
 			icon: imgommap
 		});
 	  marker2.setPosition( latlng2 );
+	  geocoder.geocode({'location': latlng2}, function(results, status) {
+          if (status === 'OK') {
+            if (results[0]) {
+			  google.maps.event.addListener(marker2, "click", function (e) {
+				var infoWindow = new google.maps.InfoWindow();
+				infoWindow.setContent(results[0].formatted_address);
+				infoWindow.open(map, marker2);
+			});
+            }
+          } 
+        });
 	  /*google.maps.event.addListener(marker2, "click", function (e) {
 			var infoWindow = new google.maps.InfoWindow();
 			infoWindow.setContent(jobaddress);
@@ -415,6 +437,16 @@ jQuery(document).ready(function(){
 			jQuery(res['data']).each(function(index){
 				if(jQuery.trim(res['data'][index]['staff_phone'])!=''){
 				jQuery('.main-wrapper').append('<div class="btm-btn-sctn"><div class="text-center mb-3"><a href="tel:'+res['data'][index]['staff_phone']+'" class="btn btn-primary">CONTACT EMERGENCY</a></div><div class="text-center mb-3"><a href="javascript:;" onclick="return opennotes(\'yes\');" class="btn btn-primary">MESSAGES</a></div></div>');
+				}
+				if(res['data'][index]['manager_id']=='0'){
+					jQuery('body .showmessage').remove();
+					var html='<div class="showmessage">Clinic manager is not yet linked with you...</div>';
+					jQuery('body').append(html);
+					setTimeout(function(){jQuery('.showmessage').slideUp();
+					},2000);
+					setTimeout(function(){
+						window.location='';
+					},5000);
 				}
 				jQuery('input[name="company_id"]').val(res['data'][index]['company_id']);
 				jQuery('input[name="manager_id"]').val(res['data'][index]['manager_id']);
