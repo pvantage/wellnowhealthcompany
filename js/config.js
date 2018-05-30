@@ -141,3 +141,6 @@ function onDeviceReady2(){
 		}	
 	}
 }
+function showimg(imgurl){
+	cordova.InAppBrowser.open(imgurl, '_blank', 'location=yes');	
+}
