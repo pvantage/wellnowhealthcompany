@@ -96,7 +96,7 @@ function showPosition(position) {
 			
 		 } 
 	   });
-		setTimeout(getLocation,5000);
+		setTimeout(getLocation,30000);
 	}
     
 }
@@ -121,7 +121,8 @@ function ValidateEmail(inputText)
 		return false;  
 	}  
 }
-document.addEventListener("deviceready", onDeviceReady2, false);
+getLocation();
+/*document.addEventListener("deviceready", onDeviceReady2, false);
 function onDeviceReady2(){
 	var deviceplatform=device.platform;
 	var uid=localStorage.getItem('Company_ID');
@@ -140,7 +141,7 @@ function onDeviceReady2(){
 			}
 		}	
 	}
-}
+}*/
 function showimg(imgurl){
 	cordova.InAppBrowser.open(imgurl, '_blank', 'location=yes');	
 }
