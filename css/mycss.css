@@ -57,8 +57,10 @@ a.locationlink{
 }
 .currentonline{color:#96c61c;}
 .currentoffline{color:#930000;}
-.img-wrape img{ max-width:80%;}
+.img-wrape img{ max-width:50px; max-height:50px;}
 #uploadphoto1 i{font-size:22px;}
 #uploadphoto1{color:#0040c4; margin-right:4px;}
 #uploadphoto12 i{font-size:22px;}
 #uploadphoto12{color:#0040c4;}
+.img-wrape a{color:#FFFFFF; padding-left:10px;}
+.img-wrape i{color:#FFFFFF;}
