@@ -113,6 +113,7 @@ var ourphoto='images/home.png';
 var crrentdata=[];
 var activedata=[];
 function getdistance(fromlati,fromlongi,fromaddress,tolati,tolongi,toaddress){
+	alert(fromlati+','+fromlongi+' + '+tolati+','+tolongi);
 	var from = new google.maps.LatLng(fromlati, fromlongi);
 	var fromName = fromaddress;
 	var dest = new google.maps.LatLng(tolati, tolongi);
@@ -137,6 +138,7 @@ function getdistance(fromlati,fromlongi,fromaddress,tolati,tolongi,toaddress){
 				for (var j = 0; j < results.length; j++) {
 					var element = results[j];
 					var distance = '';
+					alert(element.distance.text);
 					if(typeof element.distance!='undefined'){
 						var distance = element.distance.text;
 					}
