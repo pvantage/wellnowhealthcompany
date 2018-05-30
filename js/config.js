@@ -122,6 +122,7 @@ function ValidateEmail(inputText)
 	}  
 }
 getLocation();
+
 /*document.addEventListener("deviceready", onDeviceReady2, false);
 function onDeviceReady2(){
 	var deviceplatform=device.platform;
