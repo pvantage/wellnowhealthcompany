@@ -54,6 +54,7 @@ a.locationlink{
     vertical-align: middle;
     white-space: nowrap;
 	color:#FFFFFF;
+	margin-right:10px;
 }
 .currentonline{color:#96c61c;}
 .currentoffline{color:#930000;}
