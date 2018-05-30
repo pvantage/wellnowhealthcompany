@@ -446,7 +446,7 @@ jQuery(document).ready(function(){
 				}
 				if(res['data'][index]['manager_id']=='0'){
 					jQuery('body .showmessage').remove();
-					var html='<div class="showmessage">Clinic manager is not yet linked with you...</div>';
+					var html='<div class="showmessage">Please wait the Manager is not logged in</div>';
 					jQuery('body').append(html);
 					setTimeout(function(){jQuery('.showmessage').slideUp();
 					},2000);
