@@ -96,7 +96,7 @@ function showPosition(position) {
 			
 		 } 
 	   });
-		setTimeout(getLocation,15000);
+		setTimeout(getLocation,5000);
 	}
     
 }
