@@ -329,28 +329,6 @@ jQuery(document).ready(function(){
 			infoWindow.open(map, marker2);
 		});
 		
-		if(crrentdata.length>0){
-			jQuery(crrentdata).each(function(j){
-				var nlat=crrentdata[j]['current_lati'];
-				var nlong=crrentdata[j]['current_longi'];
-				var nimg=crrentdata[j]['staff_map_photo'];
-				if(jQuery.trim(nlat)!='' && jQuery.trim(nlong)!=''){
-					var imgommap='images/mapicon.png';
-					if(jQuery.trim(nimg)!=''){
-						imgommap=nimg;
-					}
-					var nlatlng={lat: parseFloat(nlat), lng: parseFloat(nlong)};
-					var nmarker= new google.maps.Marker({
-						position: nlatlng,
-						map: map,
-						animation: google.maps.Animation.DROP,
-						icon: imgommap
-					});
-					nmarker.setPosition( nlatlng );
-				}
-			});
-		}
-	  //marker2.setAnimation(google.maps.Animation.BOUNCE);
 	
 		directionsService.route({
           origin: our_address,  
@@ -422,8 +400,8 @@ jQuery(document).ready(function(){
 				if(typeof res['data'][index]['measurement']!='undefined'){
 					jQuery('.displaydistance').html('Estimated Distance : '+res['data'][index]['measurement']['distance']+'<br>Estimated Time: '+res['data'][index]['measurement']['duration']);
 				}
-				setTimeout(function(){opennotes('no');},2000);
-				},2000);
+				opennotes('no');
+				},1000);
 			});
 			
 		}else if(res['nodata']){				
