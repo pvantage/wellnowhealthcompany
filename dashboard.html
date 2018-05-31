@@ -616,7 +616,7 @@ function uploadgallerypic() {
 		}
     }, function(e) {
     }, { 
-        quality: 1,
+        quality: 50,
         sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
         destinationType: Camera.DestinationType.FILE_URI
     });
@@ -690,7 +690,7 @@ function uploadcamerapic() {
 	var captureError = function(error) {
 		navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
 	};
-	navigator.device.capture.captureImage(captureSuccess, captureError, {limit:5});
+	navigator.device.capture.captureImage(captureSuccess, captureError, {limit:1});
     
     
 }

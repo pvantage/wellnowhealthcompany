@@ -295,8 +295,6 @@ jQuery(document).ready(function(){
           center: our_address
         });
         directionsDisplay.setMap(map);
-		//getdistance(joblati,joblongi,jobaddress,Staff_Lat,Staff_Long,our_address);
-		
 		
 		var geocoder = new google.maps.Geocoder;
 		var infowindow = new google.maps.InfoWindow;
@@ -314,17 +312,7 @@ jQuery(document).ready(function(){
 			infoWindow.setContent(showaddress2);
 			infoWindow.open(map, marker);
 		});
-		/*geocoder.geocode({'location': latlng}, function(results, status) {
-          if (status === 'OK') {
-            if (results[0]) {
-			  google.maps.event.addListener(marker, "click", function (e) {
-				var infoWindow = new google.maps.InfoWindow();
-				infoWindow.setContent(results[0].formatted_address);
-				infoWindow.open(map, marker);
-			});
-            }
-          } 
-        });*/
+		
 		var imgommap='images/mapicon.png';
 		var latlng2=jobaddress;
 		var marker2 = new google.maps.Marker({
@@ -334,17 +322,7 @@ jQuery(document).ready(function(){
 			icon: imgommap
 		});
 	  marker2.setPosition( latlng2 );
-	  /*geocoder.geocode({'location': latlng2}, function(results, status) {
-          if (status === 'OK') {
-            if (results[0]) {
-			  google.maps.event.addListener(marker2, "click", function (e) {
-				var infoWindow = new google.maps.InfoWindow();
-				infoWindow.setContent(results[0].formatted_address);
-				infoWindow.open(map, marker2);
-			});
-            }
-          } 
-        });*/
+	 
 	  google.maps.event.addListener(marker2, "click", function (e) {
 			var infoWindow = new google.maps.InfoWindow();
 			infoWindow.setContent(showaddress1);
@@ -602,7 +580,7 @@ function uploadgallerypic() {
 		}
     }, function(e) {
     }, { 
-        quality: 1,
+        quality: 50,
         sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
         destinationType: Camera.DestinationType.FILE_URI
     });
@@ -674,7 +652,7 @@ function uploadcamerapic() {
 	var captureError = function(error) {
 		navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
 	};
-	navigator.device.capture.captureImage(captureSuccess, captureError, {limit:5});
+	navigator.device.capture.captureImage(captureSuccess, captureError, {limit:1});
     
     
 }
