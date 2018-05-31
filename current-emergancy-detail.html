@@ -192,7 +192,10 @@ function opennotes(showmsg){
 			
 		
 		}
-		setInterval(checkseenmsg,6000);
+		if(typeof inter2!='undefined'){
+			clearInterval(inter2);
+		}
+		var inter2=setInterval(checkseenmsg,6000);
 		return false; 
 	 },  
 	 error: function(response, d, a){
@@ -268,20 +271,14 @@ jQuery(document).ready(function(){
 	var uid=localStorage.getItem('Company_ID');
 	jQuery('input[name="emergency_id"]').val(id);
 	jQuery('input[name="company_id"]').val(uid);
-	var Staff_Lat= '';
-	var Staff_Long= '';
 	var our_address='';
 	
 	var setgooglepath=function(joblati,joblongi, jobaddress,our_address, mapid) {
 		var showaddress1=jobaddress;
 		var showaddress2=our_address;
-		Staff_Lat= localStorage.getItem('Current_Manager_clinic_lati');
-		Staff_Long= localStorage.getItem('Current_Manager_clinic_longi');
 		our_address=localStorage.getItem('Current_Manager_clinicaddress');
         var directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers:true});
         var directionsService = new google.maps.DirectionsService;
-		var latit=parseFloat(Staff_Lat);
-		var longit=parseFloat(Staff_Long);
 		if(jQuery.trim(activedata['stff_lati'])!='' && jQuery.trim(activedata['staff_longi'])!=''){
 			our_address={lat: parseFloat(activedata['stff_lati']), lng: parseFloat(activedata['staff_longi'])};
 		}
@@ -378,8 +375,6 @@ jQuery(document).ready(function(){
 				jQuery('input[name="company_id"]').val(res['data'][index]['company_id']);
 				jQuery('input[name="manager_id"]').val(res['data'][index]['manager_id']);
 			  	jQuery('input[name="clinic_id"]').val(res['data'][index]['clinic_id']);
-				localStorage.setItem('Current_Manager_clinic_lati',res['data'][index]['clinic_lati']);
-				localStorage.setItem('Current_Manager_clinic_longi',res['data'][index]['clinic_longi']);
 				localStorage.setItem('Current_Manager_clinicaddress',res['data'][index]['companyaddress']);
 				localStorage.setItem('Current_Manager_clinicaddress',res['data'][index]['companyaddress']);
 				crrentdata=res['data'][index]['otherstff'];
@@ -550,8 +545,14 @@ function uploadgallerypic() {
 						clearInterval(inter);
 					}
 					var inter=setInterval(notes,10000);
-					setInterval(getemdetail,5000);
-					setInterval(checkseenmsg,6000);
+					/*if(typeof inter3!='undefined'){
+						clearInterval(inter3);
+					}
+					var inter3=setInterval(getemdetail,5000);*/
+					if(typeof inter2!='undefined'){
+						clearInterval(inter2);
+					}
+					var inter2=setInterval(checkseenmsg,6000);
 						
 			}, fail, options);
 			});
@@ -619,8 +620,14 @@ function uploadcamerapic() {
 						clearInterval(inter);
 					}
 					var inter=setInterval(notes,10000);
-					setInterval(getemdetail,5000);
-					setInterval(checkseenmsg,6000);
+					/*if(typeof inter3!='undefined'){
+						clearInterval(inter3);
+					}
+					var inter3=setInterval(getemdetail,5000);*/
+					if(typeof inter2!='undefined'){
+						clearInterval(inter2);
+					}
+					var inter2=setInterval(checkseenmsg,6000);
 				}, fail, options);
 				});
 			}
