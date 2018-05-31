@@ -112,48 +112,7 @@
 var ourphoto='images/home.png';
 var crrentdata=[];
 var activedata=[];
-function getdistance(fromlati,fromlongi,fromaddress,tolati,tolongi,toaddress){
-	//alert(fromlati+','+fromlongi+' + '+tolati+','+tolongi);
-	var from = new google.maps.LatLng(fromlati, fromlongi);
-	var fromName = fromaddress;
-	var dest = new google.maps.LatLng(tolati, tolongi);
-	var destName = toaddress;
-	
-	var service = new google.maps.DistanceMatrixService();
-	service.getDistanceMatrix(
-		{
-			origins: [from, fromName],
-			destinations: [destName, dest],
-			travelMode: 'DRIVING'
-		}, callback);
-	
-	function callback(response, status) {
-		if (status == 'OK') {
-			var origins = response.originAddresses;
-			var destinations = response.destinationAddresses;
-	
-			for (var i = 0; i < origins.length; i++) {
-				var results = response.rows[i].elements;
-				console.log(results);
-				for (var j = 0; j < results.length; j++) {
-					var element = results[j];
-					var distance = '';
-					//alert(element.distance.text);
-					if(typeof element.distance!='undefined'){
-						var distance = element.distance.text;
-					}
-					var duration = '';
-					if(typeof element.duration!='undefined'){
-						var duration = element.duration.text;
-					}
-					jQuery('.displaydistance').html('Estimated Distance : '+distance+'<br>Estimated Time: '+duration);
-					var from = origins[i];
-					var to = destinations[j];
-				}
-			}
-		}
-	}
-}
+
 function checkseenmsg(){
 	var seenmsgs=localStorage.getItem('seenmsgs');
 	var seenmsgs_ids='';
@@ -282,6 +241,9 @@ function notes(){
 			jQuery('#emergency').modal();
 		
 		}
+		if(typeof res['measurement']!='undefined' && typeof res['measurement']['distance']!='undefined'){
+			jQuery('.displaydistance').html('Estimated Distance : '+res['measurement']['distance']+'<br>Estimated Time: '+res['measurement']['duration']);
+		}
 		return false; 
 	 },  
 	 error: function(response, d, a){
@@ -311,7 +273,8 @@ jQuery(document).ready(function(){
 	var our_address='';
 	
 	var setgooglepath=function(joblati,joblongi, jobaddress,our_address, mapid) {
-		
+		var showaddress1=jobaddress;
+		var showaddress2=our_address;
 		Staff_Lat= localStorage.getItem('Current_Manager_clinic_lati');
 		Staff_Long= localStorage.getItem('Current_Manager_clinic_longi');
 		our_address=localStorage.getItem('Current_Manager_clinicaddress');
@@ -332,7 +295,7 @@ jQuery(document).ready(function(){
           center: our_address
         });
         directionsDisplay.setMap(map);
-		getdistance(joblati,joblongi,jobaddress,Staff_Lat,Staff_Long,our_address);
+		//getdistance(joblati,joblongi,jobaddress,Staff_Lat,Staff_Long,our_address);
 		
 		
 		var geocoder = new google.maps.Geocoder;
@@ -346,12 +309,12 @@ jQuery(document).ready(function(){
 			icon: ourphoto
 		});
 	  marker.setPosition( latlng );
-	  /* google.maps.event.addListener(marker, "click", function (e) {
+	   google.maps.event.addListener(marker, "click", function (e) {
 			var infoWindow = new google.maps.InfoWindow();
-			infoWindow.setContent(our_address);
+			infoWindow.setContent(showaddress2);
 			infoWindow.open(map, marker);
-		});*/
-		geocoder.geocode({'location': latlng}, function(results, status) {
+		});
+		/*geocoder.geocode({'location': latlng}, function(results, status) {
           if (status === 'OK') {
             if (results[0]) {
 			  google.maps.event.addListener(marker, "click", function (e) {
@@ -361,7 +324,7 @@ jQuery(document).ready(function(){
 			});
             }
           } 
-        });
+        });*/
 		var imgommap='images/mapicon.png';
 		var latlng2=jobaddress;
 		var marker2 = new google.maps.Marker({
@@ -371,7 +334,7 @@ jQuery(document).ready(function(){
 			icon: imgommap
 		});
 	  marker2.setPosition( latlng2 );
-	  geocoder.geocode({'location': latlng2}, function(results, status) {
+	  /*geocoder.geocode({'location': latlng2}, function(results, status) {
           if (status === 'OK') {
             if (results[0]) {
 			  google.maps.event.addListener(marker2, "click", function (e) {
@@ -381,12 +344,12 @@ jQuery(document).ready(function(){
 			});
             }
           } 
-        });
-	  /*google.maps.event.addListener(marker2, "click", function (e) {
+        });*/
+	  google.maps.event.addListener(marker2, "click", function (e) {
 			var infoWindow = new google.maps.InfoWindow();
-			infoWindow.setContent(jobaddress);
+			infoWindow.setContent(showaddress1);
 			infoWindow.open(map, marker2);
-		});*/
+		});
 		
 		if(crrentdata.length>0){
 			jQuery(crrentdata).each(function(j){
@@ -459,9 +422,10 @@ jQuery(document).ready(function(){
 				jQuery('input[name="company_id"]').val(res['data'][index]['company_id']);
 				jQuery('input[name="manager_id"]').val(res['data'][index]['manager_id']);
 			  	jQuery('input[name="clinic_id"]').val(res['data'][index]['clinic_id']);
-				Staff_Lat= localStorage.setItem('Current_Manager_clinic_lati',res['data'][index]['clinic_lati']);
-				Staff_Long= localStorage.setItem('Current_Manager_clinic_longi',res['data'][index]['clinic_longi']);
-				our_address=localStorage.setItem('Current_Manager_clinicaddress',res['data'][index]['clinic_address']);
+				localStorage.setItem('Current_Manager_clinic_lati',res['data'][index]['clinic_lati']);
+				localStorage.setItem('Current_Manager_clinic_longi',res['data'][index]['clinic_longi']);
+				localStorage.setItem('Current_Manager_clinicaddress',res['data'][index]['companyaddress']);
+				localStorage.setItem('Current_Manager_clinicaddress',res['data'][index]['companyaddress']);
 				crrentdata=res['data'][index]['otherstff'];
 				activedata['stff_lati']=res['data'][index]['active_staff_lati'];
 				activedata['staff_longi']=res['data'][index]['active_staff_longi'];
@@ -473,9 +437,13 @@ jQuery(document).ready(function(){
 				setTimeout(function(){
 				var lati=res['data'][index]['address_lati'], 
 				longi=res['data'][index]['address_longi'],
-				address=res['data'][index]['companyaddress'], 
+				address=res['data'][index]['companyaddress'],
+				our_address=res['data'][index]['manager_address'],
 				mapid='ourgmap';
 				setgooglepath(lati,longi, address,our_address, mapid);
+				if(typeof res['data'][index]['measurement']!='undefined'){
+					jQuery('.displaydistance').html('Estimated Distance : '+res['data'][index]['measurement']['distance']+'<br>Estimated Time: '+res['data'][index]['measurement']['duration']);
+				}
 				opennotes('no');
 				},1000);
 			});
