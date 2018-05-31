@@ -422,8 +422,8 @@ jQuery(document).ready(function(){
 				if(typeof res['data'][index]['measurement']!='undefined'){
 					jQuery('.displaydistance').html('Estimated Distance : '+res['data'][index]['measurement']['distance']+'<br>Estimated Time: '+res['data'][index]['measurement']['duration']);
 				}
-				opennotes('no');
-				},1000);
+				setTimeout(function(){opennotes('no');},2000);
+				},2000);
 			});
 			
 		}else if(res['nodata']){				
