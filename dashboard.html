@@ -638,8 +638,8 @@ function uploadgalleryvideo() {
 			var manager_id=jQuery('input[name="manager_id"]').val();
 			var clinic_id=jQuery('input[name="clinic_id"]:checked').val();
 			alert(filetrasfer);
-			resolveLocalFileSystemURL(filetrasfer, function(entry) {
-				alert('test1');
+			
+			var successtranfer=function(entry) {
 				var filetrasfer2= entry.toURL();
 				
 				var uri = encodeURI(siteurl+'/api/emergencies/saveemergencyimg?company_id='+company_id+'&emergency_id='+emergency_id+'&add_by='+add_by+'&manager_id='+manager_id+'&clinic_id='+clinic_id);
@@ -660,13 +660,7 @@ function uploadgalleryvideo() {
 				//options.headers = headers;
 				
 				var ft = new FileTransfer();
-				/*var options = {
-				fileKey: "avatar",
-				fileName: "filename.mp4",
-				chunkedMode: false,
-				mimeType: "video/mp4"
-			};
-			$cordovaFileTransfer.upload("http://www.samplewebsite.com/upload", "file:/storage/....mp4", options).then(function(result) {*/
+				
 			
 			var t=ft.upload(filetrasfer2, uri, function(r){
 					//jQuery('.submitwrap img.justloading').remove();
@@ -690,9 +684,12 @@ function uploadgalleryvideo() {
 			}, function(err) {
 				alert("ERROR: " + JSON.stringify(err));
 			}, options);
+		};
+			resolveLocalFileSystemURL(filetrasfer, successtranfer, function(err) {
+				alert("ERROR2: " + JSON.stringify(err));
 			});
-		}
-    }, function(e) {
+    }
+	}, function(e) {
 		alert("ERROR2: " + JSON.stringify(e));
     }, { 
         quality: 50,
