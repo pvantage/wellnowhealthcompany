@@ -618,7 +618,9 @@ function uploadgallerypic() {
     }, function(e) {
     }, { 
         quality: 50,
-		mediaType: Camera.MediaType.ALLMEDIA
+		sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+		mediaType: Camera.MediaType.ALLMEDIA,
+		destinationType: Camera.DestinationType.FILE_URI
     });
     
 }
