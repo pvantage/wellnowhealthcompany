@@ -571,7 +571,6 @@ function uploadgallerypic() {
 			var add_by=jQuery('input[name="add_by"]').val();
 			var manager_id=jQuery('input[name="manager_id"]').val();
 			var clinic_id=jQuery('input[name="clinic_id"]:checked').val();
-			alert(filetrasfer);
 			resolveLocalFileSystemURL(filetrasfer, function(entry) {
 			var filetrasfer2= entry.toURL();
 			
@@ -637,6 +636,8 @@ function uploadgalleryvideo() {
 			var add_by=jQuery('input[name="add_by"]').val();
 			var manager_id=jQuery('input[name="manager_id"]').val();
 			var clinic_id=jQuery('input[name="clinic_id"]:checked').val();
+			var htt = "file://";
+			if(filetrasfer.indexOf(htt) == '-1'){filetrasfer=htt+filetrasfer;}
 			alert(filetrasfer);
 			
 			var successtranfer=function(entry) {
