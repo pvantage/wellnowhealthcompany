@@ -560,10 +560,11 @@ function uploadgallerypic() {
 	navigator.camera.getPicture(function(f) {
         var filetrasfer=f;
 		if(filetrasfer!=''){
+			alert(filetrasfer);
 			//jQuery('.submitwrap img.justloading').remove();
 			//jQuery('.submitwrap').append('<img src="images/ajax-loader.gif" class="justloading" />');
 			jQuery('body .showmessage').remove();
-			var html='<div class="showmessage">Please wait while uploading image...</div>';
+			var html='<div class="showmessage">Please wait while uploading file...</div>';
 			jQuery('body').append(html);
 			var company_id=jQuery('input[name="company_id"]').val();
 			var emergency_id=jQuery('input[name="emergency_id"]').val();
@@ -617,9 +618,7 @@ function uploadgallerypic() {
     }, function(e) {
     }, { 
         quality: 50,
-        sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-		mediaType: Camera.MediaType.ALLMEDIA,
-        destinationType: Camera.DestinationType.FILE_URI
+		mediaType: Camera.MediaType.ALLMEDIA
     });
     
 }
