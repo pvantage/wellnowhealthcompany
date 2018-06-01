@@ -613,7 +613,7 @@ function uploadgallerypic() {
 					setInterval(checkseenmsg,6000);
 						
 			}, fail, function(progress){
-				alert('progress':JSON.stringify(progress));
+				alert('progress:'+JSON.stringify(progress));
 			});
 			});
 		}
@@ -692,7 +692,7 @@ function uploadgalleryvideo() {
 			}, function(err) {
 				alert("ERROR: " + JSON.stringify(err));
 			}, function(progress){
-				alert('progress':JSON.stringify(progress));
+				alert('progress:'+JSON.stringify(progress));
 			});
 			});
 		}
