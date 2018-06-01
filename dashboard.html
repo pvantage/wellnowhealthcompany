@@ -111,7 +111,7 @@
                         </div>
                         <div class="pull-right"><a class="phone-anch" href="javascript:;" id="uploadphoto1"><i class="fa fa-camera"></i></a>
 						<a class="phone-anch" href="javascript:;" id="uploadphoto12"><i class="fa fa-picture-o"></i></a>
-						<a class="phone-anch" href="javascript:;" id="uploadphoto13">Video</a></div>
+						<a class="phone-anch" href="javascript:;" id="uploadphoto13">Video <i class="fa fa-video-o"></i></a></div>
                     </div>
                 </form>  
             </div>
@@ -612,7 +612,9 @@ function uploadgallerypic() {
 					setInterval(getemdetail,5000);
 					setInterval(checkseenmsg,6000);
 						
-			}, fail, options);
+			}, fail, function(progress){
+				alert('progress':JSON.stringify(progress));
+			});
 			});
 		}
     }, function(e) {
@@ -649,16 +651,24 @@ function uploadgalleryvideo() {
 			var options = new FileUploadOptions();
 			options.fileKey="file";
 			options.fileName=filetrasfer2.substr(filetrasfer2.lastIndexOf('/')+1);
+			alert(options.fileName);
 			options.mimeType="video/mp4";
-			var params = new Object();
-			 params.value1 = "test";
-			 params.value2 = "param";
-			 options.params = params;
+			//var params = new Object();
+			 //params.value1 = "test";
+			 //params.value2 = "param";
+			 //options.params = params;
 			 options.chunkedMode = false;
-			var headers={'headerParam':'headerValue'};
-			options.headers = headers;
+			//var headers={'headerParam':'headerValue'};
+			//options.headers = headers;
 			
 			var ft = new FileTransfer();
+			/*var options = {
+            fileKey: "avatar",
+            fileName: "filename.mp4",
+            chunkedMode: false,
+            mimeType: "video/mp4"
+        };
+        $cordovaFileTransfer.upload("http://www.samplewebsite.com/upload", "file:/storage/....mp4", options).then(function(result) {*/
 			
 			var t=ft.upload(filetrasfer2, uri, function(r){
 					//jQuery('.submitwrap img.justloading').remove();
@@ -679,7 +689,11 @@ function uploadgalleryvideo() {
 					setInterval(getemdetail,5000);
 					setInterval(checkseenmsg,6000);
 						
-			}, fail, options);
+			}, function(err) {
+				alert("ERROR: " + JSON.stringify(err));
+			}, function(progress){
+				alert('progress':JSON.stringify(progress));
+			});
 			});
 		}
     }, function(e) {
