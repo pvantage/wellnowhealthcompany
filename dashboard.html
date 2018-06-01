@@ -111,7 +111,7 @@
                         </div>
                         <div class="pull-right"><a class="phone-anch" href="javascript:;" id="uploadphoto1"><i class="fa fa-camera"></i></a>
 						<a class="phone-anch" href="javascript:;" id="uploadphoto12"><i class="fa fa-picture-o"></i></a>
-						<a class="phone-anch" href="javascript:;" id="uploadphoto13">Video <i class="fa fa-video-o"></i></a></div>
+						<a class="phone-anch" href="javascript:;" id="uploadphoto13">Video <i class="fa fa-file-video"></i></a></div>
                     </div>
                 </form>  
             </div>
@@ -638,19 +638,18 @@ function uploadgalleryvideo() {
 			var clinic_id=jQuery('input[name="clinic_id"]:checked').val();
 			var htt = "file://";
 			if(filetrasfer.indexOf(htt) == '-1'){filetrasfer=htt+filetrasfer;}
-			alert(filetrasfer);
 			
 			var successtranfer=function(entry) {
 				var filetrasfer2= entry.toURL();
 				
-				var uri = encodeURI(siteurl+'/api/emergencies/saveemergencyimg?company_id='+company_id+'&emergency_id='+emergency_id+'&add_by='+add_by+'&manager_id='+manager_id+'&clinic_id='+clinic_id);
+				var uri = encodeURI(siteurl+'/api/emergencies/saveemergencyivideo?company_id='+company_id+'&emergency_id='+emergency_id+'&add_by='+add_by+'&manager_id='+manager_id+'&clinic_id='+clinic_id);
 				if(parseInt(emergency_id)!='' && parseInt(emergency_id)>0){
-					uri = encodeURI(siteurl+'/api/emergencies/addemergencyimgmsg?company_id='+company_id+'&emergency_id='+emergency_id+'&add_by='+add_by+'&manager_id='+manager_id+'&clinic_id='+clinic_id);
+					uri = encodeURI(siteurl+'/api/emergencies/addemergencyvideomsg?company_id='+company_id+'&emergency_id='+emergency_id+'&add_by='+add_by+'&manager_id='+manager_id+'&clinic_id='+clinic_id);
 				}
 				var options = new FileUploadOptions();
 				options.fileKey="file";
 				options.fileName=filetrasfer2.substr(filetrasfer2.lastIndexOf('/')+1);
-				alert(options.fileName);
+				//alert(options.fileName);
 				options.mimeType="video/mp4";
 				//var params = new Object();
 				 //params.value1 = "test";
@@ -682,17 +681,11 @@ function uploadgalleryvideo() {
 					setInterval(getemdetail,5000);
 					setInterval(checkseenmsg,6000);
 						
-			}, function(err) {
-				alert("ERROR: " + JSON.stringify(err));
-			}, options);
+			}, fail, options);
 		};
-			resolveLocalFileSystemURL(filetrasfer, successtranfer, function(err) {
-				alert("ERROR2: " + JSON.stringify(err));
-			});
+		resolveLocalFileSystemURL(filetrasfer, successtranfer, fail);
     }
-	}, function(e) {
-		alert("ERROR2: " + JSON.stringify(e));
-    }, { 
+	}, fail, { 
         quality: 50,
 		sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
 		mediaType: Camera.MediaType.VIDEO,

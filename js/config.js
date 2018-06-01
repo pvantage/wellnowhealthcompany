@@ -146,3 +146,6 @@ function onDeviceReady2(){
 function showimg(imgurl){
 	cordova.InAppBrowser.open(imgurl, '_blank', 'location=yes');	
 }
+function showvideo(videourl){
+	cordova.InAppBrowser.open(videourl, '_blank', 'location=yes');	
+}
