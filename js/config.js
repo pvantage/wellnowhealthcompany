@@ -144,8 +144,10 @@ function onDeviceReady2(){
 	}
 }*/
 function showimg(imgurl){
-	cordova.InAppBrowser.open(imgurl, '_blank', 'location=yes');	
+	var url=siteurl+'/api/emergencies/showmdeiafile/?file='+imgurl+'&ftype=image';
+	cordova.InAppBrowser.open(url, '_blank', 'location=yes');	
 }
 function showvideo(videourl){
-	cordova.InAppBrowser.open(videourl, '_blank', 'location=yes');	
+	var url=siteurl+'/api/emergencies/showmdeiafile/?file='+videourl+'&ftype=video';
+	cordova.InAppBrowser.open(url, '_blank', 'location=yes');	
 }

@@ -248,6 +248,13 @@ function notes(){
 		if(typeof res['measurement']!='undefined' && typeof res['measurement']['distance']!='undefined'){
 			jQuery('.displaydistance').html('Estimated Distance : '+res['measurement']['distance']+'<br>Estimated Time: '+res['measurement']['duration']);
 		}
+		if(typeof res['emstatus']!='undefined' && res['emstatus']!=''){
+			if(res['emstatus']=='completed')
+			{
+				window.location='emergancy-detail.html?id='+res['emid'];
+			}
+		}
+		
 		return false; 
 	 },  
 	 error: function(response, d, a){
@@ -360,6 +367,10 @@ jQuery(document).ready(function(){
 		{
 			var html='';
 			jQuery(res['data']).each(function(index){
+				if(res['data'][index]['status']=='completed')
+				{
+					window.location='emergancy-detail.html?id='+id;
+				}
 				if(jQuery.trim(res['data'][index]['staff_phone'])!=''){
 				jQuery('.main-wrapper').append('<div class="btm-btn-sctn"><div class="text-center mb-3"><a href="tel:'+res['data'][index]['staff_phone']+'" class="btn btn-primary">CONTACT EMERGENCY</a></div><div class="text-center mb-3"><a href="javascript:;" onclick="return opennotes(\'yes\');" class="btn btn-primary">MESSAGES</a></div></div>');
 				}
