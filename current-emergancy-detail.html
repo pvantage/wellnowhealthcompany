@@ -85,7 +85,7 @@
                         </div>
                         <div class="pull-right"><a class="phone-anch" href="javascript:;" id="uploadphoto1"><i class="fa fa-camera"></i></a>
 				<a class="phone-anch" href="javascript:;" id="uploadphoto12"><i class="fa fa-picture-o"></i></a>
-				<a class="phone-anch" href="javascript:;" id="uploadphoto13">Video <i class="fa fa-file-video"></i></a></div>
+				<a class="phone-anch" href="javascript:;" id="uploadphoto13"><img src="images/video.png"/></a></div>
                     </div>
                 </form>  
             </div>
@@ -141,8 +141,9 @@ function checkseenmsg(){
 					jQuery('.seen_'+res['seenids'][index]['em_msg_id']).addClass('seenmsg');
 				});
 				if(jQuery('.notelists .note-content:first span').hasClass('notseenmsg')){
+					jQuery('.notelists .note-content:first span.notseenmsg').addClass('seenmsg');
 					jQuery('.notelists .note-content:first span').removeClass('notseenmsg');
-					jQuery('.notelists .note-content:first span').addClass('seenmsg');
+					
 				}
 			}
 		 },  
@@ -179,7 +180,7 @@ function opennotes(showmsg){
 		{
 			jQuery('.notelists').html('');
 			jQuery(res['notes']).each(function(index){
-				var msgg='Me: '+res['notes'][index]['note']+' <span class="seen_'+res['notes'][index]['id']+' notseenmsg"></span>';
+				var msgg='<div class="selftname">Me:</div> '+res['notes'][index]['note']+' <span class="seen_'+res['notes'][index]['id']+' notseenmsg"></span>';
 				if(parseInt(index)>0){
 					if(jQuery.trim(res['notes'][index]['manager'])!=''){
 						msgg=res['notes'][index]['manager']+': '+res['notes'][index]['note'];

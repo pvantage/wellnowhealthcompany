@@ -29,7 +29,7 @@ h2.emcalling{font-size:20px;}
 #managerdetail .modal-content h2.emcalling a, #managerdetail .modal-content h2.emcalling i {
     color: green;
 }
-.note-content .seenmsg{background:url(../images/g.png) no-repeat; width:20px; height:17px; display:block;background-size:20px auto;}
+.note-content .seenmsg{background:url(../images/g.png) no-repeat; width:20px; height:17px; display:block;    background-size: 20px auto;}
 .note-content .notseenmsg{background:url(../images/w.png) no-repeat; width:20px; height:17px; display:block;background-size:20px auto;}
 
 #managerdetail .modal-content {
@@ -73,3 +73,15 @@ a.locationlink{
 .video-wrape i{color:#FFFFFF;}
 .trip-notification .video-wrape a, .justify-content-center .video-wrape a{color:#0056b3; padding-left:10px;}
 .trip-notification .video-wrape i, .justify-content-center .video-wrape i{color:#0056b3;}
+
+.selftname {
+    float: left;
+}
+.note-content {
+    float: left;
+    width: 100%;
+}
+
+a#uploadphoto13 {
+    float: right;
+}
