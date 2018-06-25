@@ -106,12 +106,13 @@
 					  </div>
                     </div>
                     <div  class="submitwrap">
-                        <div class="pull-left">
-                            <button type="submit" class="btn btn-primary">SEND</button>
-                        </div>
-                        <div class="pull-right"><a class="phone-anch" href="javascript:;" id="uploadphoto1"><i class="fa fa-camera"></i></a>
+                        <div class="pull-left camebtns"><a class="phone-anch" href="javascript:;" id="uploadphoto1"><i class="fa fa-camera"></i></a>
 						<a class="phone-anch" href="javascript:;" id="uploadphoto12"><i class="fa fa-picture-o"></i></a>
-						<a class="phone-anch" href="javascript:;" id="uploadphoto13"><img src="images/video.png"/></a></div>
+						<a class="phone-anch" href="javascript:;" id="uploadphoto13"><img src="images/video1.png"/></a>
+						</div>
+						<div class="pull-right">
+                            <button type="submit" class="sendmsgbtn" disabled="disabled" style="background:transparent; border:none;"><img src="images/send.png" /></button>
+                        </div>
                     </div>
                 </form>  
             </div>
@@ -353,6 +354,15 @@ function checkseenmsg(){
 	 }
 }
 jQuery(document).ready(function(){
+	jQuery('textarea[name="note"]').keyup(function(){
+		var vl=jQuery(this).val();
+		if(jQuery.trim(vl)!=''){
+			jQuery('.sendmsgbtn').attr('disabled',false);
+		}
+		else{
+			jQuery('.sendmsgbtn').attr('disabled',true);
+		}
+	});
 	jQuery('#loginuser').validate();
 	jQuery('input[name="company_id"]').val(uid);
 	var url=siteurl+'/api/emergencies/clinics';
@@ -512,7 +522,7 @@ jQuery(document).ready(function(){
 						jQuery('.note_optional').remove();
 						jQuery('#loginuser textarea[name="note"]').addClass('required');
 						jQuery('input[name="emergency_id"]').val(res['emergency_id']);
-						jQuery('.submitwrap').append('<div class="pull-right"><a href="current-emergancy-detail.html?id='+res['emergency_id']+'" class="locationlink">Location on Map</a></div>');
+						jQuery('.submitwrap').append('<div class="pull-left"><a href="current-emergancy-detail.html?id='+res['emergency_id']+'" class="locationlink"><img src="images/locator.png" /></a></div>');
 					}
 					if(typeof inter!='undefined'){
 						clearInterval(inter);
@@ -522,6 +532,7 @@ jQuery(document).ready(function(){
 					//jQuery('#loginuser')[0].reset();
 					//jQuery('#emergency').modal('hide');
 					setInterval(checkseenmsg,6000);
+					jQuery('.sendmsgbtn').attr('disabled',true);
 				
 				}else if(res['errors']){				
 					jQuery('body .showmessage').remove();

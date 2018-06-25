@@ -80,12 +80,13 @@
 					  </div>
                     </div>
                     <div  class="submitwrap">
-                        <div class="pull-left">
-                            <button type="submit" class="btn btn-primary">SEND</button>
-                        </div>
-                        <div class="pull-right"><a class="phone-anch" href="javascript:;" id="uploadphoto1"><i class="fa fa-camera"></i></a>
+                        
+                        <div class="pull-left camebtns"><a class="phone-anch" href="javascript:;" id="uploadphoto1"><i class="fa fa-camera"></i></a>
 				<a class="phone-anch" href="javascript:;" id="uploadphoto12"><i class="fa fa-picture-o"></i></a>
-				<a class="phone-anch" href="javascript:;" id="uploadphoto13"><img src="images/video.png"/></a></div>
+				<a class="phone-anch" href="javascript:;" id="uploadphoto13"><img src="images/video1.png"/></a></div>
+					<div class="pull-right">
+                            <button type="submit" class="sendmsgbtn" disabled="disabled" style="background:transparent; border:none;"><img src="images/send.png" /></button>
+                        </div>
                     </div>
                 </form>  
             </div>
@@ -277,6 +278,15 @@ jQuery(document).ready(function(){
     if(window.XDomainRequest){contentType = "text/plain";}
 	jQuery.support.cors = true;
 	var id=gup('id');
+	jQuery('textarea[name="note"]').keyup(function(){
+		var vl=jQuery(this).val();
+		if(jQuery.trim(vl)!=''){
+			jQuery('.sendmsgbtn').attr('disabled',false);
+		}
+		else{
+			jQuery('.sendmsgbtn').attr('disabled',true);
+		}
+	});
 	var uid=localStorage.getItem('Company_ID');
 	jQuery('input[name="emergency_id"]').val(id);
 	jQuery('input[name="company_id"]').val(uid);
@@ -476,7 +486,7 @@ jQuery(document).ready(function(){
 					jQuery('body').append(html);
 					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
 					jQuery('#loginuser textarea[name="note"]').val('');
-					
+					jQuery('.sendmsgbtn').attr('disabled',true);
 				
 				}else if(res['errors']){				
 					jQuery('body .showmessage').remove();

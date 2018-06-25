@@ -41,29 +41,21 @@ h2.emcalling{font-size:20px;}
 	border-radius: 0px;
 }
 a.locationlink{
-    background-color: #96c61c;
-    border-color: #96c61c;
-	border-radius: 0.25rem;
     display: inline-block;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    padding: 0.375rem 0.75rem;
     text-align: center;
-    transition: color 0.15s ease-in-out 0s, background-color 0.15s ease-in-out 0s, border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
     vertical-align: middle;
-    white-space: nowrap;
-	color:#FFFFFF;
 	margin-right:10px;
+	margin-left:5px;
 }
 .currentonline{color:#96c61c;}
 .currentoffline{color:#930000;}
 .img-wrape img{ max-width:50px; max-height:50px;}
+.camebtns a {margin-right:10px !important;}
 #uploadphoto1 i{font-size:22px;}
-#uploadphoto1{color:#0040c4; margin-right:4px;}
+#uploadphoto1{color:#ffffff; margin-right:4px;}
 #uploadphoto12 i{font-size:22px;}
-#uploadphoto12{color:#0040c4; margin-right:4px;}
-#uploadphoto13{color:#0040c4;}
+#uploadphoto12{color:#ffffff; margin-right:4px;}
+#uploadphoto13{color:#ffffff;}
 .img-wrape a{color:#FFFFFF; padding-left:10px;}
 .img-wrape i{color:#FFFFFF;}
 .trip-notification .img-wrape a, .justify-content-center .img-wrape a{color:#0056b3; padding-left:10px;}
@@ -85,3 +77,5 @@ a.locationlink{
 a#uploadphoto13 {
     float: right;
 }
+.sendmsgbtn{cursor:pointer; outline:none;}
+.sendmsgbtn[disabled="disabled"]{cursor:default; opacity:0.6;}
