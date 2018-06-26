@@ -1,5 +1,5 @@
-var siteurl = "https://www.stecare.com";
-var realsiteurl = "https://www.stecare.com/";
+var siteurl = "http://178.128.186.105";
+var realsiteurl = "http://178.128.186.105/";
 function gup(sParam) {
   var sPageURL = decodeURIComponent(window.location.search.substring(1)),
         sURLVariables = sPageURL.split('&'),
@@ -145,9 +145,9 @@ function onDeviceReady2(){
 }*/
 function showimg(imgurl){
 	var url=siteurl+'/api/emergencies/showmdeiafile/?file='+imgurl+'&ftype=image';
-	cordova.InAppBrowser.open(url, '_blank', 'location=yes');	
+	cordova.InAppBrowser.open(url, '_blank', 'location=no');	
 }
 function showvideo(videourl){
 	var url=siteurl+'/api/emergencies/showmdeiafile/?file='+videourl+'&ftype=video';
-	cordova.InAppBrowser.open(url, '_blank', 'location=yes');	
+	cordova.InAppBrowser.open(url, '_blank', 'location=no');	
 }
