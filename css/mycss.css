@@ -56,6 +56,7 @@ a.locationlink{
 #uploadphoto12 i{font-size:22px;}
 #uploadphoto12{color:#ffffff; margin-right:4px;}
 #uploadphoto13{color:#ffffff;}
+#uploadphoto13 img{float:left;}
 .img-wrape a{color:#FFFFFF; padding-left:10px;}
 .img-wrape i{color:#FFFFFF;}
 .trip-notification .img-wrape a, .justify-content-center .img-wrape a{color:#0056b3; padding-left:10px;}
