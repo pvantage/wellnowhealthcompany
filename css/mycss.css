@@ -45,12 +45,12 @@ a.locationlink{
     text-align: center;
     vertical-align: middle;
 	margin-right:10px;
-	margin-left:5px;
+	margin-left:10px;
 }
 .currentonline{color:#96c61c;}
 .currentoffline{color:#930000;}
 .img-wrape img{ max-width:50px; max-height:50px;}
-.camebtns a {margin-right:10px !important; float:left; }
+.camebtns a {margin-right:15px !important; float:left; }
 #uploadphoto1 i{font-size:22px;}
 #uploadphoto1{color:#ffffff; margin-right:4px;}
 #uploadphoto12 i{font-size:22px;}
