@@ -50,7 +50,7 @@ a.locationlink{
 .currentonline{color:#96c61c;}
 .currentoffline{color:#930000;}
 .img-wrape img{ max-width:50px; max-height:50px;}
-.camebtns a {margin-right:10px !important;}
+.camebtns a {margin-right:10px !important; float:left;}
 #uploadphoto1 i{font-size:22px;}
 #uploadphoto1{color:#ffffff; margin-right:4px;}
 #uploadphoto12 i{font-size:22px;}
@@ -75,8 +75,5 @@ a.locationlink{
     width: 100%;
 }
 
-a#uploadphoto13 {
-    float: right;
-}
 .sendmsgbtn{cursor:pointer; outline:none;}
 .sendmsgbtn[disabled="disabled"]{cursor:default; opacity:0.6;}
