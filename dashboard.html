@@ -566,7 +566,7 @@ function fail(error) {
 	jQuery('body .showmessage').remove();
 	var html='<div class="showmessage" style="width:100%">Uploading error: Code = ' + error.code+', upload error source ' + error.source+', upload error target ' + error.target+'</div>';
 	jQuery('body').append(html);
-	setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
+	setTimeout(function(){jQuery('.showmessage').slideUp();},30000);
 }
 function uploadgallerypic() {
 	navigator.camera.getPicture(function(f) {
