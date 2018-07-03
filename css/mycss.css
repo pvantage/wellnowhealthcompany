@@ -1,7 +1,7 @@
 .showmessage{width:100%; background:#29a03f; color:#FFFFFF; height:auto; line-height:normal; font-size:16px; text-align:center; position:fixed; bottom:10px; left:0; z-index:999999;
  border-top:1px solid #FFFFFF; border-bottom:1px solid #FFFFFF; padding:8px;}
 .clinicnote:before{position: absolute;
-    top: -2px;
+    top: 0px;
     left: -12px;
     width: 0;
     height: 0;
@@ -37,6 +37,7 @@ border: 1px solid #0e58ab;
 padding: 3px 8px;
 border-radius: 0px 3px 3px 3px;
 background: #046cbf;
+float:left;
 }
 .showpopmessage {
     width: 100%;
@@ -67,8 +68,20 @@ h2.emcalling{font-size:20px;}
 #managerdetail .modal-content h2.emcalling a, #managerdetail .modal-content h2.emcalling i {
     color: green;
 }
-.note-content .seenmsg{background:url(../images/g.png) no-repeat; width:20px; height:17px; display:block;    background-size: 20px auto;}
-.note-content .notseenmsg{background:url(../images/w.png) no-repeat; width:20px; height:17px; display:block;background-size:20px auto;}
+.note-content .seenmsg {
+	background: url(../images/g.png) no-repeat center;
+	width: 20px;
+	height: 17px;
+	display: inline-block;
+	background-size: 17px auto;
+	background-position: 4px 6px;
+}
+.note-content .notseenmsg{background: url(../images/w.png) no-repeat center;
+	width: 20px;
+	height: 17px;
+	display: inline-block;
+	background-size: 17px auto;
+	background-position: 4px 6px;}
 
 #managerdetail .modal-content {
     background: #fff !important;
@@ -118,3 +131,4 @@ a.locationlink{
 
 .sendmsgbtn{cursor:pointer; outline:none;}
 .sendmsgbtn[disabled="disabled"]{cursor:default; opacity:0.6;}
+.minut5response{color:#000033;}
