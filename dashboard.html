@@ -92,6 +92,7 @@
             <div class="modal-body">
 			
                 <form id="loginuser" action="" method="post">
+					<input id="lastclinic_id" value="0" type="hidden">
 					<input type="hidden" name="company_id" value="0">
 					<input type="hidden" name="emergency_id" value="0">
 					<input type="hidden" name="add_by" value="company">
@@ -100,7 +101,7 @@
 					<div class="notelists"></div>
                     <div class="mb-3">
                        <label>Provider injury details <span class="note_optional">(Optional)</span>
-					   <br>Please give up to 5 minutes for response</label>
+					   <br>Please give up to 5 minutes for a response</label>
 					   <div>
 						<textarea name="note" rows="4" cols="50" class="form-control"></textarea>
 					  </div>
@@ -233,14 +234,16 @@ function notes(){
 		if(res['notes'] && jQuery.trim(res['notes'])!='')
 		{
 			jQuery(res['notes']).each(function(index){
-				var msgg='Me: '+res['notes'][index]['note'];
+				var clsas='clinicnote';
+				var msgg=res['notes'][index]['note'];
 				if(jQuery.trim(res['notes'][index]['manager'])!=''){
-					msgg=res['notes'][index]['manager']+': '+res['notes'][index]['note'];
+					msgg=res['notes'][index]['note']+' :'+res['notes'][index]['manager'];
+					clsas='managernote';
 				}
 				else{
-					msgg='Me: '+res['notes'][index]['note'];
+					msgg=res['notes'][index]['note'];
 				}
-				jQuery('.notelists').append('<div class="note-content">'+msgg+'</div>');
+				jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+'">'+msgg+'</span></div>');
 			});
 			jQuery('#emergency').modal();
 		
@@ -353,18 +356,7 @@ function checkseenmsg(){
 	   });
 	 }
 }
-jQuery(document).ready(function(){
-	jQuery('textarea[name="note"]').keyup(function(){
-		var vl=jQuery(this).val();
-		if(jQuery.trim(vl)!=''){
-			jQuery('.sendmsgbtn').attr('disabled',false);
-		}
-		else{
-			jQuery('.sendmsgbtn').attr('disabled',true);
-		}
-	});
-	jQuery('#loginuser').validate();
-	jQuery('input[name="company_id"]').val(uid);
+function showclinics(loop){
 	var url=siteurl+'/api/emergencies/clinics';
 	jQuery.ajax({  
 	 type: 'POST',  
@@ -415,9 +407,20 @@ jQuery(document).ready(function(){
 			});
 			html+='<ul>';
 			jQuery('.clinics').html(html);
-			jQuery('.clinics input:first').attr('checked',true);
-			jQuery('.clinics input:first').prop('checked',true);
-			jQuery('.clinics li:first ul').show();
+			if(loop=='first'){
+				jQuery('.clinics input:first').attr('checked',true);
+				jQuery('.clinics input:first').prop('checked',true);
+				jQuery('.clinics li:first ul').show();
+				var cid=jQuery('input[name="clinic_id"]:checked').val();
+				jQuery('#lastclinic_id').val(cid);
+			}
+			else{
+				
+				var cid=jQuery('#lastclinic_id').val();
+				jQuery('.clinics input[name="clinic_id"][value="'+cid+'"]').attr('checked',true);
+				jQuery('.clinics input[name="clinic_id"][value="'+cid+'"]').prop('checked',true);
+				jQuery('.clinics input[name="clinic_id"][value="'+cid+'"]').next('ul.showmanagerlist').show();
+			}
 			
 			jQuery('.showmanagerdetail').click(function(){
 				var ht='<ul>';
@@ -441,6 +444,8 @@ jQuery(document).ready(function(){
 				var $t=jQuery('input[name="clinic_id"]:checked');
 				jQuery('.showmanagerlist').slideUp();
 				jQuery($t).next('ul.showmanagerlist').slideDown();
+				var cid=jQuery('input[name="clinic_id"]:checked').val();
+				jQuery('#lastclinic_id').val(cid);
 			});
 		}
 		return false; 
@@ -455,6 +460,24 @@ jQuery(document).ready(function(){
 	 }
 			
    });
+   setTimeout(function(){showclinics('second');},10000);
+}
+jQuery(document).ready(function(){
+	jQuery('textarea[name="note"]').keyup(function(){
+		var vl=jQuery(this).val();
+		if(jQuery.trim(vl)!=''){
+			jQuery('.sendmsgbtn').attr('disabled',false);
+		}
+		else{
+			jQuery('.sendmsgbtn').attr('disabled',true);
+		}
+	});
+	jQuery('#loginuser').validate();
+	jQuery('input[name="company_id"]').val(uid);
+	
+	showclinics('first');
+	
+	
    jQuery('a.reportinjury').click(function(){
    		getLocation();
 		jQuery('input[name="company_id"]').val(uid);
@@ -512,7 +535,7 @@ jQuery(document).ready(function(){
 					if(parseInt(emergency_id)==0){
 						cls=' emergencystart';
 					}
-					jQuery('.notelists').append('<div class="note-content">Me: '+msg+'<span class="seen_'+res['emergency_id']+cls+' notseenmsg"></span></div>');
+					jQuery('.notelists').append('<div class="note-content"><span class="clinicnote">'+msg+'<span class="seen_'+res['emergency_id']+cls+' notseenmsg"></span></span></div>');
 					jQuery('body .showmessage').remove();
 					var html='<div class="showmessage">'+res['msg']+'</div>';
 					jQuery('body').append(html);
@@ -606,7 +629,7 @@ function uploadgallerypic() {
 			var t=ft.upload(filetrasfer2, uri, function(r){
 					//jQuery('.submitwrap img.justloading').remove();
 					var cntents=r.response.split('||emg||');
-					jQuery('.notelists').append('<div class="note-content">'+cntents[0]);
+					jQuery('.notelists').append('<div class="note-content"><span class="clinicnote">'+cntents[0]+'</span></div>');
 					jQuery('body .showmessage').remove();
 					var html='<div class="showmessage">'+cntents[2]+'</div>';
 					jQuery('body').append(html);
@@ -676,7 +699,7 @@ function uploadgalleryvideo() {
 			var t=ft.upload(filetrasfer2, uri, function(r){
 					//jQuery('.submitwrap img.justloading').remove();
 					var cntents=r.response.split('||emg||');
-					jQuery('.notelists').append('<div class="note-content">'+cntents[0]);
+					jQuery('.notelists').append('<div class="note-content"><span class="clinicnote">'+cntents[0]+'</span></div>');
 					jQuery('body .showmessage').remove();
 					var html='<div class="showmessage">'+cntents[2]+'</div>';
 					jQuery('body').append(html);
@@ -694,9 +717,9 @@ function uploadgalleryvideo() {
 						
 			}, fail, options);
 		};
-		resolveLocalFileSystemURL(filetrasfer, successtranfer, fail);
+		resolveLocalFileSystemURL(filetrasfer, successtranfer, function(){});
     }
-	}, fail, { 
+	}, function(){}, { 
         quality: 50,
 		sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
 		mediaType: Camera.MediaType.VIDEO,
@@ -748,7 +771,7 @@ function uploadcamerapic() {
 				var t=ft.upload(filetrasfer2, uri, function(r){
 					//jQuery('.submitwrap img.justloading').remove();
 					var cntents=r.response.split('||emg||');
-					jQuery('.notelists').append('<div class="note-content">'+cntents[0]);
+					jQuery('.notelists').append('<div class="note-content"><span class="clinicnote">'+cntents[0]+'</span></div>');
 					jQuery('body .showmessage').remove();
 					var html='<div class="showmessage">'+cntents[2]+'</div>';
 					jQuery('body').append(html);

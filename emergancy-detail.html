@@ -149,16 +149,19 @@ function opennotes(){
 		{
 			jQuery('.notelists').html('');
 			jQuery(res['notes']).each(function(index){
-				var msgg='Me: '+res['notes'][index]['note'];
+				var clsas='clinicnote';
+				//var msgg='Me: '+res['notes'][index]['note'];
+				var msgg=res['notes'][index]['note'];
 				if(parseInt(index)>0){
 					if(jQuery.trim(res['notes'][index]['manager'])!=''){
-						msgg=res['notes'][index]['manager']+': '+res['notes'][index]['note'];
+						msgg=res['notes'][index]['note']+' :'+res['notes'][index]['manager'];
+						clsas='managernote';
 					}
 					else{
-						msgg='Me: '+res['notes'][index]['note'];
+						msgg=res['notes'][index]['note'];
 					}
 				}
-				jQuery('.notelists').append('<div class="note-content">'+msgg+'</div>');
+				jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+'">'+msgg+'</span></div>');
 			});
 			
 		

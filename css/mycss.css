@@ -1,6 +1,43 @@
 .showmessage{width:100%; background:#29a03f; color:#FFFFFF; height:auto; line-height:normal; font-size:16px; text-align:center; position:fixed; bottom:10px; left:0; z-index:999999;
  border-top:1px solid #FFFFFF; border-bottom:1px solid #FFFFFF; padding:8px;}
+.clinicnote:before{position: absolute;
+    top: -2px;
+    left: -12px;
+    width: 0;
+    height: 0;
+    content: '';
+    border: 6px solid transparent;
+    border-right-color: transparent;
+    border-right-color: transparent;
+    border-right-color: transparent;
+    border-right-color: #0e58ab;
+}
+.managernote:before{position: absolute;
+    top: 0px;
+    right: -12px;
+    width: 0;
+    height: 0;
+    content: '';
+    border: 6px solid transparent;
+    border-left-color: transparent;
+    border-left-color: transparent;
+    border-left-color: transparent;
+    border-left-color: #4B7B15;
 
+}
+.managernote {
+border: 1px solid #4B7B15;
+padding: 3px 8px;
+border-radius: 3px 0px 3px 3px;
+float: right;
+background: #70a003;
+}
+.clinicnote {
+border: 1px solid #0e58ab;
+padding: 3px 8px;
+border-radius: 0px 3px 3px 3px;
+background: #046cbf;
+}
 .showpopmessage {
     width: 100%;
     background: #FFFFFF;
@@ -11,6 +48,7 @@
     box-shadow: 2px 3px 3px #c8c8c8;
     padding: 10px;
 }
+
 #ourgmap{width:100%; height:500px;}
 .mapbox{width:100%; height:330px;}
 .displaydistance{color:#FFFFFF; text-align:center;}
@@ -73,7 +111,10 @@ a.locationlink{
 .note-content {
     float: left;
     width: 100%;
+	position:relative;
+	margin-bottom:10px;
 }
+ 
 
 .sendmsgbtn{cursor:pointer; outline:none;}
 .sendmsgbtn[disabled="disabled"]{cursor:default; opacity:0.6;}
