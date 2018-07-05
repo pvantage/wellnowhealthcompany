@@ -381,7 +381,9 @@ function showclinics(loop){
 				var phn=res['clinics'][index]['phone'];
 				if(typeof res['clinics'][index]['managers']!='undefined'){
 					var manager=res['clinics'][index]['managers'];
-					html+='<ul class="showmanagerlist showmanagerlist_'+clnid+'" style="display:none;"><li>Click on provider name for bio.</li>';
+					html+='<ul class="showmanagerlist showmanagerlist_'+clnid+'" style="display:none;">';
+					html+='<li>Clinic <i class="fa fa-phone"></i>&nbsp;&nbsp;&nbsp;<a href="tel:'+res['clinics'][index]['phone']+'"">'+res['clinics'][index]['phone']+'</a></li>';
+					html+='<li>Click on provider name for bio.</li>';
 					jQuery(manager).each(function(index2){
 						var activemanagercls='';
 						if(index2=='0'){
