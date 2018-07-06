@@ -274,6 +274,7 @@ function addcalls(clinic_id,$this){
 	var manager_id=jQuery($active).attr('data-id');
 	
 	var $parent=jQuery($active).parent('li');
+	
 	if(jQuery($parent).next('li').length){
 		jQuery($active).removeClass('activemanagercls');
 		jQuery($parent).next('li').find('a').addClass('activemanagercls');
@@ -285,6 +286,10 @@ function addcalls(clinic_id,$this){
 	
 	$activeagain= jQuery('.showmanagerlist_'+clinic_id+' a.activemanagercls');
 	var phone2=jQuery($activeagain).attr('data-phone');
+	if(typeof phone2=='undefined' || phone2=='undefined'){
+		phone2=jQuery($this).parents('.cliniclist').attr('data-phone');
+		manager_id=0
+	}
 	jQuery($this).attr('href','tel:'+phone2);
 	
 	var url=siteurl+'/api/emergencies/addemergencyphonecall';
@@ -375,7 +380,7 @@ function showclinics(loop){
 		{
 			var html='<ul>';
 			jQuery(res['clinics']).each(function(index){
-				html+='<li><input type="radio" name="clinic_id" value="'+res['clinics'][index]['id']+'" /> '+res['clinics'][index]['name']+' ('+res['clinics'][index]['address']+')';			
+				html+='<li class="cliniclist" data-phone="'+res['clinics'][index]['phone']+'"><input type="radio" name="clinic_id" value="'+res['clinics'][index]['id']+'" /> '+res['clinics'][index]['name']+' ('+res['clinics'][index]['address']+')';			
 				var clnid=res['clinics'][index]['id'];
 				var manarray=new Array();
 				var phn=res['clinics'][index]['phone'];
@@ -401,7 +406,6 @@ function showclinics(loop){
 					html+='</ul>';
 				}
 				//alert(managesphone);
-				
 				if(jQuery.trim(phn)!='' && phn!='undefined'){
 					html+='<ul class="emcall"><li><h2 class="emcalling"><i class="fa fa-phone"></i><a href="tel:'+phn+'" onclick="addcalls('+clnid+', this)">Call Emergency</a></h2></li></ul>';
 				}

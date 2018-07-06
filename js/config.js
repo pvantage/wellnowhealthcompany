@@ -72,7 +72,7 @@ function showPosition(position) {
 	var uid=localStorage.getItem('Company_ID');
 	
 	//alert(uid);
-	if(typeof uid!='undefine' && uid!='' && uid!=null && (position.coords.latitude!='' || position.coords.longitude!='')){
+	if(typeof uid!='undefined' && uid!='' && uid!=null && (position.coords.latitude!='' || position.coords.longitude!='')){
 		var url=siteurl+'/api/account/updatecompanylatilongi';
 		jQuery.ajax({  
 		 type: 'POST',  
