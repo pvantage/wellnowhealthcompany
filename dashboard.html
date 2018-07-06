@@ -405,6 +405,11 @@ function showclinics(loop){
 					});
 					html+='</ul>';
 				}
+				else{
+					html+='<ul class="showmanagerlist showmanagerlist_'+clnid+'" style="display:none;">';
+					html+='<li>Clinic <i class="fa fa-phone"></i>&nbsp;&nbsp;&nbsp;<a href="tel:'+res['clinics'][index]['phone']+'"">'+res['clinics'][index]['phone']+'</a></li>';
+					html+='</ul>';
+				}
 				//alert(managesphone);
 				if(jQuery.trim(phn)!='' && phn!='undefined'){
 					html+='<ul class="emcall"><li><h2 class="emcalling"><i class="fa fa-phone"></i><a href="tel:'+phn+'" onclick="addcalls('+clnid+', this)">Call Emergency</a></h2></li></ul>';
