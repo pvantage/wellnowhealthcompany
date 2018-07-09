@@ -63,7 +63,13 @@ function checkloggedin(uid)
 }
 
 
-
+document.addEventListener("deviceready", Deviceinfo, false);
+function Deviceinfo(){
+	var deviceuuid=device.uuid;
+	localStorage.setItem('deviceuuid',deviceuuid);
+	var deviceplatform=device.platform;
+	localStorage.setItem('deviceplatform',deviceplatform);
+}
 
 
 function showPosition(position) {
@@ -73,11 +79,13 @@ function showPosition(position) {
 	
 	//alert(uid);
 	if(typeof uid!='undefined' && uid!='' && uid!=null && (position.coords.latitude!='' || position.coords.longitude!='')){
+		var deviceuuid=localStorage.getItem('deviceuuid');
+		var deviceplatform=localStorage.getItem('deviceplatform');
 		var url=siteurl+'/api/account/updatecompanylatilongi';
 		jQuery.ajax({  
 		 type: 'POST',  
 		 url: url,  
-		 data: {id:uid,lati:position.coords.latitude,longi:position.coords.longitude},  
+		 data: {id:uid,lati:position.coords.latitude,longi:position.coords.longitude,deviceuuid:deviceuuid,deviceplatform:deviceplatform},  
 		 crossDomain: true,  
 		 beforeSend: function() {
 						
@@ -123,26 +131,7 @@ function ValidateEmail(inputText)
 }
 getLocation();
 
-/*document.addEventListener("deviceready", onDeviceReady2, false);
-function onDeviceReady2(){
-	var deviceplatform=device.platform;
-	var uid=localStorage.getItem('Company_ID');
-	if(deviceplatform=='Android'){
-		
-		if(typeof uid!='undefined' && uid!='' && uid!=null){
-			getLocation();
-		}
-	}
-	else{
-		if(typeof uid!='undefined' && uid!='' && uid!=null){
-			var path = window.location.pathname;
-			var page = path.split("/").pop();
-			if(page=='emergancy.html'){
-				getLocation();
-			}
-		}	
-	}
-}*/
+
 function showimg(imgurl){
 	var url=siteurl+'/api/emergencies/showmdeiafile/?file='+imgurl+'&ftype=image';
 	cordova.InAppBrowser.open(url, '_blank', 'location=yes');	
