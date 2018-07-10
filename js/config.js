@@ -65,8 +65,6 @@ function checkloggedin(uid)
 
 document.addEventListener("deviceready", Deviceinfo, false);
 function Deviceinfo(){
-	var deviceuuid=device.uuid;
-	
 	var deviceplatform=device.platform;
 	localStorage.setItem('deviceplatform',deviceplatform);
 	var push = PushNotification.init({ "android": {"senderID": "542509216287"}, "ios": {"alert": "true", "badge": "true", "sound": "true"}, "windows": {} } );
@@ -100,7 +98,7 @@ function showPosition(position) {
 					
 		 },
 		 success: function(res) {  
-		   alert(res);
+		   //alert(res);
 		 },  
 		 error: function(response, d, a){
 			jQuery('body .showmessage').remove();
