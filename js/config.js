@@ -69,9 +69,9 @@ function Deviceinfo(){
 	localStorage.setItem('deviceuuid',deviceuuid);
 	var deviceplatform=device.platform;
 	localStorage.setItem('deviceplatform',deviceplatform);
-	alert(deviceuuid+'='+deviceplatform);
+	//alert(deviceuuid+'='+deviceplatform);
 }
-
+document.addEventListener("deviceready", getLocation, false);
 
 function showPosition(position) {
 	var lat=position.coords.latitude;
@@ -113,11 +113,11 @@ function showPosition(position) {
 	}
     
 }
- function showError(error){
-	 alert('Message:' + error.message);
+ function showpostionError(error){
+	 alert('Message:' + JSON.stringify(error));
  }
  function getLocation() {
-     navigator.geolocation.getCurrentPosition(showPosition, showError);
+     navigator.geolocation.getCurrentPosition(showPosition, showpostionError);
 }
  
 var uid=localStorage.getItem('Company_ID');
