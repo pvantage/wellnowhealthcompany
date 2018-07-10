@@ -69,12 +69,9 @@ function Deviceinfo(){
 	localStorage.setItem('deviceuuid',deviceuuid);
 	var deviceplatform=device.platform;
 	localStorage.setItem('deviceplatform',deviceplatform);
-	//alert(deviceuuid+'='+deviceplatform);
 }
-document.addEventListener("deviceready", getLocation, false);
 
 function showPosition(position) {
-	alert('Test2');
 	var lat=position.coords.latitude;
 	var lon=position.coords.longitude;
 	localStorage.setItem('Company_Lat',lat);
@@ -82,8 +79,6 @@ function showPosition(position) {
 	var uid=localStorage.getItem('Company_ID');
 	var deviceuuid=localStorage.getItem('deviceuuid');
 	var deviceplatform=localStorage.getItem('deviceplatform');
-	alert(lat+'='+lon+'='+deviceuuid+'='+deviceplatform);
-	//alert(uid);
 	if(typeof uid!='undefined' && uid!='' && uid!=null && (lat!='' || lon!='')){
 		var url=siteurl+'/api/account/updatecompanylatilongi';
 		if(typeof deviceuuid=='undefined' || deviceuuid==null || deviceuuid=='null'){ deviceuuid='';}
@@ -118,7 +113,6 @@ function showPosition(position) {
 	 alert('Message:' + JSON.stringify(error));
  }
  function getLocation() {
-	 alert('Test1');
      navigator.geolocation.getCurrentPosition(showPosition, showpostionError, { enableHighAccuracy: true});
 }
  
