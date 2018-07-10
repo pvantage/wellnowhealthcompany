@@ -95,7 +95,7 @@ function showPosition(position) {
 					
 		 },
 		 success: function(res) {  
-		   
+		   alert(res);
 		 },  
 		 error: function(response, d, a){
 			jQuery('body .showmessage').remove();
