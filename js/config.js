@@ -74,6 +74,7 @@ function Deviceinfo(){
 document.addEventListener("deviceready", getLocation, false);
 
 function showPosition(position) {
+	alert('Test2');
 	var lat=position.coords.latitude;
 	var lon=position.coords.longitude;
 	localStorage.setItem('Company_Lat',lat);
@@ -117,7 +118,8 @@ function showPosition(position) {
 	 alert('Message:' + JSON.stringify(error));
  }
  function getLocation() {
-     navigator.geolocation.getCurrentPosition(showPosition, showpostionError);
+	 alert('Test1');
+     navigator.geolocation.getCurrentPosition(showPosition, showpostionError, { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 });
 }
  
 var uid=localStorage.getItem('Company_ID');
