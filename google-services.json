@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "805176602195",
-    "firebase_url": "https://urbane-recycling.firebaseio.com",
-    "project_id": "urbane-recycling",
-    "storage_bucket": "urbane-recycling.appspot.com"
+    "project_number": "542509216287",
+    "firebase_url": "https://wellnow-health-for-company.firebaseio.com",
+    "project_id": "wellnow-health-for-company",
+    "storage_bucket": "wellnow-health-for-company.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:805176602195:android:db6426a9c4bcd5d0",
+        "mobilesdk_app_id": "1:542509216287:android:e471081fb1a89f23",
         "android_client_info": {
-          "package_name": "urbanerecycling.com"
+          "package_name": "patient.wellnowhealth.com"
         }
       },
       "oauth_client": [
         {
-          "client_id": "805176602195-shjfh01g3eddljcg1aps6gnom66n67mh.apps.googleusercontent.com",
+          "client_id": "542509216287-7roc7f1qka4ro7v64qlsoklj168auti6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDxpjjks3MptgRfvGGJPTHZKGWWn8KJsrM"
+          "current_key": "AIzaSyDSj2WsQ9ZFqrHreS3dtzYe0rWC4M7roC0"
         }
       ],
       "services": {

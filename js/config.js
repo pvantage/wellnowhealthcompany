@@ -69,6 +69,7 @@ function Deviceinfo(){
 	localStorage.setItem('deviceuuid',deviceuuid);
 	var deviceplatform=device.platform;
 	localStorage.setItem('deviceplatform',deviceplatform);
+	alert(deviceuuid+'='+deviceplatform);
 }
 
 

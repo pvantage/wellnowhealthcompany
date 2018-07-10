@@ -30,7 +30,7 @@
 	  <resource-file src="google-services.json" target="google-services.json" />
 	</platform>
 			 
-	 <plugin name="phonegap-plugin-push" spec="~1.9.0">
+	 <plugin name="phonegap-plugin-push" spec="~1.9.4">
 	 	<variable name="SENDER_ID" value="1:838559475873:android:ad01c8af058d97ba" />
 	 </plugin>
 	 <platform name="ios">

@@ -7,21 +7,21 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>805176602195-hm5l492h8vj1bqgnpcud0aicjbqht4jh.apps.googleusercontent.com</string>
+	<string>542509216287-st4dnoc113t1l0os55nh2fblk7ag60nk.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.805176602195-hm5l492h8vj1bqgnpcud0aicjbqht4jh</string>
+	<string>com.googleusercontent.apps.542509216287-st4dnoc113t1l0os55nh2fblk7ag60nk</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDg-QaYFm0s5keOBmkqNlptJ9WISOGdylg</string>
+	<string>AIzaSyC2R5PLGLiK5hjhXNHlY1h8bubhBCri3p0</string>
 	<key>GCM_SENDER_ID</key>
-	<string>805176602195</string>
+	<string>542509216287</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>urbanerecycling.com</string>
+	<string>patient.wellnowhealth.com</string>
 	<key>PROJECT_ID</key>
-	<string>urbane-recycling</string>
+	<string>wellnow-health-for-company</string>
 	<key>STORAGE_BUCKET</key>
-	<string>urbane-recycling.appspot.com</string>
+	<string>wellnow-health-for-company.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<true></true>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -33,8 +33,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:805176602195:ios:db6426a9c4bcd5d0</string>
+	<string>1:542509216287:ios:e471081fb1a89f23</string>
 	<key>DATABASE_URL</key>
-	<string>https://urbane-recycling.firebaseio.com</string>
+	<string>https://wellnow-health-for-company.firebaseio.com</string>
 </dict>
 </plist>
