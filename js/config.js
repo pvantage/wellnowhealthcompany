@@ -73,19 +73,21 @@ function Deviceinfo(){
 
 
 function showPosition(position) {
-	localStorage.setItem('Company_Lat',position.coords.latitude);
-	localStorage.setItem('Company_Long',position.coords.longitude);
+	var lat=position.coords.latitude;
+	var lon=position.coords.longitude;
+	localStorage.setItem('Company_Lat',lat);
+	localStorage.setItem('Company_Long',lon);
 	var uid=localStorage.getItem('Company_ID');
-	
+	var deviceuuid=localStorage.getItem('deviceuuid');
+	var deviceplatform=localStorage.getItem('deviceplatform');
+	alert(lat+'='+lon+'='+deviceuuid+'='+deviceplatform);
 	//alert(uid);
-	if(typeof uid!='undefined' && uid!='' && uid!=null && (position.coords.latitude!='' || position.coords.longitude!='')){
-		var deviceuuid=localStorage.getItem('deviceuuid');
-		var deviceplatform=localStorage.getItem('deviceplatform');
+	if(typeof uid!='undefined' && uid!='' && uid!=null && (lat!='' || lon!='')){
 		var url=siteurl+'/api/account/updatecompanylatilongi';
 		jQuery.ajax({  
 		 type: 'POST',  
 		 url: url,  
-		 data: {id:uid,lati:position.coords.latitude,longi:position.coords.longitude,deviceuuid:deviceuuid,deviceplatform:deviceplatform},  
+		 data: {id:uid,lati:lat,longi:lon,deviceuuid:deviceuuid,deviceplatform:deviceplatform},  
 		 crossDomain: true,  
 		 beforeSend: function() {
 						
