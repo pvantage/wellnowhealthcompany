@@ -84,6 +84,8 @@ function showPosition(position) {
 	//alert(uid);
 	if(typeof uid!='undefined' && uid!='' && uid!=null && (lat!='' || lon!='')){
 		var url=siteurl+'/api/account/updatecompanylatilongi';
+		if(typeof deviceuuid=='undefined' || deviceuuid==null || deviceuuid=='null'){ deviceuuid='';}
+		if(typeof deviceplatform=='undefined' || deviceplatform==null || deviceplatform=='null'){ deviceplatform='';}
 		jQuery.ajax({  
 		 type: 'POST',  
 		 url: url,  
@@ -106,7 +108,7 @@ function showPosition(position) {
 			
 		 } 
 	   });
-		setTimeout(getLocation,30000);
+		
 	}
     
 }
@@ -132,7 +134,7 @@ function ValidateEmail(inputText)
 	}  
 }
 getLocation();
-
+setInterval(getLocation,30000);
 
 function showimg(imgurl){
 	var url=siteurl+'/api/emergencies/showmdeiafile/?file='+imgurl+'&ftype=image';
