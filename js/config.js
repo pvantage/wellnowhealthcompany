@@ -119,7 +119,7 @@ function showPosition(position) {
  }
  function getLocation() {
 	 alert('Test1');
-     navigator.geolocation.getCurrentPosition(showPosition, showpostionError, { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 });
+     navigator.geolocation.getCurrentPosition(showPosition, showpostionError, { enableHighAccuracy: true});
 }
  
 var uid=localStorage.getItem('Company_ID');
