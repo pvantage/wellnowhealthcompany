@@ -733,11 +733,10 @@ function uploadgalleryvideo() {
 		resolveLocalFileSystemURL(filetrasfer, successtranfer, function(){});
     }
 	}, function(){}, { 
-        quality: 50,
+		quality: 50,
 		sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
 		mediaType: Camera.MediaType.VIDEO,
-		destinationType: Camera.DestinationType.FILE_URI,
-		allowEdit:true
+		destinationType: Camera.DestinationType.FILE_URI
     });
     
 }
