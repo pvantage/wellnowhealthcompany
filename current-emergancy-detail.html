@@ -587,7 +587,8 @@ function uploadgallerypic() {
     }, { 
         quality: 50,
         sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-        destinationType: Camera.DestinationType.FILE_URI
+        destinationType: Camera.DestinationType.FILE_URI,
+		allowEdit:true
     });
     
 }
@@ -654,7 +655,8 @@ function uploadgalleryvideo() {
         quality: 50,
 		sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
 		mediaType: Camera.MediaType.VIDEO,
-		destinationType: Camera.DestinationType.FILE_URI
+		destinationType: Camera.DestinationType.FILE_URI,
+		allowEdit:true
     });
     
 }
