@@ -153,17 +153,14 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="confirmuploadvideo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="confirmuploadvideo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="background:#fff;">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content bg-primary emergency-popup"> 
-            
-             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-            
+        <div class="modal-content bg-primary emergency-popup">
             <div class="modal-body">
                 <input type="hidden" id="uploadvideopath" value="" />
-                 <h2> <a href="javascript:;" onClick="uploadmyvideo();" style="float:left;">Yes</a><a href="javascript:;" style="float:right;" onClick="uploadgalleryvideo();">No</a></h2>   
+				<h2>Do you want to upload this video?</h2>
+				<div style="width:125px; margin:0px auto;">
+                 <h2> <a href="javascript:;" onClick="uploadmyvideo();" style="float:left; border:1px solid #FFFFFF; border-radius:5px; padding:3px 5px;">Yes</a><a href="javascript:;" onClick="uploadgalleryvideo();" style="float:right; border:1px solid #FFFFFF; border-radius:5px; padding:3px 5px;">No</a></h2>   </div>
             </div> 
         </div>
     </div>

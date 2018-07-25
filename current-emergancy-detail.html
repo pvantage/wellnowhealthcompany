@@ -94,6 +94,19 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="confirmuploadvideo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="background:#fff;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bg-primary emergency-popup">
+            <div class="modal-body">
+                <input type="hidden" id="uploadvideopath" value="" />
+				<h2>Do you want to upload this video?</h2>
+				<div style="width:125px; margin:0px auto;">
+                 <h2> <a href="javascript:;" onClick="uploadmyvideo();" style="float:left; border:1px solid #FFFFFF; border-radius:5px; padding:3px 5px;">Yes</a><a href="javascript:;" onClick="uploadgalleryvideo();" style="float:right; border:1px solid #FFFFFF; border-radius:5px; padding:3px 5px;">No</a></h2>   </div>
+            </div> 
+        </div>
+    </div>
+</div>
+
 <script src="js/jquery-3.2.1.min.js" ></script>
 <script src="js/popper.min.js" ></script>
 <script src="js/bootstrap.min.js"></script>
@@ -592,26 +605,31 @@ function uploadgallerypic() {
     });
     
 }
-function uploadgalleryvideo() {
-	navigator.camera.getPicture(function(f) {
-        var filetrasfer=f;
-		if(filetrasfer!=''){
-			jQuery('body .showmessage').remove();
-			var html='<div class="showmessage">Please wait while uploading video...</div>';
-			jQuery('body').append(html);
-			var company_id=jQuery('input[name="company_id"]').val();
-			var emergency_id=gup('id');
-			var add_by=jQuery('input[name="add_by"]').val();
-			var manager_id=jQuery('input[name="manager_id"]').val();
-			var clinic_id=jQuery('input[name="clinic_id"]').val();
-			var htt = "file://";
-			if(filetrasfer.indexOf(htt) == '-1'){filetrasfer=htt+filetrasfer;}
+function uploadmyvideo(){
+	var filetrasfer=jQuery('#uploadvideopath').val();
+	
+	if(filetrasfer!=''){
+		jQuery('#confirmuploadvideo').modal('hide');
+		//jQuery('.submitwrap img.justloading').remove();
+		//jQuery('.submitwrap').append('<img src="images/ajax-loader.gif" class="justloading" />');
+		jQuery('body .showmessage').remove();
+		var html='<div class="showmessage">Please wait while uploading video...</div>';
+		jQuery('body').append(html);
+		var company_id=jQuery('input[name="company_id"]').val();
+		var emergency_id=jQuery('input[name="emergency_id"]').val();
+		var add_by=jQuery('input[name="add_by"]').val();
+		var manager_id=jQuery('input[name="manager_id"]').val();
+		var clinic_id=jQuery('input[name="clinic_id"]:checked').val();
+		var htt = "file://";
+		if(filetrasfer.indexOf(htt) == '-1'){filetrasfer=htt+filetrasfer;}
 			
-			var successtranfer=function(entry) {
+		var successtranfer=function(entry) {
 				var filetrasfer2= entry.toURL();
 				
-				var uri = encodeURI(siteurl+'/api/emergencies/addemergencyvideomsg?company_id='+company_id+'&emergency_id='+emergency_id+'&add_by='+add_by+'&manager_id='+manager_id+'&clinic_id='+clinic_id);
-				
+				var uri = encodeURI(siteurl+'/api/emergencies/saveemergencyivideo?company_id='+company_id+'&emergency_id='+emergency_id+'&add_by='+add_by+'&manager_id='+manager_id+'&clinic_id='+clinic_id);
+				if(parseInt(emergency_id)!='' && parseInt(emergency_id)>0){
+					uri = encodeURI(siteurl+'/api/emergencies/addemergencyvideomsg?company_id='+company_id+'&emergency_id='+emergency_id+'&add_by='+add_by+'&manager_id='+manager_id+'&clinic_id='+clinic_id);
+				}
 				var options = new FileUploadOptions();
 				options.fileKey="file";
 				options.fileName=filetrasfer2.substr(filetrasfer2.lastIndexOf('/')+1);
@@ -638,7 +656,7 @@ function uploadgalleryvideo() {
 					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
 					if(parseInt(emergency_id)==0){
 						jQuery('input[name="emergency_id"]').val(cntents[1]);
-						jQuery('.submitwrap').append('<div class="pull-right"><a href="current-emergancy-detail.html?id='+cntents[1]+'" class="locationlink">Location on Map</a></div>');
+						jQuery('.submitwrap').append('<div class="pull-left"><a href="current-emergancy-detail.html?id='+cntents[1]+'" class="locationlink"><img src="images/locator.png" /></a></div>');
 					}
 					if(typeof inter!='undefined'){
 						clearInterval(inter);
@@ -651,6 +669,11 @@ function uploadgalleryvideo() {
 		};
 		resolveLocalFileSystemURL(filetrasfer, successtranfer, function(){});
     }
+}
+function uploadgalleryvideo() {
+	navigator.camera.getPicture(function(f) {
+        jQuery('#uploadvideopath').val(f);
+       jQuery('#confirmuploadvideo').modal();
 	}, function(){}, { 
         quality: 50,
 		sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
