@@ -607,7 +607,7 @@ function uploadgallerypic() {
 }
 function uploadmyvideo(){
 	var filetrasfer=jQuery('#uploadvideopath').val();
-	
+	   jQuery('#emergency').modal();
 	if(filetrasfer!=''){
 		jQuery('#confirmuploadvideo').modal('hide');
 		//jQuery('.submitwrap img.justloading').remove();
@@ -674,6 +674,7 @@ function uploadgalleryvideo() {
 	navigator.camera.getPicture(function(f) {
         jQuery('#uploadvideopath').val(f);
        jQuery('#confirmuploadvideo').modal();
+	   jQuery('#emergency').modal('hide');
 	}, function(){}, { 
         quality: 50,
 		sourceType: Camera.PictureSourceType.PHOTOLIBRARY,

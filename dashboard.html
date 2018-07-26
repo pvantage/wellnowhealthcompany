@@ -153,7 +153,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="confirmuploadvideo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="background:#fff;">
+<div class="modal fade" id="confirmuploadvideo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content bg-primary emergency-popup">
             <div class="modal-body">
@@ -681,7 +681,7 @@ function uploadgallerypic() {
 }
 function uploadmyvideo(){
 	var filetrasfer=jQuery('#uploadvideopath').val();
-	
+	jQuery('#emergency').modal('show');
 	if(filetrasfer!=''){
 		jQuery('#confirmuploadvideo').modal('hide');
 		//jQuery('.submitwrap img.justloading').remove();
@@ -748,6 +748,7 @@ function uploadgalleryvideo() {
 	navigator.camera.getPicture(function(f) {
 		jQuery('#uploadvideopath').val(f);
        jQuery('#confirmuploadvideo').modal();
+	   jQuery('#emergency').modal('hide');
 	}, function(){}, { 
 		quality: 50,
 		sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
