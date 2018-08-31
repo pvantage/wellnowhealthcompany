@@ -101,7 +101,7 @@ a.locationlink{
 .currentonline{color:#96c61c;}
 .currentoffline{color:#930000;}
 .img-wrape img{ max-width:50px; max-height:50px;}
-.camebtns a {margin-right:10px !important; float:left; }
+.camebtns a {margin-right:1px !important; float:left; width: 61px;}
 #uploadphoto1 i{font-size:28px !important;}
 #uploadphoto1{color:#ffffff; margin-right:4px;}
 #uploadphoto12 i{font-size:28px;}
