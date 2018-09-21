@@ -567,7 +567,7 @@ jQuery(document).ready(function(){
 						jQuery('.note_optional').remove();
 						jQuery('#loginuser textarea[name="note"]').addClass('required');
 						jQuery('input[name="emergency_id"]').val(res['emergency_id']);
-						jQuery('.submitwrap').append('<div class="pull-left"><a href="current-emergancy-detail.html?id='+res['emergency_id']+'" class="locationlink"><img src="images/locator.png" /></a></div>');
+						jQuery('.submitwrap').append('<div class="pull-left"><a href="current-emergancy-detail.html?id='+res['emergency_id']+'" class="locationlink"><img src="images/locator.png" /><span>Location</span></a></div>');
 					}
 					if(typeof inter!='undefined'){
 						clearInterval(inter);
@@ -658,7 +658,7 @@ function uploadgallerypic() {
 					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
 					if(parseInt(emergency_id)==0){
 						jQuery('input[name="emergency_id"]').val(cntents[1]);
-						jQuery('.submitwrap').append('<div class="pull-left"><a href="current-emergancy-detail.html?id='+cntents[1]+'" class="locationlink"><img src="images/locator.png" /></a></div>');
+						jQuery('.submitwrap').append('<div class="pull-left"><a href="current-emergancy-detail.html?id='+cntents[1]+'" class="locationlink"><img src="images/locator.png" /><span>Location</span></a></div>');
 					}
 					if(typeof inter!='undefined'){
 						clearInterval(inter);
@@ -730,7 +730,7 @@ function uploadmyvideo(){
 					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
 					if(parseInt(emergency_id)==0){
 						jQuery('input[name="emergency_id"]').val(cntents[1]);
-						jQuery('.submitwrap').append('<div class="pull-left"><a href="current-emergancy-detail.html?id='+cntents[1]+'" class="locationlink"><img src="images/locator.png" /></a></div>');
+						jQuery('.submitwrap').append('<div class="pull-left"><a href="current-emergancy-detail.html?id='+cntents[1]+'" class="locationlink"><img src="images/locator.png" /><span>Location</span></a></div>');
 					}
 					if(typeof inter!='undefined'){
 						clearInterval(inter);
@@ -808,7 +808,7 @@ function uploadcamerapic() {
 					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
 					if(parseInt(emergency_id)==0){
 						jQuery('input[name="emergency_id"]').val(cntents[1]);
-						jQuery('.submitwrap').append('<div class="pull-left"><a href="current-emergancy-detail.html?id='+cntents[1]+'" class="locationlink"><img src="images/locator.png" /></a></div>');
+						jQuery('.submitwrap').append('<div class="pull-left"><a href="current-emergancy-detail.html?id='+cntents[1]+'" class="locationlink"><img src="images/locator.png" /><span>Location</span></a></div>');
 					}
 					if(typeof inter!='undefined'){
 						clearInterval(inter);
