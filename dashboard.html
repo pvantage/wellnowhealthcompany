@@ -383,7 +383,12 @@ function addcalls(clinic_id,$this){
 		}, 
 		crossDomain: true,  
 		success: function(res) { 
-			
+			db.transaction(function(tx){
+				var cdate=getdatetime();
+				var qr='INSERT INTO wnh_emergency_phone (phone_id, manager_id, company_id, clinic_id, cdate, phone) VALUES ("'+jQuery.trim(res)+'", "'+manager_id+'", "'+uid+'", "'+clinic_id+'", "'+cdate+'", "'+phone+'")';
+				tx.executeSql(qr);
+				
+			});
 		},  
 		error: function(response, d, a){
 			//alert(JSON.stringify(response));
@@ -531,28 +536,29 @@ function showclinics(loop){
 				jQuery('.clinics input[name="clinic_id"][value="'+cid+'"]').prop('checked',true);
 				jQuery('.clinics input[name="clinic_id"][value="'+cid+'"]').next('ul.showmanagerlist').show();
 			}
-			
-			jQuery('.showmanagerdetail').click(function(){
-				var ht='<ul>';
-				var img=jQuery(this).attr('data-image');
-				if(jQuery.trim(img)!=''){
-					ht+='<li><img src="'+img+'" alt="" style="max-height:100px; float:left; margin:0 5px 5px 0;" />'+jQuery(this).attr('data-bioinfo')+'</li>';
-				}
-				else{
-					ht+='<li><span>'+jQuery(this).attr('data-bioinfo')+'</span></li>';
-				}
-				ht+'</ul>';
-				jQuery('.managerlists').html(ht);
-				jQuery('#managerdetail').modal();
-			});
-			jQuery('input[name="clinic_id"]').change(function(){
-				
-				var $t=jQuery('input[name="clinic_id"]:checked');
-				jQuery('.showmanagerlist').slideUp();
-				jQuery($t).next('ul.showmanagerlist').slideDown();
-				var cid=jQuery('input[name="clinic_id"]:checked').val();
-				jQuery('#lastclinic_id').val(cid);
-			});
+			if(loop=='first'){
+				jQuery('.showmanagerdetail').click(function(){
+					var ht='<ul>';
+					var img=jQuery(this).attr('data-image');
+					if(jQuery.trim(img)!=''){
+						ht+='<li><img src="'+img+'" alt="" style="max-height:100px; float:left; margin:0 5px 5px 0;" />'+jQuery(this).attr('data-bioinfo')+'</li>';
+					}
+					else{
+						ht+='<li><span>'+jQuery(this).attr('data-bioinfo')+'</span></li>';
+					}
+					ht+'</ul>';
+					jQuery('.managerlists').html(ht);
+					jQuery('#managerdetail').modal();
+				});
+				jQuery('input[name="clinic_id"]').change(function(){
+					
+					var $t=jQuery('input[name="clinic_id"]:checked');
+					jQuery('.showmanagerlist').slideUp();
+					jQuery($t).next('ul.showmanagerlist').slideDown();
+					var cid=jQuery('input[name="clinic_id"]:checked').val();
+					jQuery('#lastclinic_id').val(cid);
+				});
+			}
 		});
 		
 	}

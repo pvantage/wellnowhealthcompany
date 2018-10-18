@@ -32,11 +32,13 @@
 <script src="js/bootstrap.min.js" ></script>
 <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
 <script type="text/javascript" src="js/config.js"></script>
+<script type="text/javascript">
+rebute=false;
+</script>
 <script type="text/javascript" src="js/database.js"></script>
 <script type="text/javascript" src="js/queries.js"></script>
 <script type="text/javascript">
-updategardenerdata();
-checkfornewupdates();
+
 jQuery(document).ready(function(){
 	jQuery( document ).on( "mobileinit", function() {
 		jQuery.mobile.allowCrossDomainPages = true;
@@ -48,9 +50,11 @@ jQuery(document).ready(function(){
 	if(lastlogday!=today){
 		localStorage.removeItem('timecount');
 	}
+	updategardenerdata();
+	checkfornewupdates();
 	setTimeout(function(){
 		window.location ='dashboard.html';
-	},4000);
+	},10000);
 	db.transaction(checkloginuser, errorDB, successDB);
 	function checkloginuser(tx){
 		var q="SELECT * FROM userlogin WHERE loggedin=?";

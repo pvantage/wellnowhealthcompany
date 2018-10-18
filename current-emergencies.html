@@ -128,10 +128,12 @@ function loademergencies(){
 				var html='';
 				for(var i = 0; i < res.rows.length; i++)
 				{
+					var note=res.rows.item(i).note;
+					if(res.rows.item(i).filetype=='video' || res.rows.item(i).filetype=='image'){note='please click message';}
 					html+='<div class="row mb-3 emglist"><div class="col-4"><div class="meta-date h-100 justify-content-center flex-column"><div class="date-circle">'+res.rows.item(i).showdate+'</div></div></div>';
 					html+='<div class="col-8"><div class="past-detail h-100 justify-content-center flex-column"><ul><li><a href="current-emergancy-detail.html?id='+res.rows.item(i).emergency_id+'">Clinic: <strong>'+res.rows.item(i).clinic+' ('+res.rows.item(i).clinicaddress+')</strong></a></li>';
-					if(jQuery.trim(res.rows.item(i).note)!=''){
-						html+='<li>Note: <strong>'+res.rows.item(i).note+'</strong></li>';
+					if(jQuery.trim(note)!=''){
+						html+='<li>Note: <strong>'+note+'</strong></li>';
 					}
 					html+='</ul></div></div></div>';
 				}
