@@ -170,6 +170,7 @@
 <script src="js/popper.min.js" ></script>
 <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
 <script type="text/javascript" src="js/config.js"></script>
+<script type="text/javascript" src="js/queries.js"></script>
 <script src="js/bootstrap.min.js"></script> 
 <script src="js/validate.js"></script>
 <script>
@@ -226,8 +227,75 @@ function getemdetail(){
 		}
 	});
 }
-
 function notes(){
+	var emergency_id=jQuery('input[name="emergency_id"]').val();
+	var url=siteurl+'/api/emergencies/getsinglemsgs';
+	 jQuery.ajax({  
+	 type: 'POST',  
+	 url: url,           
+	 dataType: 'json',  
+	 data: {emergency_id:emergency_id,seeby:'company'}, 
+	 beforeSend: function() {
+		
+	 },		
+	 complete: function() {
+	 }, 
+	 crossDomain: true,  
+	 success: function(res) { 
+	 	//alert(JSON.stringify(res));
+		if(res['notes'] && jQuery.trim(res['notes'])!='')
+		{
+			jQuery(res['notes']).each(function(index){
+				var clsas='clinicnote';
+				var msgg=res['notes'][index]['note'];
+				if(jQuery.trim(res['notes'][index]['manager'])!=''){
+					msgg=res['notes'][index]['note']+' :'+res['notes'][index]['manager'];
+					clsas='managernote';
+				}
+				else{
+					msgg=res['notes'][index]['note'];
+				}
+				jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+'">'+msgg+'</div>');
+				
+				db.transaction(function(tx){
+					var qr='INSERT INTO wnh_emergency_notes (emergency_note_id, emergency_id, note, filepath, filetype, manager_id, company_id, cdate, readbycompany, readbymanager, parent_id, notify) VALUES ("'+res['notes'][index]['emergency_note_id']+'", "'+emergency_id+'", "'+res['notes'][index]['note']+'", "'+res['notes'][index]['filepath']+'", "'+res['notes'][index]['filetype']+'", "'+res['notes'][index]['manager_id']+'", "'+res['notes'][index]['company_id']+'", "'+res['notes'][index]['cdate']+'", "'+res['notes'][index]['readbycompany']+'", "'+res['notes'][index]['readbymanager']+'", "'+res['notes'][index]['parent_id']+'", "'+res['notes'][index]['notify']+'")';
+					tx.executeSql(qr);
+					
+				});
+			});
+			jQuery('#emergency').modal();
+		
+		}
+		if(typeof res['measurement']!='undefined' && typeof res['measurement']['distance']!='undefined'){
+			jQuery('.displaydistance').html('Estimated Distance : '+res['measurement']['distance']+'<br>Estimated Time: '+res['measurement']['duration']);
+		}
+		if(typeof res['emstatus']!='undefined' && res['emstatus']!=''){
+			var emstatus=res['emstatus'];
+			db.transaction(function(tx){
+				var qr="UPDATE wnh_emergencies SET status='"+emstatus+"' WHERE emergency_id='"+emergency_id+"'";
+				tx.executeSql(qr);
+				if(emstatus=='completed')
+				{
+					window.location='emergancy-detail.html?id='+emergency_id;
+				}
+			});
+			
+		}
+		
+		return false; 
+	 },  
+	 error: function(response, d, a){
+		
+		jQuery('body .showmessage').remove();
+		var html='<div class="showmessage">Server Error.</div>';
+		jQuery('body').append(html);
+		setTimeout(function(){jQuery('.showmessage').slideUp();},1000);
+		return false; 
+	 }
+			
+   });
+}
+/*function notes2(){
 	var emergency_id=jQuery('input[name="emergency_id"]').val();
 	var url=siteurl+'/api/emergencies/getsinglemsgs';
 	 jQuery.ajax({  
@@ -271,7 +339,7 @@ function notes(){
 	 }
 			
    });
-}
+}*/
 function startchatwithmanager(manager_id,clinic_id){
 	jQuery('input[name="manager_id"]').val(manager_id);
 	jQuery('#managerdetail').modal('hide');
@@ -336,6 +404,34 @@ function checkseenmsg(){
 	}
 	var emergency_id=jQuery('#loginuser input[name="emergency_id"]').val();
 	if(emergency_id!='' && emergency_id!='0'){
+		db.transaction(showlistjobs, errorDB, successDB);
+		function showlistjobs(tx){
+			var q="SELECT * FROM wnh_emergency_notes where emergency_id=? AND readbymanager=?";
+			var cond=[emergency_id,'1'];
+			tx.executeSql(q, cond, function(tx, res){
+				if(parseInt(res.rows.length)>0){
+					for(var i = 0; i < res.rows.length; i++)
+					{
+						jQuery('.seen_'+res.rows.item(i).emergency_note_id).removeClass('notseenmsg');
+						jQuery('.seen_'+res.rows.item(i).emergency_note_id).addClass('seenmsg');
+					}
+					if(jQuery('.notelists .note-content:first span').hasClass('notseenmsg')){
+						jQuery('.notelists .note-content:first span.notseenmsg').addClass('seenmsg');
+						jQuery('.notelists .note-content:first span').removeClass('notseenmsg');
+					}
+				}
+			});
+		}
+	}
+}
+/*function checkseenmsg2(){
+	var seenmsgs=localStorage.getItem('seenmsgs');
+	var seenmsgs_ids='';
+	if(typeof seenmsgs!='undefined' && seenmsgs!='' && seenmsgs!=null){
+		seenmsgs_ids=seenmsgs;
+	}
+	var emergency_id=jQuery('#loginuser input[name="emergency_id"]').val();
+	if(emergency_id!='' && emergency_id!='0'){
 		var url=siteurl+'/api/emergencies/checkseenmsgs';
 		jQuery.ajax({  
 		 type: 'POST',  
@@ -371,8 +467,96 @@ function checkseenmsg(){
 				
 	   });
 	 }
-}
+}*/
 function showclinics(loop){
+	db.transaction(showlistjobs, errorDB, successDB);
+	function showlistjobs(tx){
+		var q="SELECT * FROM wnh_clinics";
+		var cond=[];
+		tx.executeSql(q, cond, function(tx, res){
+			if(parseInt(res.rows.length)>0){
+				var html='';
+				for(var i = 0; i < res.rows.length; i++)
+				{
+					var phn=res.rows.item(i).phone;
+					var clnid=res.rows.item(i).clinic_id;
+					var html='<ul><li class="cliniclist clinic-'+clnid+'" data-phone="'+res.rows.item(i).phone+'"><input type="radio" name="clinic_id" value="'+res.rows.item(i).clinic_id+'" /> '+res.rows.item(i).name+' ('+res.rows.item(i).address+')<ul class="showmanagerlist showmanagerlist_'+clnid+'" style="display:none;">';	
+					html+='<li>Clinic <i class="fa fa-phone"></i>&nbsp;&nbsp;&nbsp;<a href="tel:'+res.rows.item(i).phone+'"">'+res.rows.item(i).phone+'</a></li></ul></li></ul>';
+					jQuery('.clinics').append(html);
+					
+					var q="SELECT * FROM wnh_managers WHERE clinic_id=?";
+					var cond=[clnid];
+					tx.executeSql(q, cond, function(tx, res2){
+						if(parseInt(res2.rows.length)>0){
+							var html='<li>Click on provider name for bio.</li>';
+							var clinic_id=clnid;
+							for(var i = 0; i < res2.rows.length; i++)
+							{
+								clinic_id=res2.rows.item(i).clinic_id;
+								var activemanagercls='';
+								if(i=='0'){
+									phn=res2.rows.item(i).phone;
+									activemanagercls=' activemanagercls';
+								}
+								var activestatus='&nbsp;&nbsp;<span class="currentoffline">Offline</span>';
+								if(res2.rows.item(i).loggedin=='1'){activestatus='&nbsp;&nbsp;<span class="currentonline">Online</span>';}
+								html+='<li class="showinfobio"><a href="javascript:;" class="showmanagerdetail'+activemanagercls+'" data-id="'+res2.rows.item(i).manager_id+'" data-fname="'+res2.rows.item(i).name+'" data-email="'+res2.rows.item(i).email+'" data-phone="'+res2.rows.item(i).phone+'" data-bioinfo="'+res2.rows.item(i).bioinfo+'" data-image="'+res2.rows.item(i).image+'" data-clinic_id="'+res2.rows.item(i).clinic_id+'">'+res2.rows.item(i).name+'</a>'+activestatus+'</li>';
+							}
+							if(jQuery.trim(phn)!='' && phn!='undefined'){
+								html+='<ul class="emcall"><li><h2 class="emcalling"><i class="fa fa-phone"></i><a href="tel:'+phn+'" onclick="addcalls('+clinic_id+', this)">Call Emergency</a></h2></li></ul>';
+							}
+							jQuery('.clinics .clinic-'+clinic_id+' .showmanagerlist').html(html);
+						}
+					});
+					
+				}
+				
+			}
+			
+			
+			if(loop=='first'){
+				jQuery('.clinics input:first').attr('checked',true);
+				jQuery('.clinics input:first').prop('checked',true);
+				jQuery('.clinics li:first ul').show();
+				var cid=jQuery('input[name="clinic_id"]:checked').val();
+				jQuery('#lastclinic_id').val(cid);
+			}
+			else{
+				
+				var cid=jQuery('#lastclinic_id').val();
+				jQuery('.clinics input[name="clinic_id"][value="'+cid+'"]').attr('checked',true);
+				jQuery('.clinics input[name="clinic_id"][value="'+cid+'"]').prop('checked',true);
+				jQuery('.clinics input[name="clinic_id"][value="'+cid+'"]').next('ul.showmanagerlist').show();
+			}
+			
+			jQuery('.showmanagerdetail').click(function(){
+				var ht='<ul>';
+				var img=jQuery(this).attr('data-image');
+				if(jQuery.trim(img)!=''){
+					ht+='<li><img src="'+img+'" alt="" style="max-height:100px; float:left; margin:0 5px 5px 0;" />'+jQuery(this).attr('data-bioinfo')+'</li>';
+				}
+				else{
+					ht+='<li><span>'+jQuery(this).attr('data-bioinfo')+'</span></li>';
+				}
+				ht+'</ul>';
+				jQuery('.managerlists').html(ht);
+				jQuery('#managerdetail').modal();
+			});
+			jQuery('input[name="clinic_id"]').change(function(){
+				
+				var $t=jQuery('input[name="clinic_id"]:checked');
+				jQuery('.showmanagerlist').slideUp();
+				jQuery($t).next('ul.showmanagerlist').slideDown();
+				var cid=jQuery('input[name="clinic_id"]:checked').val();
+				jQuery('#lastclinic_id').val(cid);
+			});
+		});
+		
+	}
+	setTimeout(function(){showclinics('second');},10000);
+}
+/*function showclinics2(loop){
+
 	var url=siteurl+'/api/emergencies/clinics';
 	jQuery.ajax({  
 	 type: 'POST',  
@@ -453,11 +637,7 @@ function showclinics(loop){
 				else{
 					ht+='<li><span>'+jQuery(this).attr('data-bioinfo')+'</span></li>';
 				}
-				/*ht+='<li><label>Phone: </label> <span>'+jQuery(this).attr('data-phone')+'</span></li>';
-				ht+='<li><label>Email: </label> <span>'+jQuery(this).attr('data-email')+'</span></li>';*/
-				/*if(jQuery(this).attr('data-phone')!=''){
-					ht+='<li><h2 class="emcalling"><i class="fa fa-phone"></i> <a href="tel:'+jQuery(this).attr('data-phone')+'" onclick="addcalls(\''+jQuery(this).attr('data-phone')+'\','+jQuery(this).attr('data-id')+','+jQuery(this).attr('data-clinic_id')+')">Call Emergency</a></h2><h2 class="emcalling"><i class="fa fa-comment"></i> <a href="javascript:;" onclick="startchatwithmanager('+jQuery(this).attr('data-id')+','+jQuery(this).attr('data-clinic_id')+')">Start Message</a></h2></li>';
-				}*/
+				
 				ht+'</ul>';
 				jQuery('.managerlists').html(ht);
 				jQuery('#managerdetail').modal();
@@ -483,6 +663,100 @@ function showclinics(loop){
 			
    });
    setTimeout(function(){showclinics('second');},10000);
+}*/
+function getgallerysinglenote(note_id,mobilefilepath){
+	var url=siteurl+'/api/emergencies/getsinglenote';
+	 jQuery.ajax({  
+	 type: 'POST',  
+	 url: url,           
+	 dataType: 'json',  
+	 data: {note_id:note_id}, 
+	 beforeSend: function() {
+		
+	 },		
+	 complete: function() {
+	 }, 
+	 crossDomain: true,  
+	 success: function(res) { 
+		if(res['emnotes'])
+		{
+			jQuery(res['emnotes']).each(function(index){
+				db.transaction(function(tx){
+					var qr='INSERT INTO wnh_emergency_notes (emergency_note_id, emergency_id, note, filepath, mobilefilepath, filetype, manager_id, company_id, cdate, readbycompany, readbymanager, parent_id, notify) VALUES ("'+res['emnotes'][index]['id']+'", "'+res['emnotes'][index]['emergency_id']+'", "'+res['emnotes'][index]['note']+'", "'+res['emnotes'][index]['filepath']+'", "'+mobilefilepath+'", "'+res['emnotes'][index]['filetype']+'", "'+res['emnotes'][index]['manager_id']+'", "'+res['emnotes'][index]['company_id']+'", "'+res['emnotes'][index]['cdate']+'", "1", "'+res['emnotes'][index]['readbymanager']+'", "'+res['emnotes'][index]['parent_id']+'", "'+res['emnotes'][index]['notify']+'")';
+					tx.executeSql(qr);
+					
+				});
+			});
+		
+		}else if(res['errors']){				
+			jQuery('body .showmessage').remove();
+			var html='<div class="showmessage">'+res['error']+'</div>';
+			jQuery('body').append(html);
+			setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
+		}
+		else
+		{
+			alert('Server error');
+		}
+		return false; 
+	 },  
+	 error: function(response, d, a){
+		
+		jQuery('body .showmessage').remove();
+		var html='<div class="showmessage">Server Error.</div>';
+		jQuery('body').append(html);
+		setTimeout(function(){jQuery('.showmessage').slideUp();},1000);
+		return false; 
+	 }
+			
+   });
+}
+function getgallerysinglemsg(em_id,filetrasfer){
+	var url=siteurl+'/api/emergencies/getsingleem';
+	 jQuery.ajax({  
+	 type: 'POST',  
+	 url: url,           
+	 dataType: 'json',  
+	 data: {em_id:em_id}, 
+	 beforeSend: function() {
+		
+	 },		
+	 complete: function() {
+	 }, 
+	 crossDomain: true,  
+	 success: function(res) { 
+		if(res['ems'])
+		{
+			jQuery(res['ems']).each(function(index){
+				db.transaction(function(tx){
+					var qr='INSERT INTO wnh_emergencies (emergency_id, company_id, clinic_id, manager_id, note, status, filepath, mobilefilepath, filetype, cdate, readbymanager, deletebymanager, deletebycaompany, showdate, clinic, clinicaddress, measurement) VALUES ("'+res['ems'][index]['id']+'", "'+res['ems'][index]['company_id']+'", "'+res['ems'][index]['clinic_id']+'", "'+res['ems'][index]['manager_id']+'", "'+res['ems'][index]['note']+'", "'+res['ems'][index]['status']+'", "'+res['ems'][index]['filepath']+'", "'+mobilefilepath+'", "'+res['ems'][index]['filetype']+'", "'+res['ems'][index]['cdate']+'", "'+res['ems'][index]['readbymanager']+'", "'+res['ems'][index]['deletebymanager']+'", "'+res['ems'][index]['deletebycaompany']+'", "'+res['ems'][index]['showdate']+'", "'+res['ems'][index]['clinic']+'", "'+res['ems'][index]['clinicaddress']+'", "'+res['ems'][index]['measurement']+'")';
+					tx.executeSql(qr);
+					
+				});
+			});
+		
+		}else if(res['errors']){				
+			jQuery('body .showmessage').remove();
+			var html='<div class="showmessage">'+res['error']+'</div>';
+			jQuery('body').append(html);
+			setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
+		}
+		else
+		{
+			alert('Server error');
+		}
+		return false; 
+	 },  
+	 error: function(response, d, a){
+		
+		jQuery('body .showmessage').remove();
+		var html='<div class="showmessage">Server Error.</div>';
+		jQuery('body').append(html);
+		setTimeout(function(){jQuery('.showmessage').slideUp();},1000);
+		return false; 
+	 }
+			
+   });
 }
 jQuery(document).ready(function(){
 	jQuery('textarea[name="note"]').keyup(function(){
@@ -556,8 +830,10 @@ jQuery(document).ready(function(){
 					var cls='';
 					if(parseInt(emergency_id)==0){
 						cls=' emergencystart';
+						getgallerysinglemsg(res['emergency_id'],'');
 					}
 					jQuery('.notelists').append('<div class="note-content"><span class="clinicnote">'+msg+'<span class="seen_'+res['emergency_id']+cls+' notseenmsg"></span></span></div>');
+					
 					jQuery('body .showmessage').remove();
 					var html='<div class="showmessage">'+res['msg']+'</div>';
 					jQuery('body').append(html);
@@ -576,7 +852,7 @@ jQuery(document).ready(function(){
 					setInterval(getemdetail,5000);
 					//jQuery('#loginuser')[0].reset();
 					//jQuery('#emergency').modal('hide');
-					setInterval(checkseenmsg,6000);
+					setInterval(checkseenmsg,2000);
 					jQuery('.sendmsgbtn').attr('disabled',true);
 				
 				}else if(res['errors']){				
@@ -650,8 +926,13 @@ function uploadgallerypic() {
 			
 			var t=ft.upload(filetrasfer2, uri, function(r){
 					//jQuery('.submitwrap img.justloading').remove();
+					
 					var cntents=r.response.split('||emg||');
-					jQuery('.notelists').append('<div class="note-content"><span class="clinicnote">'+cntents[0]+'</span></div>');
+					var cls='';
+					if(parseInt(emergency_id)==0){
+						cls=' emergencystart';
+					}
+					jQuery('.notelists').append('<div class="note-content"><span class="clinicnote"><div class="note-content">Me: <span class="img-wrape"><a href="javascript:;" onclick="return showimg(\''+filetrasfer+'\');"><i class="fa fa-picture-o" style="font-size:18px;"></i> Click to zoom</a></span><span class="seen_'+cntents[1]+cls+' notseenmsg"></span></span></div>');
 					jQuery('body .showmessage').remove();
 					var html='<div class="showmessage">'+cntents[2]+'</div>';
 					jQuery('body').append(html);
@@ -659,13 +940,17 @@ function uploadgallerypic() {
 					if(parseInt(emergency_id)==0){
 						jQuery('input[name="emergency_id"]').val(cntents[1]);
 						jQuery('.submitwrap').append('<div class="pull-left"><a href="current-emergancy-detail.html?id='+cntents[1]+'" class="locationlink"><img src="images/locator.png" /><span>Location</span></a></div>');
+						getgallerysinglemsg(cntents[1],filetrasfer);
+					}
+					else{
+						getgallerysinglenote(cntents[1],filetrasfer);
 					}
 					if(typeof inter!='undefined'){
 						clearInterval(inter);
 					}
 					var inter=setInterval(notes,5000);
 					setInterval(getemdetail,5000);
-					setInterval(checkseenmsg,6000);
+					setInterval(checkseenmsg,2000);
 						
 			}, fail, options);
 			});
@@ -723,7 +1008,11 @@ function uploadmyvideo(){
 			var t=ft.upload(filetrasfer2, uri, function(r){
 					//jQuery('.submitwrap img.justloading').remove();
 					var cntents=r.response.split('||emg||');
-					jQuery('.notelists').append('<div class="note-content"><span class="clinicnote">'+cntents[0]+'</span></div>');
+					var cls='';
+					if(parseInt(emergency_id)==0){
+						cls=' emergencystart';
+					}
+					jQuery('.notelists').append('<div class="note-content">Me: <span class="video-wrape"><a href="javascript:;" onclick="return showvideo(\''+filetrasfer+'\');"><img src="images/video1.png" alt="video" /> Click to view</a></span><span class="seen_'+cntents[1]+cls+' notseenmsg"></span></div>');
 					jQuery('body .showmessage').remove();
 					var html='<div class="showmessage">'+cntents[2]+'</div>';
 					jQuery('body').append(html);
@@ -731,13 +1020,17 @@ function uploadmyvideo(){
 					if(parseInt(emergency_id)==0){
 						jQuery('input[name="emergency_id"]').val(cntents[1]);
 						jQuery('.submitwrap').append('<div class="pull-left"><a href="current-emergancy-detail.html?id='+cntents[1]+'" class="locationlink"><img src="images/locator.png" /><span>Location</span></a></div>');
+						getgallerysinglemsg(cntents[1],filetrasfer);
+					}
+					else{
+						getgallerysinglenote(cntents[1],filetrasfer);
 					}
 					if(typeof inter!='undefined'){
 						clearInterval(inter);
 					}
 					var inter=setInterval(notes,5000);
 					setInterval(getemdetail,5000);
-					setInterval(checkseenmsg,6000);
+					setInterval(checkseenmsg,2000);
 						
 			}, fail, options);
 		};
@@ -801,7 +1094,11 @@ function uploadcamerapic() {
 				var t=ft.upload(filetrasfer2, uri, function(r){
 					//jQuery('.submitwrap img.justloading').remove();
 					var cntents=r.response.split('||emg||');
-					jQuery('.notelists').append('<div class="note-content"><span class="clinicnote">'+cntents[0]+'</span></div>');
+					var cls='';
+					if(parseInt(emergency_id)==0){
+						cls=' emergencystart';
+					}
+					jQuery('.notelists').append('<div class="note-content"><span class="clinicnote"><div class="note-content">Me: <span class="img-wrape"><a href="javascript:;" onclick="return showimg(\''+filetrasfer+'\');"><i class="fa fa-picture-o" style="font-size:18px;"></i> Click to zoom</a></span><span class="seen_'+cntents[1]+cls+' notseenmsg"></span></span></div>');
 					jQuery('body .showmessage').remove();
 					var html='<div class="showmessage">'+cntents[2]+'</div>';
 					jQuery('body').append(html);
@@ -809,13 +1106,17 @@ function uploadcamerapic() {
 					if(parseInt(emergency_id)==0){
 						jQuery('input[name="emergency_id"]').val(cntents[1]);
 						jQuery('.submitwrap').append('<div class="pull-left"><a href="current-emergancy-detail.html?id='+cntents[1]+'" class="locationlink"><img src="images/locator.png" /><span>Location</span></a></div>');
+						getgallerysinglemsg(cntents[1],filetrasfer);
+					}
+					else{
+						getgallerysinglenote(cntents[1],filetrasfer);
 					}
 					if(typeof inter!='undefined'){
 						clearInterval(inter);
 					}
 					var inter=setInterval(notes,5000);
 					setInterval(getemdetail,5000);
-					setInterval(checkseenmsg,6000);
+					setInterval(checkseenmsg,2000);
 				}, fail, options);
 				});
 			}

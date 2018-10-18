@@ -112,6 +112,7 @@
 <script src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
 	<script type="text/javascript" src="js/config.js"></script>
+	<script type="text/javascript" src="js/queries.js"></script>
 	<script type="text/javascript" src="js/validate.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?sensor=true&libraries=geometry&key=AIzaSyAdRw4y6QbeCa2AVoQcI_j7NMQZPYDrabU" type="text/javascript"></script>
 <script>
@@ -129,7 +130,7 @@ var ourphoto='images/home.png';
 var crrentdata=[];
 var activedata=[];
 
-function checkseenmsg(){
+/*function checkseenmsg2(){
 	var seenmsgs=localStorage.getItem('seenmsgs');
 	var seenmsgs_ids='';
 	if(typeof seenmsgs!='undefined' && seenmsgs!='' && seenmsgs!=null){
@@ -173,8 +174,36 @@ function checkseenmsg(){
 				
 	   });
 	 }
+}*/
+function checkseenmsg(){
+	var seenmsgs=localStorage.getItem('seenmsgs');
+	var seenmsgs_ids='';
+	if(typeof seenmsgs!='undefined' && seenmsgs!='' && seenmsgs!=null){
+		seenmsgs_ids=seenmsgs;
+	}
+	var emergency_id=gup('id');
+	if(emergency_id!='' && emergency_id!='0'){
+		db.transaction(showlistjobs, errorDB, successDB);
+		function showlistjobs(tx){
+			var q="SELECT * FROM wnh_emergency_notes where emergency_id=? AND readbymanager=?";
+			var cond=[emergency_id,'1'];
+			tx.executeSql(q, cond, function(tx, res){
+				if(parseInt(res.rows.length)>0){
+					for(var i = 0; i < res.rows.length; i++)
+					{
+						jQuery('.seen_'+res.rows.item(i).emergency_note_id).removeClass('notseenmsg');
+						jQuery('.seen_'+res.rows.item(i).emergency_note_id).addClass('seenmsg');
+					}
+					if(jQuery('.notelists .note-content:first span').hasClass('notseenmsg')){
+						jQuery('.notelists .note-content:first span.notseenmsg').addClass('seenmsg');
+						jQuery('.notelists .note-content:first span').removeClass('notseenmsg');
+					}
+				}
+			});
+		}
+	}
 }
-function opennotes(showmsg){
+/*function opennotes2(showmsg){
 	var emergency_id=gup('id');
 	var url=siteurl+'/api/emergencies/getmsgs';
 	 jQuery.ajax({  
@@ -231,8 +260,58 @@ function opennotes(showmsg){
 		clearInterval(inter);
 	}
 	var inter=setInterval(notes,5000);
+}*/
+function opennotes(showmsg){
+	var emergency_id=gup('id');
+	jQuery('.notelists').html('');
+	db.transaction(showlistjobs, errorDB, successDB);
+	function showlistjobs(tx){
+		var q="SELECT * FROM wnh_emergencies where emergency_id=?";
+		var cond=[emergency_id];
+		tx.executeSql(q, cond, function(tx, res){
+			if(parseInt(res.rows.length)>0){
+				for(var i = 0; i < res.rows.length; i++)
+				{
+					var clsas='clinicnote';
+					var msgg=res.rows.item(i).note+' <span class="seen_em'+res.rows.item(i).emergency_id+' notseenmsg"></span>';
+					jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+'">'+msgg+'</span></div>');
+					var q="SELECT n.*, m.name as manager FROM wnh_emergency_notes as n, wnh_managers as m, wnh_emergencies as e where e.emergency_id=n.emergency_id and e.manager_id=m.manager_id and n.emergency_id=?";
+					var cond=[emergency_id];
+					tx.executeSql(q, cond, function(tx, res2){
+						if(parseInt(res2.rows.length)>0){
+							for(var i = 0; i < res2.rows.length; i++)
+							{
+								var clsas='clinicnote';
+								var msgg=res2.rows.item(i).note+' <span class="seen_'+res2.rows.item(i).emergency_note_id+' notseenmsg"></span>';
+								if(res2.rows.item(i).manager_id!='0'){
+									msgg=res2.rows.item(i).note+' :'+res2.rows.item(i).manager;
+									clsas='managernote';
+								}
+								
+								jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+'">'+msgg+'</span></div>');
+								
+							}
+						}
+					});
+				}
+			}
+		});
+		if(showmsg=='yes'){
+			jQuery('#emergency').modal();
+		}
+		if(typeof inter2!='undefined'){
+			clearInterval(inter2);
+		}
+		var inter2=setInterval(checkseenmsg,2000);
+		return false;
+		
+	}
+	if(typeof inter!='undefined'){
+		clearInterval(inter);
+	}
+	var inter=setInterval(notes,5000);
 }
-function notes(){
+/*function notes2(){
 	var emergency_id=gup('id');
 	var url=siteurl+'/api/emergencies/getsinglemsgs';
 	 jQuery.ajax({  
@@ -273,6 +352,74 @@ function notes(){
 			{
 				window.location='emergancy-detail.html?id='+res['emid'];
 			}
+		}
+		
+		return false; 
+	 },  
+	 error: function(response, d, a){
+		
+		jQuery('body .showmessage').remove();
+		var html='<div class="showmessage">Server Error.</div>';
+		jQuery('body').append(html);
+		setTimeout(function(){jQuery('.showmessage').slideUp();},1000);
+		return false; 
+	 }
+			
+   });
+}*/
+function notes(){
+	var emergency_id=gup('id');
+	var url=siteurl+'/api/emergencies/getsinglemsgs';
+	 jQuery.ajax({  
+	 type: 'POST',  
+	 url: url,           
+	 dataType: 'json',  
+	 data: {emergency_id:emergency_id,seeby:'company'}, 
+	 beforeSend: function() {
+		
+	 },		
+	 complete: function() {
+	 }, 
+	 crossDomain: true,  
+	 success: function(res) { 
+	 	//alert(JSON.stringify(res));
+		if(res['notes'] && jQuery.trim(res['notes'])!='')
+		{
+			jQuery(res['notes']).each(function(index){
+				var clsas='clinicnote';
+				var msgg=res['notes'][index]['note'];
+				if(jQuery.trim(res['notes'][index]['manager'])!=''){
+					msgg=res['notes'][index]['note']+' :'+res['notes'][index]['manager'];
+					clsas='managernote';
+				}
+				else{
+					msgg=res['notes'][index]['note'];
+				}
+				jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+'">'+msgg+'</div>');
+				
+				db.transaction(function(tx){
+					var qr='INSERT INTO wnh_emergency_notes (emergency_note_id, emergency_id, note, filepath, filetype, manager_id, company_id, cdate, readbycompany, readbymanager, parent_id, notify) VALUES ("'+res['notes'][index]['emergency_note_id']+'", "'+emergency_id+'", "'+res['notes'][index]['note']+'", "'+res['notes'][index]['filepath']+'", "'+res['notes'][index]['filetype']+'", "'+res['notes'][index]['manager_id']+'", "'+res['notes'][index]['company_id']+'", "'+res['notes'][index]['cdate']+'", "'+res['notes'][index]['readbycompany']+'", "'+res['notes'][index]['readbymanager']+'", "'+res['notes'][index]['parent_id']+'", "'+res['notes'][index]['notify']+'")';
+					tx.executeSql(qr);
+					
+				});
+			});
+			jQuery('#emergency').modal();
+		
+		}
+		if(typeof res['measurement']!='undefined' && typeof res['measurement']['distance']!='undefined'){
+			jQuery('.displaydistance').html('Estimated Distance : '+res['measurement']['distance']+'<br>Estimated Time: '+res['measurement']['duration']);
+		}
+		if(typeof res['emstatus']!='undefined' && res['emstatus']!=''){
+			var emstatus=res['emstatus'];
+			db.transaction(function(tx){
+				var qr="UPDATE wnh_emergencies SET status='"+emstatus+"' WHERE emergency_id='"+emergency_id+"'";
+				tx.executeSql(qr);
+				if(emstatus=='completed')
+				{
+					window.location='emergancy-detail.html?id='+emergency_id;
+				}
+			});
+			
 		}
 		
 		return false; 
@@ -372,13 +519,13 @@ jQuery(document).ready(function(){
           if (status == 'OK') {
             directionsDisplay.setDirections(response);
           } else {
-            window.location='';
+            //window.location='';
           }
         });
         
       }
 	
-	var url=siteurl+'/api/emergencies/ergencydetail';
+	/*var url=siteurl+'/api/emergencies/ergencydetail';
 	jQuery.ajax({  
 		type: 'POST',  
 		url: url,           
@@ -410,7 +557,7 @@ jQuery(document).ready(function(){
 					setTimeout(function(){jQuery('.showmessage').slideUp();
 					},2000);
 					setTimeout(function(){
-						window.location='';
+						//window.location='';
 					},5000);
 				}
 				jQuery('input[name="manager_id"]').val(res['data'][index]['manager_id']);
@@ -452,7 +599,73 @@ jQuery(document).ready(function(){
 		setTimeout(function(){jQuery('.showmessage').slideUp();},1000);
 		return false; 
 		}
-	});
+	});*/
+	function loademergency(id){
+		db.transaction(showlistjobs, errorDB, successDB);
+		function showlistjobs(tx){
+			var q="SELECT m.phone,m.image, c.address_lati as clinic_lati, c.address_longi as clinic_longi, c.address as clinic_address, cm.*, e.manager_id, e.clinic_id FROM wnh_emergencies as e, wnh_managers as m, wnh_clinics as c, wnh_company as cm where e.manager_id=m.manager_id AND e.clinic_id=c.clinic_id AND e.company_id=cm.company_id AND e.emergency_id=?";
+			var cond=[id];
+			tx.executeSql(q, cond, function(tx, res){
+				if(parseInt(res.rows.length)>0){
+					var html='';
+					for(var i = 0; i < res.rows.length; i++)
+					{
+						var phone=res.rows.item(i).phone;
+						if(jQuery.trim(phone)!=''){
+							//jQuery('.main-wrapper').append('<div class="btm-btn-sctn"><div class="text-center mb-3"><a href="tel:'+phone+'" class="btn btn-primary">CONTACT EMERGENCY</a></div><div class="text-center mb-3"><a href="javascript:;" onclick="return opennotes();" class="btn btn-primary">MESSAGES</a></div></div>');
+							jQuery('.main-wrapper').append('<div class="btm-btn-sctn"><div class="text-center mb-3"><a href="tel:'+phone+'" class="btn btn-primary">CONTACT EMERGENCY</a></div><div class="text-center mb-3"><a href="javascript:;" onclick="return opennotes(\'yes\');" class="btn btn-primary">MESSAGES</a></div></div>');
+						}
+						if(res.rows.item(i).manager_id=='0'){
+							jQuery('body .showmessage').remove();
+							var html='<div class="showmessage">Please wait the Manager is not logged in</div>';
+							jQuery('body').append(html);
+							setTimeout(function(){jQuery('.showmessage').slideUp();
+							},2000);
+							setTimeout(function(){
+								window.location='';
+							},5000);
+						}
+						jQuery('input[name="manager_id"]').val(res.rows.item(i).manager_id);
+			  			jQuery('input[name="clinic_id"]').val(res.rows.item(i).clinic_id);
+				
+						localStorage.setItem('Current_Manager_clinic_lati',res.rows.item(i).clinic_lati);
+						localStorage.setItem('Current_Manager_clinic_longi',res.rows.item(i).clinic_longi);
+						localStorage.setItem('Current_Manager_clinicaddress',res.rows.item(i).clinic_address);
+						our_address=res.rows.item(i).clinic_address;
+						//crrentdata=res['data'][index]['otherstff'];
+						activedata['stff_lati']=res.rows.item(i).clinic_lati;
+						activedata['staff_longi']=res.rows.item(i).clinic_longi;
+						activedata['company_lati']=res.rows.item(i).current_lati;
+						activedata['company_longi']=res.rows.item(i).current_longi;
+						
+						var mapimage=realsiteurl+'uploads/profile/'+res.rows.item(i).image;
+						//alert(res.rows.item(i).clinic_lati+', '+res.rows.item(i).clinic_longi+', '+res.rows.item(i).clinic_address);
+						if(jQuery.trim(res.rows.item(i).image)!=''){ourphoto=mapimage;}
+						var lati=res.rows.item(i).current_lati, 
+							longi=res.rows.item(i).current_longi,
+							address=res.rows.item(i).current_address, 
+							mapid='ourgmap';
+						setTimeout(function(){
+							setgooglepath(lati,longi, address,our_address, mapid);
+							opennotes('no');
+						},1000);
+						
+					}
+				}
+				else{
+					jQuery('body .showmessage').remove();
+					var html='<div class="showmessage">Please wait the Manager is not logged in</div>';
+					jQuery('body').append(html);
+					setTimeout(function(){jQuery('.showmessage').slideUp();
+					},2000);
+					setTimeout(function(){
+						window.location='';
+					},5000);
+				}
+			});
+		}
+	}
+	loademergency(id);
 	jQuery('#loginuser').submit( function(){	
 		var error=false;
 		jQuery('#loginuser input.required').each(function(){
@@ -504,6 +717,15 @@ jQuery(document).ready(function(){
 					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
 					jQuery('#loginuser textarea[name="note"]').val('');
 					jQuery('.sendmsgbtn').attr('disabled',true);
+					
+					jQuery(res['emnotes']).each(function(index){
+						
+						db.transaction(function(tx){
+							var qr='INSERT INTO wnh_emergency_notes (emergency_note_id, emergency_id, note, filepath, mobilefilepath, filetype, manager_id, company_id, cdate, readbycompany, readbymanager, parent_id, notify) VALUES ("'+res['emnotes'][index]['id']+'", "'+res['emnotes'][index]['emergency_id']+'", "'+res['emnotes'][index]['note']+'", "'+res['emnotes'][index]['filepath']+'", "", "'+res['emnotes'][index]['filetype']+'", "'+res['emnotes'][index]['manager_id']+'", "'+res['emnotes'][index]['company_id']+'", "'+res['emnotes'][index]['cdate']+'", "1", "'+res['emnotes'][index]['readbymanager']+'", "'+res['emnotes'][index]['parent_id']+'", "'+res['emnotes'][index]['notify']+'")';
+							tx.executeSql(qr);
+							
+						});
+					});
 				
 				}else if(res['errors']){				
 					jQuery('body .showmessage').remove();
@@ -531,6 +753,53 @@ jQuery(document).ready(function(){
 		 return false;   
 	});
 });
+function getgallerysinglenote(note_id,mobilefilepath){
+	var url=siteurl+'/api/emergencies/getsinglenote';
+	 jQuery.ajax({  
+	 type: 'POST',  
+	 url: url,           
+	 dataType: 'json',  
+	 data: {note_id:note_id}, 
+	 beforeSend: function() {
+		
+	 },		
+	 complete: function() {
+	 }, 
+	 crossDomain: true,  
+	 success: function(res) { 
+		if(res['emnotes'])
+		{
+			jQuery(res['emnotes']).each(function(index){
+				db.transaction(function(tx){
+					var qr='INSERT INTO wnh_emergency_notes (emergency_note_id, emergency_id, note, filepath, mobilefilepath, filetype, manager_id, company_id, cdate, readbycompany, readbymanager, parent_id, notify) VALUES ("'+res['emnotes'][index]['id']+'", "'+res['emnotes'][index]['emergency_id']+'", "'+res['emnotes'][index]['note']+'", "'+res['emnotes'][index]['filepath']+'", "'+mobilefilepath+'", "'+res['emnotes'][index]['filetype']+'", "'+res['emnotes'][index]['manager_id']+'", "'+res['emnotes'][index]['company_id']+'", "'+res['emnotes'][index]['cdate']+'", "1", "'+res['emnotes'][index]['readbymanager']+'", "'+res['emnotes'][index]['parent_id']+'", "'+res['emnotes'][index]['notify']+'")';
+					tx.executeSql(qr);
+					
+				});
+			});
+		
+		}else if(res['errors']){				
+			jQuery('body .showmessage').remove();
+			var html='<div class="showmessage">'+res['error']+'</div>';
+			jQuery('body').append(html);
+			setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
+		}
+		else
+		{
+			alert('Server error');
+		}
+		return false; 
+	 },  
+	 error: function(response, d, a){
+		
+		jQuery('body .showmessage').remove();
+		var html='<div class="showmessage">Server Error.</div>';
+		jQuery('body').append(html);
+		setTimeout(function(){jQuery('.showmessage').slideUp();},1000);
+		return false; 
+	 }
+			
+   });
+}
 var platform='';
 function fail(error) {
 	jQuery('body .showmessage').remove();
@@ -578,6 +847,7 @@ function uploadgallerypic() {
 					jQuery('.notelists').append('<div class="note-content"><span class="clinicnote">'+cntents[0]+'</span></div>');
 					jQuery('body .showmessage').remove();
 					var html='<div class="showmessage">'+cntents[2]+'</div>';
+					getgallerysinglenote(cntents[1],filetrasfer);
 					jQuery('body').append(html);
 					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
 					if(typeof inter!='undefined'){
@@ -652,6 +922,7 @@ function uploadmyvideo(){
 					jQuery('.notelists').append('<div class="note-content"><span class="clinicnote">'+cntents[0]+'</span></div>');
 					jQuery('body .showmessage').remove();
 					var html='<div class="showmessage">'+cntents[2]+'</div>';
+					getgallerysinglenote(cntents[1],filetrasfer);
 					jQuery('body').append(html);
 					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
 					if(parseInt(emergency_id)==0){
@@ -732,6 +1003,7 @@ function uploadcamerapic() {
 					jQuery('.notelists').append('<div class="note-content"><span class="clinicnote">'+cntents[0]+'</span></div>');
 					jQuery('body .showmessage').remove();
 					var html='<div class="showmessage">'+cntents[2]+'</div>';
+					getgallerysinglenote(cntents[1],filetrasfer);
 					jQuery('body').append(html);
 					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
 					if(typeof inter!='undefined'){

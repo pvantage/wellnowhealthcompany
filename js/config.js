@@ -1,5 +1,53 @@
-var siteurl = "http://178.128.186.105";
-var realsiteurl = "http://178.128.186.105/";
+//var siteurl = "http://178.128.186.105";
+//var realsiteurl = "http://178.128.186.105/";
+var siteurl = "http://vantageappspro.com/wellnowhealth";
+var realsiteurl = "http://vantageappspro.com/wellnowhealth/";
+var db = window.openDatabase("wellnowhealth", "1.0", "Well Now Health", 200000);
+var days=['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+var times = {'07:00:00':'7:00 AM','07:30:00':'7:30 AM','08:00:00':'8:00 AM','08:30:00':'8:30 AM','09:00:00':'9:00 AM','09:30:00':'9:30 AM','10:00:00':'10:00 AM', '10:30:00':'10:30 AM','11:00:00':'11:00 AM', '11:30:00':'11:30 AM','12:00:00':'12:00 PM','12:30:00':'12:30 PM','13:00:00':'01:00 PM', '13:30:00':'01:30 PM','14:00:00':'02:00 PM','14:30:00':'02:30 PM','15:00:00':'03:00 PM', '15:30:00':'03:30 PM','16:00:00':'04:00 PM','16:30:00':'04:30 PM','17:00:00':'05:00 PM','17:30:00':'05:30 PM','18:00:00':'06:00 PM'};
+
+var d = new Date();
+var m=d.getMonth();
+if(parseInt(m)<12){m=parseInt(m)+1;}
+if(parseInt(m)<10){m='0'+m;}
+var d1=d.getDate();
+if(parseInt(d1)<10){d1='0'+d1;}
+var today=d.getFullYear()+'-'+m+'-'+d1;
+function addasecondintime(){
+	d = new Date(); // just for example, can be any other time
+	myTimeSpan = 1000; // 1 second in milliseconds
+	d.setTime(d.getTime() + myTimeSpan);	
+	var mint=d.getMinutes();
+	if(parseInt(mint)<10){mint='0'+mint;}
+	var h=d.getHours();
+	if(parseInt(h)<10){h='0'+h;}
+	var sec=d.getSeconds();
+	if(parseInt(sec)<10){sec='0'+sec;}
+	return h+':'+mint+':'+sec;
+}
+function getcurrenttime(){
+	var d = new Date();
+	var mint=d.getMinutes();
+	if(parseInt(mint)<10){mint='0'+mint;}
+	var h=d.getHours();
+	if(parseInt(h)<10){h='0'+h;}
+	var sec=d.getSeconds();
+	if(parseInt(sec)<10){sec='0'+sec;}
+	return h+':'+mint+':'+sec;
+}
+var currenttime=getcurrenttime();
+function getdatetime(){
+	var d = new Date();
+	var mint=d.getMinutes();
+	if(parseInt(mint)<10){mint='0'+mint;}
+	var h=d.getHours();
+	if(parseInt(h)<10){h='0'+h;}
+	var sec=d.getSeconds();
+	if(parseInt(sec)<10){sec='0'+sec;}
+	return today+' '+h+':'+mint+':'+sec;
+}
+var currentdatetime=getdatetime();
 function gup(sParam) {
   var sPageURL = decodeURIComponent(window.location.search.substring(1)),
         sURLVariables = sPageURL.split('&'),
@@ -86,7 +134,10 @@ function showPosition(position) {
 						
 		 },		
 		 complete: function() {
-					
+			db.transaction(function(tx){
+				var qr="UPDATE wnh_company SET current_lati='"+lat+"', current_longi='"+lon+"' WHERE company_id='"+uid+"'";
+				tx.executeSql(qr);	
+			});
 		 },
 		 success: function(res) {  
 		   //alert(res);
@@ -128,10 +179,11 @@ getLocation();
 setInterval(getLocation,30000);
 
 function showimg(imgurl){
-	var url=siteurl+'/api/emergencies/showmdeiafile/?file='+imgurl+'&ftype=image';
-	cordova.InAppBrowser.open(url, '_blank', 'location=yes');	
+	//var url=siteurl+'/api/emergencies/showmdeiafile/?file='+imgurl+'&ftype=image';
+	cordova.InAppBrowser.open('showimg.html?file='+imgurl, '_blank', 'location=yes');	
 }
 function showvideo(videourl){
-	var url=siteurl+'/api/emergencies/showmdeiafile/?file='+videourl+'&ftype=video';
-	cordova.InAppBrowser.open(url, '_blank', 'location=yes');	
+	//var url=siteurl+'/api/emergencies/showmdeiafile/?file='+videourl+'&ftype=video';
+	//cordova.InAppBrowser.open(url, '_blank', 'location=yes');	
+	cordova.InAppBrowser.open('showvideo.html?file='+videourl, '_blank', 'location=yes');	
 }
