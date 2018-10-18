@@ -1,106 +1,50 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-<meta charset="utf-8" />
-<!-- Website Design By: www.happyworm.com -->
-<title>Demo : jPlayer as a video player</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="video-script/dist/skin/blue.monday/css/jplayer.blue.monday.min.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="video-script/lib/jquery.min.js"></script>
-<script type="text/javascript" src="video-script/dist/jplayer/jquery.jplayer.min.js"></script>
-<script type="text/javascript">
-//<![CDATA[
-$(document).ready(function(){
-	var ww=jQuery(window).width();
-	var wh=jQuery(window).height();
-	var vfile=gup('file');
-	wh=parseInt(wh)-100;
-	$("#jquery_jplayer_1").jPlayer({
-		ready: function () {
-			$(this).jPlayer("setMedia", {
-				title: "Big Buck Bunny",
-				mp4: vfile,
-				m4v: vfile,
-				ogv: vfile,
-				webmv: vfile,
-				poster: "video-script/bg.jpg"
-			});
-		},
-		swfPath: "video-script/dist/jplayer",
-		supplied: "webmv, ogv, m4v",
-		size: {
-			width: ww+"px",
-			height: wh+"px",
-			cssClass: "jp-video-360p"
-		},
-		useStateClassSkin: true,
-		autoBlur: false,
-		smoothPlayBar: true,
-		keyEnabled: true,
-		remainingDuration: true,
-		toggleDuration: true
-	});
+<title>Wllnow Health App</title>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-});
-//]]>
-</script>
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="css/bootstrap.min.css" >
+<link rel="stylesheet" href="css/style.css" >
+<link rel="stylesheet" href="css/mycss.css" >
 </head>
 <body>
-<div id="jp_container_1" class="jp-video jp-video-360p" role="application" aria-label="media player">
-	<div class="jp-type-single">
-		<div id="jquery_jplayer_1" class="jp-jplayer"></div>
-		<div class="jp-gui">
-			<div class="jp-video-play">
-				<button class="jp-video-play-icon" role="button" tabindex="0">play</button>
-			</div>
-			<div class="jp-interface">
-				<div class="jp-progress">
-					<div class="jp-seek-bar">
-						<div class="jp-play-bar"></div>
-					</div>
-				</div>
-				<div class="jp-duration" role="timer" aria-label="duration">&nbsp;</div>
-				<div class="jp-controls-holder">
-					<div class="jp-controls">
-						<button class="jp-play" role="button" tabindex="0">play</button>
-						<button class="jp-stop" role="button" tabindex="0">stop</button>
-					</div>
-					<div class="jp-volume-controls">
-						<button class="jp-mute" role="button" tabindex="0">mute</button>
-						<button class="jp-volume-max" role="button" tabindex="0">max volume</button>
-						<div class="jp-volume-bar">
-							<div class="jp-volume-bar-value"></div>
-						</div>
-					</div>
-					<div class="jp-toggles">
-						<button class="jp-full-screen" role="button" tabindex="0">full screen</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="jp-no-solution">
-			<span>Update Required</span>
-			To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
-		</div>
-	</div>
+<div class="container">
+	<video width="320" height="240" controls>
+	  <source src="movie.mp4" type="video/mp4">
+	  <source src="movie.ogg" type="video/ogg">
+	  Your browser does not support the video tag.
+	</video>
 </div>
+</div>
+
+<!-- Optional JavaScript --> 
+<!-- jQuery first, then Popper.js, then Bootstrap JS --> 
+<script src="js/jquery-3.2.1.min.js" ></script> 
+<script src="js/popper.min.js" ></script> 
+<script src="js/bootstrap.min.js" ></script>
+<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+<script type="text/javascript" src="js/config.js"></script>
+<script type="text/javascript" src="js/queries.js"></script>
 <script type="text/javascript">
+
 jQuery(document).ready(function(){
-	var wh=jQuery(window).height();
-	wh=parseInt(wh)-100;
+	
+	jQuery( document ).on( "mobileinit", function() {
+		jQuery.mobile.allowCrossDomainPages = true;
+	});
+	var contentType ="application/x-www-form-urlencoded; charset=utf-8";
+    if(window.XDomainRequest){contentType = "text/plain";}
+	jQuery.support.cors = true;
+	var wh=jQuery(window).heigth();
 	var ww=jQuery(window).width();
-	jQuery('.jp-video-360p').css({'width':ww+'px','border':'none'});
-	jQuery('#jquery_jplayer_1, #jp_poster_0, .jp-controls-holder').css({'width':ww+'px'});
-	jQuery('.jp-controls-holder .jp-controls').css({'margin-left':'130px'});
-	jQuery('.jp-video .jp-toggles').css({'right':'0px'});
-	jQuery('.jp-video .jp-volume-controls').css({'left': '15px'});
-	jQuery('body').css({'margin': '0px', 'padding': '0px'});
-	var h=parseInt(wh/2);
-	var w=parseInt(ww/2);
-	//jQuery('.jp-video-play-icon').css({'margin-top':'-'+h+'px','margin-left':'-'+w+'px'});
-	jQuery('.jp-video-play-icon').css({'position':'absolute'});
+	var file=gup('file');
+	var vd='<video width="'+ww+'" height="'+wh+'" controls><source src="'+file+'" type="video/mp4"><source src="'+file+'" type="video/webm"><source src="'+file+'" type="video/ogg">Your browser does not support the video tag.</video>';
 });
+
 </script>
 </body>
-
 </html>

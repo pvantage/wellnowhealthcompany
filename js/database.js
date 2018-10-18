@@ -33,9 +33,9 @@
     // Transaction error callback
     //
     function errorCB(tx, err) {
-        alert("Error processing SQL1: "+err);
-		alert("Error processing SQL2: "+err.code);
-		alert("Error processing SQL3: "+err.message);
+        //alert("Error processing SQL1: "+err);
+		//alert("Error processing SQL2: "+err.code);
+		//alert("Error processing SQL3: "+err.message);
     }
 
     // Transaction success callback

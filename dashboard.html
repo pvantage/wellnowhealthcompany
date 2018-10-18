@@ -478,11 +478,14 @@ function showclinics(loop){
 				var html='';
 				for(var i = 0; i < res.rows.length; i++)
 				{
+					
 					var phn=res.rows.item(i).phone;
 					var clnid=res.rows.item(i).clinic_id;
-					var html='<ul><li class="cliniclist clinic-'+clnid+'" data-phone="'+res.rows.item(i).phone+'"><input type="radio" name="clinic_id" value="'+res.rows.item(i).clinic_id+'" /> '+res.rows.item(i).name+' ('+res.rows.item(i).address+')<ul class="showmanagerlist showmanagerlist_'+clnid+'" style="display:none;">';	
-					html+='<li>Clinic <i class="fa fa-phone"></i>&nbsp;&nbsp;&nbsp;<a href="tel:'+res.rows.item(i).phone+'"">'+res.rows.item(i).phone+'</a></li></ul></li></ul>';
-					jQuery('.clinics').append(html);
+					if(loop=='first'){
+						var html='<ul><li class="cliniclist clinic-'+clnid+'" data-phone="'+res.rows.item(i).phone+'"><input type="radio" name="clinic_id" value="'+res.rows.item(i).clinic_id+'" /> '+res.rows.item(i).name+' ('+res.rows.item(i).address+')<ul class="showmanagerlist showmanagerlist_'+clnid+'" style="display:none;">';	
+						html+='<li>Clinic <i class="fa fa-phone"></i>&nbsp;&nbsp;&nbsp;<a href="tel:'+res.rows.item(i).phone+'"">'+res.rows.item(i).phone+'</a></li></ul></li></ul>';
+						jQuery('.clinics').append(html);
+					}
 					
 					var q="SELECT * FROM wnh_managers WHERE clinic_id=?";
 					var cond=[clnid];
