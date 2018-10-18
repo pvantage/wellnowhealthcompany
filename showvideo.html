@@ -35,7 +35,7 @@ jQuery(document).ready(function(){
 	var contentType ="application/x-www-form-urlencoded; charset=utf-8";
     if(window.XDomainRequest){contentType = "text/plain";}
 	jQuery.support.cors = true;
-	var wh=jQuery(window).heigth();
+	var wh=jQuery(window).height();
 	var ww=jQuery(window).width();
 	var file=gup('file');
 	var vd='<video width="'+ww+'" height="'+wh+'" controls><source src="'+file+'" type="video/mp4"><source src="'+file+'" type="video/webm"><source src="'+file+'" type="video/ogg">Your browser does not support the video tag.</video>';
