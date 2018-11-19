@@ -282,7 +282,20 @@ function opennotes(showmsg){
 							for(var i = 0; i < res2.rows.length; i++)
 							{
 								var clsas='clinicnote';
-								var msgg=res2.rows.item(i).note+' <span class="seen_'+res2.rows.item(i).emergency_note_id+' notseenmsg"></span>';
+								var note=res2.rows.item(i).note;
+								if(jQuery.trim(note)=='' && jQuery.trim(res2.rows.item(i).filetype)!=''){
+									var filepath=res2.rows.item(i).mobilefilepath;
+									if(jQuery.trim(filepath)==''){
+										filepath=res2.rows.item(i).filepath;
+									}
+									if(jQuery.trim(res2.rows.item(i).filetype)=='video'){
+										note='<span class="video-wrape"><a href="javascript:;" onclick="return showvideo(\''+filepath+'\');"><img src="images/video1.png" alt="video" /> Click to view</a></span>';
+									}
+									else if(jQuery.trim(res2.rows.item(i).filetype)=='image'){
+										note='<span class="img-wrape"><a href="javascript:;" onclick="return showimg(\''+filepath+'\');"><i class="fa fa-picture-o" style="font-size:18px;"></i> Click to zoom</a></span>';
+									}
+								}
+								var msgg=note+' <span class="seen_'+res2.rows.item(i).emergency_note_id+' notseenmsg"></span>';
 								if(res2.rows.item(i).manager_id!='0'){
 									msgg=res2.rows.item(i).note+' :'+res2.rows.item(i).manager;
 									clsas='managernote';
