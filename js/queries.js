@@ -1,21 +1,29 @@
-
-document.addEventListener("online", checkfornewupdates, false);
-//document.addEventListener("online", updategardenerdata, false);
+var wd=jQuery(window).width();
 function checkonlineoffline(){
-	document.addEventListener("online", checkfornewupdates, false);
-	document.addEventListener("online", updategardenerdata, false);
-	checkfornewupdates();
-	updategardenerdata();
+	if(parseInt(wd)<=700){
+		document.addEventListener("online", checkfornewupdates, false);
+		document.addEventListener("online", updategardenerdata, false);
+	}
+	else{
+		checkfornewupdates();
+		updategardenerdata();
+	}
 }
 setInterval(checkonlineoffline,5000);
-
-function updategardenerdata(){
-	//var networkState = navigator.connection.type;
-	//alert('Connection type: ' + networkState);
+function fastqueryreq(){
+	if(parseInt(wd)<=700){
+		document.addEventListener("online", fastquery, false);
+	}
+	else{
+		fastquery();
+	}
+}
+setInterval(fastqueryreq,2000);
+function fastquery(){
 	var uid=localStorage.getItem('Company_ID');
 	if(typeof uid!='undefine' && uid!='' && uid!=null){
-		db.transaction(checkupdateforjobs, updateerrorDB, successDB);
-		function checkupdateforjobs(tx){
+		db.transaction(checkupdateforjobs1, updateerrorDB, successDB);
+		function checkupdateforjobs1(tx){
 			var q="SELECT * FROM wnh_emergencies WHERE company_id=?";
 			var cond=[uid];
 			tx.executeSql(q, cond, function(tx, res2){
@@ -53,6 +61,35 @@ function updategardenerdata(){
 					
 				}
 			});
+		}
+		var url=siteurl+'/api/updates/companyemergencies';
+		jQuery.ajax({  
+			type: 'POST',  
+			url: url,           
+			dataType: 'json',  
+			crossDomain: true,
+			data: {company_id:uid}, 
+			beforeSend: function() {
+			
+			},		
+			complete: function() {
+			}, 
+			crossDomain: true,  
+			success: Updateemergencydata,  
+			error: function(response, d, a){
+		
+			return false; 
+			}
+		});
+	}
+}
+function updategardenerdata(){
+	//var networkState = navigator.connection.type;
+	//alert('Connection type: ' + networkState);
+	var uid=localStorage.getItem('Company_ID');
+	if(typeof uid!='undefine' && uid!='' && uid!=null){
+		db.transaction(checkupdateforjobs, updateerrorDB, successDB);
+		function checkupdateforjobs(tx){
 			
 			var q="SELECT * FROM wnh_emergencies WHERE company_id=?";
 			var cond=[uid];
@@ -183,25 +220,7 @@ function checkfornewupdates(){
 			return false; 
 			}
 		});
-		var url=siteurl+'/api/updates/companyemergencies';
-		jQuery.ajax({  
-			type: 'POST',  
-			url: url,           
-			dataType: 'json',  
-			crossDomain: true,
-			data: {company_id:uid}, 
-			beforeSend: function() {
-			
-			},		
-			complete: function() {
-			}, 
-			crossDomain: true,  
-			success: Updateemergencydata,  
-			error: function(response, d, a){
 		
-			return false; 
-			}
-		});
 		
 		var url=siteurl+'/api/updates/getphones';
 		jQuery.ajax({  

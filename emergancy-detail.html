@@ -131,60 +131,12 @@ function getdistance(fromlati,fromlongi,fromaddress,tolati,tolongi,toaddress){
 		}
 	}
 }
-/*function opennotes2(){
-	var emergency_id=gup('id');
-	var url=siteurl+'/api/emergencies/getmsgs';
-	 jQuery.ajax({  
-	 type: 'POST',  
-	 url: url,           
-	 dataType: 'json',  
-	 data: {emergency_id:emergency_id,seeby:'company'}, 
-	 beforeSend: function() {
-		jQuery('#emergency').modal();
-	 },		
-	 complete: function() {
-	 }, 
-	 crossDomain: true,  
-	 success: function(res) { 
-		if(res['notes'])
-		{
-			jQuery('.notelists').html('');
-			jQuery(res['notes']).each(function(index){
-				var clsas='clinicnote';
-				var msgg=res['notes'][index]['note'];
-				if(parseInt(index)>0){
-					if(jQuery.trim(res['notes'][index]['manager'])!=''){
-						msgg=res['notes'][index]['note']+' :'+res['notes'][index]['manager'];
-						clsas='managernote';
-					}
-					else{
-						msgg=res['notes'][index]['note'];
-					}
-				}
-				jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+'">'+msgg+'</span></div>');
-			});
-			
-		
-		}
-		return false; 
-	 },  
-	 error: function(response, d, a){
-		
-		jQuery('body .showmessage').remove();
-		var html='<div class="showmessage">Server Error.</div>';
-		jQuery('body').append(html);
-		setTimeout(function(){jQuery('.showmessage').slideUp();},1000);
-		return false; 
-	 }
-			
-   });
-   
-}*/
+
 function opennotes(){
 	var emergency_id=gup('id');
 	jQuery('.notelists').html('');
-	db.transaction(showlistjobs, errorDB, successDB);
-	function showlistjobs(tx){
+	db.transaction(showlistjobs1, errorDB, successDB);
+	function showlistjobs1(tx){
 		var q="SELECT * FROM wnh_emergencies where emergency_id=?";
 		var cond=[emergency_id];
 		tx.executeSql(q, cond, function(tx, res){
@@ -354,8 +306,8 @@ jQuery(document).ready(function(){
 		}
 	});*/
 	function loademergency(id){
-		db.transaction(showlistjobs, errorDB, successDB);
-		function showlistjobs(tx){
+		db.transaction(showlistjobs2, errorDB, successDB);
+		function showlistjobs2(tx){
 			var q="SELECT m.phone,m.image, c.address_lati as clinic_lati, c.address_longi as clinic_longi, c.address as clinic_address, cm.* FROM wnh_emergencies as e, wnh_managers as m, wnh_clinics as c, wnh_company as cm where e.manager_id=m.manager_id AND e.clinic_id=c.clinic_id AND e.company_id=cm.company_id AND e.emergency_id=?";
 			var cond=[id];
 			tx.executeSql(q, cond, function(tx, res){

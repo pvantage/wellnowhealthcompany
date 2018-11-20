@@ -129,7 +129,7 @@
 var ourphoto='images/home.png';
 var crrentdata=[];
 var activedata=[];
-
+var quenotes=[];
 
 function checkseenmsg(){
 	var seenmsgs=localStorage.getItem('seenmsgs');
@@ -181,27 +181,31 @@ function opennotes(showmsg){
 						if(parseInt(res2.rows.length)>0){
 							for(var i = 0; i < res2.rows.length; i++)
 							{
-								var clsas='clinicnote';
-								var note=res2.rows.item(i).note;
-								if(jQuery.trim(note)=='' && jQuery.trim(res2.rows.item(i).filetype)!=''){
-									var filepath=res2.rows.item(i).mobilefilepath;
-									if(jQuery.trim(filepath)==''){
-										filepath=res2.rows.item(i).filepath;
+								//var chkque=quenotes.indexOf(res2.rows.item(i).emergency_note_id);
+								//if(chkque==-1){
+									//quenotes.push(res2.rows.item(i).emergency_note_id);
+									var clsas='clinicnote';
+									var note=res2.rows.item(i).note;
+									if(jQuery.trim(note)=='' && jQuery.trim(res2.rows.item(i).filetype)!=''){
+										var filepath=res2.rows.item(i).mobilefilepath;
+										if(jQuery.trim(filepath)==''){
+											filepath=res2.rows.item(i).filepath;
+										}
+										if(jQuery.trim(res2.rows.item(i).filetype)=='video'){
+											note='<span class="video-wrape"><a href="javascript:;" onclick="return showvideo(\''+filepath+'\');"><img src="images/video1.png" alt="video" /> Click to view</a></span>';
+										}
+										else if(jQuery.trim(res2.rows.item(i).filetype)=='image'){
+											note='<span class="img-wrape"><a href="javascript:;" onclick="return showimg(\''+filepath+'\');"><i class="fa fa-picture-o" style="font-size:18px;"></i> Click to zoom</a></span>';
+										}
 									}
-									if(jQuery.trim(res2.rows.item(i).filetype)=='video'){
-										note='<span class="video-wrape"><a href="javascript:;" onclick="return showvideo(\''+filepath+'\');"><img src="images/video1.png" alt="video" /> Click to view</a></span>';
+									var msgg=note+' <span class="seen_'+res2.rows.item(i).emergency_note_id+' notseenmsg"></span>';
+									if(res2.rows.item(i).manager_id!='0'){
+										msgg=res2.rows.item(i).note+' :'+res2.rows.item(i).manager;
+										clsas='managernote';
 									}
-									else if(jQuery.trim(res2.rows.item(i).filetype)=='image'){
-										note='<span class="img-wrape"><a href="javascript:;" onclick="return showimg(\''+filepath+'\');"><i class="fa fa-picture-o" style="font-size:18px;"></i> Click to zoom</a></span>';
-									}
-								}
-								var msgg=note+' <span class="seen_'+res2.rows.item(i).emergency_note_id+' notseenmsg"></span>';
-								if(res2.rows.item(i).manager_id!='0'){
-									msgg=res2.rows.item(i).note+' :'+res2.rows.item(i).manager;
-									clsas='managernote';
-								}
-								
-								jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+'">'+msgg+'</span></div>');
+									
+									jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+'">'+msgg+'</span></div>');
+								//}
 								
 							}
 						}
@@ -222,7 +226,7 @@ function opennotes(showmsg){
 	if(typeof inter!='undefined'){
 		clearInterval(inter);
 	}
-	var inter=setInterval(notes,5000);
+	//var inter=setInterval(notes,5000);
 }
 
 function notes(){
@@ -244,7 +248,7 @@ function notes(){
 		if(res['notes'] && jQuery.trim(res['notes'])!='')
 		{
 			jQuery(res['notes']).each(function(index){
-				var clsas='clinicnote';
+				/*var clsas='clinicnote';
 				var msgg=res['notes'][index]['note'];
 				if(jQuery.trim(res['notes'][index]['manager'])!=''){
 					msgg=res['notes'][index]['note']+' :'+res['notes'][index]['manager'];
@@ -253,11 +257,11 @@ function notes(){
 				else{
 					msgg=res['notes'][index]['note'];
 				}
-				jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+'">'+msgg+'</div>');
+				jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+'">'+msgg+'</div>');*/
 				
 				db.transaction(function(tx){
-					var qr='INSERT INTO wnh_emergency_notes (emergency_note_id, emergency_id, note, filepath, filetype, manager_id, company_id, cdate, readbycompany, readbymanager, parent_id, notify) VALUES ("'+res['notes'][index]['emergency_note_id']+'", "'+emergency_id+'", "'+res['notes'][index]['note']+'", "'+res['notes'][index]['filepath']+'", "'+res['notes'][index]['filetype']+'", "'+res['notes'][index]['manager_id']+'", "'+res['notes'][index]['company_id']+'", "'+res['notes'][index]['cdate']+'", "'+res['notes'][index]['readbycompany']+'", "'+res['notes'][index]['readbymanager']+'", "'+res['notes'][index]['parent_id']+'", "'+res['notes'][index]['notify']+'")';
-					tx.executeSql(qr);
+					//var qr='INSERT INTO wnh_emergency_notes (emergency_note_id, emergency_id, note, filepath, filetype, manager_id, company_id, cdate, readbycompany, readbymanager, parent_id, notify) VALUES ("'+res['notes'][index]['emergency_note_id']+'", "'+emergency_id+'", "'+res['notes'][index]['note']+'", "'+res['notes'][index]['filepath']+'", "'+res['notes'][index]['filetype']+'", "'+res['notes'][index]['manager_id']+'", "'+res['notes'][index]['company_id']+'", "'+res['notes'][index]['cdate']+'", "'+res['notes'][index]['readbycompany']+'", "'+res['notes'][index]['readbymanager']+'", "'+res['notes'][index]['parent_id']+'", "'+res['notes'][index]['notify']+'")';
+					//tx.executeSql(qr);
 					
 				});
 			});
