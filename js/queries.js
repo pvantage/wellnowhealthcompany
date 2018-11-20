@@ -4,10 +4,10 @@ document.addEventListener("online", checkfornewupdates, false);
 function checkonlineoffline(){
 	document.addEventListener("online", checkfornewupdates, false);
 	document.addEventListener("online", updategardenerdata, false);
-	//checkfornewupdates();
-	//updategardenerdata();
+	checkfornewupdates();
+	updategardenerdata();
 }
-setInterval(checkonlineoffline,15000);
+setInterval(checkonlineoffline,5000);
 
 function updategardenerdata(){
 	//var networkState = navigator.connection.type;
