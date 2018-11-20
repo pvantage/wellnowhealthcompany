@@ -119,7 +119,7 @@ function deletethis(id,$this){
 function loademergencies(){
 	db.transaction(showlistjobs, errorDB, successDB);
 	function showlistjobs(tx){
-		var q="SELECT * FROM wnh_emergencies where status=? AND deletebycaompany=? AND company_id=?";
+		var q="SELECT * FROM wnh_emergencies where status=? AND deletebycaompany=? AND company_id=? ORDER BY id DESC";
 		var cond=['completed', '0', uid];
 		tx.executeSql(q, cond, function(tx, res){
 			if(parseInt(res.rows.length)>0){

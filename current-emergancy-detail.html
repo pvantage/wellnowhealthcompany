@@ -130,51 +130,7 @@ var ourphoto='images/home.png';
 var crrentdata=[];
 var activedata=[];
 
-/*function checkseenmsg2(){
-	var seenmsgs=localStorage.getItem('seenmsgs');
-	var seenmsgs_ids='';
-	if(typeof seenmsgs!='undefined' && seenmsgs!='' && seenmsgs!=null){
-		seenmsgs_ids=seenmsgs;
-	}
-	var emergency_id=gup('id');
-	if(emergency_id!='' && emergency_id!='0'){
-		var url=siteurl+'/api/emergencies/checkseenmsgs';
-		jQuery.ajax({  
-		 type: 'POST',  
-		 url: url,           
-		 dataType: 'json',  
-		 data: {seenmsgs_ids:seenmsgs_ids,emergency_id:emergency_id,seeby:'company'}, 
-		 beforeSend: function() {
-			
-		 },		
-		 complete: function() {
-		 }, 
-		 crossDomain: true,  
-		 success: function(res) { 
-			if(res['seenids']){
-				jQuery(res['seenids']).each(function(index){
-					jQuery('.seen_'+res['seenids'][index]['em_msg_id']).removeClass('notseenmsg');
-					jQuery('.seen_'+res['seenids'][index]['em_msg_id']).addClass('seenmsg');
-				});
-				if(jQuery('.notelists .note-content:first span').hasClass('notseenmsg')){
-					jQuery('.notelists .note-content:first span.notseenmsg').addClass('seenmsg');
-					jQuery('.notelists .note-content:first span').removeClass('notseenmsg');
-					
-				}
-			}
-		 },  
-		 error: function(response, d, a){
-			
-			jQuery('body .showmessage').remove();
-			var html='<div class="showmessage">Server Error.</div>';
-			jQuery('body').append(html);
-			setTimeout(function(){jQuery('.showmessage').slideUp();},1000);
-			return false; 
-		 }
-				
-	   });
-	 }
-}*/
+
 function checkseenmsg(){
 	var seenmsgs=localStorage.getItem('seenmsgs');
 	var seenmsgs_ids='';
@@ -203,64 +159,7 @@ function checkseenmsg(){
 		}
 	}
 }
-/*function opennotes2(showmsg){
-	var emergency_id=gup('id');
-	var url=siteurl+'/api/emergencies/getmsgs';
-	 jQuery.ajax({  
-	 type: 'POST',  
-	 url: url,           
-	 dataType: 'json',  
-	 data: {emergency_id:emergency_id,seeby:'company'}, 
-	 beforeSend: function() {
-	 	if(showmsg=='yes'){
-			jQuery('#emergency').modal();
-		}
-	 },		
-	 complete: function() {
-	 }, 
-	 crossDomain: true,  
-	 success: function(res) { 
-		if(res['notes'])
-		{
-			jQuery('.notelists').html('');
-			jQuery(res['notes']).each(function(index){
-				var clsas='clinicnote';
-				var msgg=res['notes'][index]['note']+' <span class="seen_'+res['notes'][index]['id']+' notseenmsg"></span>';
-				if(parseInt(index)>0){
-					if(jQuery.trim(res['notes'][index]['manager'])!=''){
-						msgg=res['notes'][index]['note']+' :'+res['notes'][index]['manager'];
-						clsas='managernote';
-					}
-					else{
-						msgg=res['notes'][index]['note']+' <span class="seen_'+res['notes'][index]['id']+' notseenmsg"></span>';
-					}
-				}
-				jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+'">'+msgg+'</div>');
-			});
-			
-		
-		}
-		if(typeof inter2!='undefined'){
-			clearInterval(inter2);
-		}
-		var inter2=setInterval(checkseenmsg,6000);
-		return false; 
-	 },  
-	 error: function(response, d, a){
-		
-		jQuery('body .showmessage').remove();
-		var html='<div class="showmessage">Server Error.</div>';
-		jQuery('body').append(html);
-		setTimeout(function(){jQuery('.showmessage').slideUp();},1000);
-		return false; 
-	 }
-			
-   });
-   if(typeof inter!='undefined'){
-		clearInterval(inter);
-	}
-	var inter=setInterval(notes,5000);
-}*/
+
 function opennotes(showmsg){
 	var emergency_id=gup('id');
 	jQuery('.notelists').html('');
@@ -324,62 +223,7 @@ function opennotes(showmsg){
 	}
 	var inter=setInterval(notes,5000);
 }
-/*function notes2(){
-	var emergency_id=gup('id');
-	var url=siteurl+'/api/emergencies/getsinglemsgs';
-	 jQuery.ajax({  
-	 type: 'POST',  
-	 url: url,           
-	 dataType: 'json',  
-	 data: {emergency_id:emergency_id,seeby:'company'}, 
-	 beforeSend: function() {
-		
-	 },		
-	 complete: function() {
-	 }, 
-	 crossDomain: true,  
-	 success: function(res) { 
-		if(res['notes'] && jQuery.trim(res['notes'])!='')
-		{
-			jQuery(res['notes']).each(function(index){
-				var clsas='clinicnote';
-				var msgg=res['notes'][index]['note'];
-				if(jQuery.trim(res['notes'][index]['manager'])!=''){
-					msgg=res['notes'][index]['note']+' :'+res['notes'][index]['manager'];
-					clsas='managernote';
-				}
-				else{
-					msgg=res['notes'][index]['note'];
-				}
-				jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+'">'+msgg+'</div>');
-				//jQuery('.notelists').append('<div class="note-content">'+res['notes'][index]['note']+'</div>');
-			});
-			jQuery('#emergency').modal();
-		
-		}
-		if(typeof res['measurement']!='undefined' && typeof res['measurement']['distance']!='undefined'){
-			jQuery('.displaydistance').html('Estimated Distance : '+res['measurement']['distance']+'<br>Estimated Time: '+res['measurement']['duration']);
-		}
-		if(typeof res['emstatus']!='undefined' && res['emstatus']!=''){
-			if(res['emstatus']=='completed')
-			{
-				window.location='emergancy-detail.html?id='+res['emid'];
-			}
-		}
-		
-		return false; 
-	 },  
-	 error: function(response, d, a){
-		
-		jQuery('body .showmessage').remove();
-		var html='<div class="showmessage">Server Error.</div>';
-		jQuery('body').append(html);
-		setTimeout(function(){jQuery('.showmessage').slideUp();},1000);
-		return false; 
-	 }
-			
-   });
-}*/
+
 function notes(){
 	var emergency_id=gup('id');
 	var url=siteurl+'/api/emergencies/getsinglemsgs';
@@ -538,81 +382,7 @@ jQuery(document).ready(function(){
         
       }
 	
-	/*var url=siteurl+'/api/emergencies/ergencydetail';
-	jQuery.ajax({  
-		type: 'POST',  
-		url: url,           
-		dataType: 'json',  
-		crossDomain: true,
-		data: {id:id}, 
-		beforeSend: function() {
-		
-		},		
-		complete: function() {
-		}, 
-		crossDomain: true,  
-		success: function(res) { 
-		if(res['data'])
-		{
-			var html='';
-			jQuery(res['data']).each(function(index){
-				if(res['data'][index]['status']=='completed')
-				{
-					window.location='emergancy-detail.html?id='+id;
-				}
-				if(jQuery.trim(res['data'][index]['staff_phone'])!=''){
-				jQuery('.main-wrapper').append('<div class="btm-btn-sctn"><div class="text-center mb-3"><a href="tel:'+res['data'][index]['staff_phone']+'" class="btn btn-primary">CONTACT EMERGENCY</a></div><div class="text-center mb-3"><a href="javascript:;" onclick="return opennotes(\'yes\');" class="btn btn-primary">MESSAGES</a></div></div>');
-				}
-				if(res['data'][index]['manager_id']=='0'){
-					jQuery('body .showmessage').remove();
-					var html='<div class="showmessage">Please wait the Manager is not logged in</div>';
-					jQuery('body').append(html);
-					setTimeout(function(){jQuery('.showmessage').slideUp();
-					},2000);
-					setTimeout(function(){
-						//window.location='';
-					},5000);
-				}
-				jQuery('input[name="manager_id"]').val(res['data'][index]['manager_id']);
-			  	jQuery('input[name="clinic_id"]').val(res['data'][index]['clinic_id']);
-				localStorage.setItem('Current_Manager_clinicaddress',res['data'][index]['companyaddress']);
-				localStorage.setItem('Current_Manager_clinicaddress',res['data'][index]['companyaddress']);
-				crrentdata=res['data'][index]['otherstff'];
-				activedata['stff_lati']=res['data'][index]['active_staff_lati'];
-				activedata['staff_longi']=res['data'][index]['active_staff_longi'];
-				activedata['company_lati']=res['data'][index]['current_lati'];
-				activedata['company_longi']=res['data'][index]['current_longi'];
-				var mapimage=res['data'][index]['staff_map_photo'];
-				if(jQuery.trim(mapimage)!=''){ourphoto=mapimage;}
-				
-				setTimeout(function(){
-				var lati=res['data'][index]['address_lati'], 
-				longi=res['data'][index]['address_longi'],
-				address=res['data'][index]['companyaddress'],
-				our_address=res['data'][index]['manager_address'],
-				mapid='ourgmap';
-				setgooglepath(lati,longi, address,our_address, mapid);
-				if(typeof res['data'][index]['measurement']!='undefined'){
-					jQuery('.displaydistance').html('Estimated Distance : '+res['data'][index]['measurement']['distance']+'<br>Estimated Time: '+res['data'][index]['measurement']['duration']);
-				}
-				opennotes('no');
-				},1000);
-			});
-			
-		}else if(res['nodata']){				
-			//jQuery('.activity-map-wrap').append(res['nodata']);
-		}
-		
-		},  
-		error: function(response, d, a){
-		
-		jQuery('body .showmessage').remove();
-		var html='<div class="showmessage">Server Error.</div>';
-		jQuery('body').append(html);
-		setTimeout(function(){jQuery('.showmessage').slideUp();},1000);
-		return false; 
-		}
-	});*/
+	
 	function loademergency(id){
 		db.transaction(showlistjobs, errorDB, successDB);
 		function showlistjobs(tx){
