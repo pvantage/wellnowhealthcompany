@@ -357,6 +357,7 @@ function Updatecompanydata(res){
 							tx.executeSql(qr);	
 						}
 						else{
+							
 							var qr='INSERT INTO wnh_company (company_id, name, phone, email, fax, status, address, total_employees, current_lati, current_address, current_longi, address_lati, address_longi, applogin, deviceregID, device_type) VALUES ("'+res['companies'][index]['id']+'", "'+res['companies'][index]['fname']+'", "'+res['companies'][index]['phone']+'", "'+res['companies'][index]['email']+'", "'+res['companies'][index]['fax']+'", "'+res['companies'][index]['status']+'", "'+res['companies'][index]['address']+'", "'+res['companies'][index]['total_employees']+'", "'+res['companies'][index]['current_lati']+'", "'+res['companies'][index]['current_longi']+'", "'+res['companies'][index]['current_address']+'", "'+res['companies'][index]['address_lati']+'", "'+res['companies'][index]['address_longi']+'", "'+res['companies'][index]['applogin']+'", "'+res['companies'][index]['deviceregID']+'", "'+res['companies'][index]['device_type']+'")';
 							//jQuery('body').append(qr);
 							tx.executeSql(qr);	
@@ -389,6 +390,8 @@ function Updateemergencydata(res){
 							tx.executeSql(qr);	
 						}
 						else{
+							
+																		 
 							var qr='INSERT INTO wnh_emergencies (emergency_id, company_id, clinic_id, manager_id, note, status, filepath, mobilefilepath, filetype, cdate, readbymanager, deletebymanager, deletebycaompany, showdate, clinic, clinicaddress, measurement) VALUES ("'+res['data'][index]['id']+'", "'+res['data'][index]['company_id']+'", "'+res['data'][index]['clinic_id']+'", "'+res['data'][index]['manager_id']+'", "'+res['data'][index]['note']+'", "'+res['data'][index]['status']+'", "'+res['data'][index]['filepath']+'", "", "'+res['data'][index]['filetype']+'", "'+res['data'][index]['cdate']+'", "'+res['data'][index]['readbymanager']+'", "'+res['data'][index]['deletebymanager']+'", "'+res['data'][index]['deletebycaompany']+'", "'+res['data'][index]['showdate']+'", "'+res['data'][index]['clinic']+'", "'+res['data'][index]['clinicaddress']+'", "'+res['data'][index]['measurement']+'")';
 							//jQuery('body').append(qr);
 							//alert(qr)
