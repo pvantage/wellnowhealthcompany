@@ -1,22 +1,11 @@
 var wd=jQuery(window).width();
 function checkonlineoffline(){
-	if(parseInt(wd)<=700){
-		document.addEventListener("online", checkfornewupdates, false);
-		document.addEventListener("online", updategardenerdata, false);
-	}
-	else{
-		checkfornewupdates();
-		updategardenerdata();
-	}
+	checkfornewupdates();
+	updategardenerdata();
 }
 setInterval(checkonlineoffline,5000);
 function fastqueryreq(){
-	if(parseInt(wd)<=700){
-		document.addEventListener("online", fastquery, false);
-	}
-	else{
-		fastquery();
-	}
+	fastquery();
 }
 setInterval(fastqueryreq,2000);
 function fastquery(){
