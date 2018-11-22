@@ -162,28 +162,28 @@ function checkseenmsg(){
 
 function opennotes(showmsg){
 	var emergency_id=gup('id');
-	jQuery('.notelists').html('');
+	//jQuery('.notelists').html('');
 	db.transaction(showlistjobs1, errorDB, successDB);
 	function showlistjobs1(tx){
 		var q="SELECT * FROM wnh_emergencies where emergency_id=?";
 		var cond=[emergency_id];
-		jQuery('.notelists').html('');
+		//jQuery('.notelists').html('');
 		tx.executeSql(q, cond, function(tx, res){
 			if(parseInt(res.rows.length)>0){
 				for(var i = 0; i < res.rows.length; i++)
 				{
-					var clsas='clinicnote';
-					var msgg=res.rows.item(i).note+' <span class="seen_em'+res.rows.item(i).emergency_id+' notseenmsg"></span>';
-					jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+'">'+msgg+'</span></div>');
+					
 					var q="SELECT n.*, m.name as manager FROM wnh_emergency_notes as n, wnh_managers as m, wnh_emergencies as e where e.emergency_id=n.emergency_id and e.manager_id=m.manager_id and n.emergency_id=?";
 					var cond=[emergency_id];
 					tx.executeSql(q, cond, function(tx, res2){
 						if(parseInt(res2.rows.length)>0){
 							for(var i = 0; i < res2.rows.length; i++)
 							{
-								//var chkque=quenotes.indexOf(res2.rows.item(i).emergency_note_id);
-								//if(chkque==-1){
-									//quenotes.push(res2.rows.item(i).emergency_note_id);
+								var chkque=quenotes.indexOf(res2.rows.item(i).emergency_note_id);
+								//alert(chkque);
+								if(chkque==-1){
+									//alert(res2.rows.item(i).note);
+									quenotes.push(res2.rows.item(i).emergency_note_id);
 									var clsas='clinicnote';
 									var note=res2.rows.item(i).note;
 									if(jQuery.trim(note)=='' && jQuery.trim(res2.rows.item(i).filetype)!=''){
@@ -203,9 +203,8 @@ function opennotes(showmsg){
 										msgg=res2.rows.item(i).note+' :'+res2.rows.item(i).manager;
 										clsas='managernote';
 									}
-									
 									jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+'">'+msgg+'</span></div>');
-								//}
+								}
 								
 							}
 						}
@@ -226,7 +225,7 @@ function opennotes(showmsg){
 	if(typeof inter!='undefined'){
 		clearInterval(inter);
 	}
-	//var inter=setInterval(notes,5000);
+	var inter=setInterval(notes,5000);
 }
 
 function notes(){
@@ -245,29 +244,7 @@ function notes(){
 	 crossDomain: true,  
 	 success: function(res) { 
 	 	//alert(JSON.stringify(res));
-		if(res['notes'] && jQuery.trim(res['notes'])!='')
-		{
-			jQuery(res['notes']).each(function(index){
-				/*var clsas='clinicnote';
-				var msgg=res['notes'][index]['note'];
-				if(jQuery.trim(res['notes'][index]['manager'])!=''){
-					msgg=res['notes'][index]['note']+' :'+res['notes'][index]['manager'];
-					clsas='managernote';
-				}
-				else{
-					msgg=res['notes'][index]['note'];
-				}
-				jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+'">'+msgg+'</div>');*/
-				
-				db.transaction(function(tx){
-					//var qr='INSERT INTO wnh_emergency_notes (emergency_note_id, emergency_id, note, filepath, filetype, manager_id, company_id, cdate, readbycompany, readbymanager, parent_id, notify) VALUES ("'+res['notes'][index]['emergency_note_id']+'", "'+emergency_id+'", "'+res['notes'][index]['note']+'", "'+res['notes'][index]['filepath']+'", "'+res['notes'][index]['filetype']+'", "'+res['notes'][index]['manager_id']+'", "'+res['notes'][index]['company_id']+'", "'+res['notes'][index]['cdate']+'", "'+res['notes'][index]['readbycompany']+'", "'+res['notes'][index]['readbymanager']+'", "'+res['notes'][index]['parent_id']+'", "'+res['notes'][index]['notify']+'")';
-					//tx.executeSql(qr);
-					
-				});
-			});
-			jQuery('#emergency').modal();
 		
-		}
 		if(typeof res['measurement']!='undefined' && typeof res['measurement']['distance']!='undefined'){
 			jQuery('.displaydistance').html('Estimated Distance : '+res['measurement']['distance']+'<br>Estimated Time: '+res['measurement']['duration']);
 		}
@@ -391,7 +368,7 @@ jQuery(document).ready(function(){
 	function loademergency(id){
 		db.transaction(showlistjobs2, errorDB, successDB);
 		function showlistjobs2(tx){
-			var q="SELECT m.phone,m.image, c.address_lati as clinic_lati, c.address_longi as clinic_longi, c.address as clinic_address, cm.*, e.manager_id, e.clinic_id FROM wnh_emergencies as e, wnh_managers as m, wnh_clinics as c, wnh_company as cm where e.manager_id=m.manager_id AND e.clinic_id=c.clinic_id AND e.company_id=cm.company_id AND e.emergency_id=?";
+			var q="SELECT e.note,m.phone,m.image, c.address_lati as clinic_lati, c.address_longi as clinic_longi, c.address as clinic_address, cm.*, e.manager_id, e.clinic_id FROM wnh_emergencies as e, wnh_managers as m, wnh_clinics as c, wnh_company as cm where e.manager_id=m.manager_id AND e.clinic_id=c.clinic_id AND e.company_id=cm.company_id AND e.emergency_id=?";
 			var cond=[id];
 			tx.executeSql(q, cond, function(tx, res){
 				if(parseInt(res.rows.length)>0){
@@ -401,6 +378,10 @@ jQuery(document).ready(function(){
 						var phone=res.rows.item(i).phone;
 						if(jQuery.trim(phone)!=''){
 							//jQuery('.main-wrapper').append('<div class="btm-btn-sctn"><div class="text-center mb-3"><a href="tel:'+phone+'" class="btn btn-primary">CONTACT EMERGENCY</a></div><div class="text-center mb-3"><a href="javascript:;" onclick="return opennotes();" class="btn btn-primary">MESSAGES</a></div></div>');
+							var clsas='clinicnote';
+							var msgg=res.rows.item(i).note+' <span class="seen_em'+id+' notseenmsg"></span>';
+							jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+'">'+msgg+'</span></div>');
+							
 							jQuery('.main-wrapper').append('<div class="btm-btn-sctn"><div class="text-center mb-3"><a href="tel:'+phone+'" class="btn btn-primary">CONTACT EMERGENCY</a></div><div class="text-center mb-3"><a href="javascript:;" onclick="return opennotes(\'yes\');" class="btn btn-primary">MESSAGES</a></div></div>');
 						}
 						if(res.rows.item(i).manager_id=='0'){
@@ -506,14 +487,14 @@ jQuery(document).ready(function(){
 					jQuery('#loginuser textarea[name="note"]').val('');
 					jQuery('.sendmsgbtn').attr('disabled',true);
 					
-					jQuery(res['emnotes']).each(function(index){
+					/*jQuery(res['emnotes']).each(function(index){
 						
 						db.transaction(function(tx){
 							var qr='INSERT INTO wnh_emergency_notes (emergency_note_id, emergency_id, note, filepath, mobilefilepath, filetype, manager_id, company_id, cdate, readbycompany, readbymanager, parent_id, notify) VALUES ("'+res['emnotes'][index]['id']+'", "'+res['emnotes'][index]['emergency_id']+'", "'+res['emnotes'][index]['note']+'", "'+res['emnotes'][index]['filepath']+'", "", "'+res['emnotes'][index]['filetype']+'", "'+res['emnotes'][index]['manager_id']+'", "'+res['emnotes'][index]['company_id']+'", "'+res['emnotes'][index]['cdate']+'", "1", "'+res['emnotes'][index]['readbymanager']+'", "'+res['emnotes'][index]['parent_id']+'", "'+res['emnotes'][index]['notify']+'")';
 							tx.executeSql(qr);
 							
 						});
-					});
+					});*/
 				
 				}else if(res['errors']){				
 					jQuery('body .showmessage').remove();
@@ -541,7 +522,7 @@ jQuery(document).ready(function(){
 		 return false;   
 	});
 });
-function getgallerysinglenote(note_id,mobilefilepath){
+/*function getgallerysinglenote(note_id,mobilefilepath){
 	var url=siteurl+'/api/emergencies/getsinglenote';
 	 jQuery.ajax({  
 	 type: 'POST',  
@@ -587,7 +568,7 @@ function getgallerysinglenote(note_id,mobilefilepath){
 	 }
 			
    });
-}
+}*/
 var platform='';
 function fail(error) {
 	jQuery('body .showmessage').remove();
@@ -636,7 +617,7 @@ function uploadgallerypic() {
 					jQuery('.notelists').append('<div class="note-content"><span class="clinicnote"><div class="note-content">Me: <span class="img-wrape"><a href="javascript:;" onclick="return showimg(\''+filetrasfer+'\');"><i class="fa fa-picture-o" style="font-size:18px;"></i> Click to zoom</a></span><span class="seen_'+cntents[1]+' notseenmsg"></span></span></div>');
 					jQuery('body .showmessage').remove();
 					var html='<div class="showmessage">'+cntents[2]+'</div>';
-					getgallerysinglenote(cntents[1],filetrasfer);
+					//getgallerysinglenote(cntents[1],filetrasfer);
 					jQuery('body').append(html);
 					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
 					if(typeof inter!='undefined'){
@@ -712,7 +693,7 @@ function uploadmyvideo(){
 					jQuery('.notelists').append('<div class="note-content">Me: <span class="video-wrape"><a href="javascript:;" onclick="return showvideo(\''+filetrasfer+'\');"><img src="images/video1.png" alt="video" /> Click to view</a></span><span class="seen_'+cntents[1]+cls+' notseenmsg"></span></div>');
 					jQuery('body .showmessage').remove();
 					var html='<div class="showmessage">'+cntents[2]+'</div>';
-					getgallerysinglenote(cntents[1],filetrasfer);
+					//getgallerysinglenote(cntents[1],filetrasfer);
 					jQuery('body').append(html);
 					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
 					if(parseInt(emergency_id)==0){
@@ -794,7 +775,7 @@ function uploadcamerapic() {
 					jQuery('.notelists').append('<div class="note-content"><span class="clinicnote"><div class="note-content">Me: <span class="img-wrape"><a href="javascript:;" onclick="return showimg(\''+filetrasfer+'\');"><i class="fa fa-picture-o" style="font-size:18px;"></i> Click to zoom</a></span><span class="seen_'+cntents[1]+' notseenmsg"></span></span></div>');
 					jQuery('body .showmessage').remove();
 					var html='<div class="showmessage">'+cntents[2]+'</div>';
-					getgallerysinglenote(cntents[1],filetrasfer);
+					//getgallerysinglenote(cntents[1],filetrasfer);
 					jQuery('body').append(html);
 					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
 					if(typeof inter!='undefined'){
