@@ -188,6 +188,7 @@ if(typeof uid=='undefined' || uid=='' || uid=='undefined' || uid==null){
 		window.location='login.html';
 	},1000);
 }
+var quenotes=[];
 function getemdetail(){
 	var emergency_id=jQuery('input[name="emergency_id"]').val();
 	var url=siteurl+'/api/emergencies/ergencydetail';
@@ -219,16 +220,18 @@ function getemdetail(){
 		
 		},  
 		error: function(response, d, a){
-			jQuery('body .showmessage').remove();
+			/*jQuery('body .showmessage').remove();
 			var html='<div class="showmessage">Server Error.</div>';
 			jQuery('body').append(html);
 			setTimeout(function(){jQuery('.showmessage').slideUp();},1000);
-			return false; 
+			return false;*/ 
 		}
 	});
 }
 function notes(){
 	var emergency_id=jQuery('input[name="emergency_id"]').val();
+	if(emergency_id!=''){
+	
 	var url=siteurl+'/api/emergencies/getsinglemsgs';
 	 jQuery.ajax({  
 	 type: 'POST',  
@@ -245,6 +248,7 @@ function notes(){
 	 	//alert(JSON.stringify(res));
 		if(res['notes'] && jQuery.trim(res['notes'])!='')
 		{
+			
 			jQuery(res['notes']).each(function(index){
 				var clsas='clinicnote';
 				var msgg=res['notes'][index]['note'];
@@ -258,12 +262,12 @@ function notes(){
 				jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+'">'+msgg+'</div>');
 				
 				db.transaction(function(tx){
-					var qr='INSERT INTO wnh_emergency_notes (emergency_note_id, emergency_id, note, filepath, filetype, manager_id, company_id, cdate, readbycompany, readbymanager, parent_id, notify) VALUES ("'+res['notes'][index]['emergency_note_id']+'", "'+emergency_id+'", "'+res['notes'][index]['note']+'", "'+res['notes'][index]['filepath']+'", "'+res['notes'][index]['filetype']+'", "'+res['notes'][index]['manager_id']+'", "'+res['notes'][index]['company_id']+'", "'+res['notes'][index]['cdate']+'", "'+res['notes'][index]['readbycompany']+'", "'+res['notes'][index]['readbymanager']+'", "'+res['notes'][index]['parent_id']+'", "'+res['notes'][index]['notify']+'")';
+					var qr='INSERT INTO wnh_emergency_notes (emergency_note_id, emergency_id, note, filepath, filetype, manager_id, company_id, cdate, readbycompany, readbymanager, parent_id, notify,mobilefilepath) VALUES ("'+res['notes'][index]['emergency_note_id']+'", "'+emergency_id+'", "'+res['notes'][index]['note']+'", "'+res['notes'][index]['filepath']+'", "'+res['notes'][index]['filetype']+'", "'+res['notes'][index]['manager_id']+'", "'+res['notes'][index]['company_id']+'", "'+res['notes'][index]['cdate']+'", "'+res['notes'][index]['readbycompany']+'", "'+res['notes'][index]['readbymanager']+'", "'+res['notes'][index]['parent_id']+'", "'+res['notes'][index]['notify']+'","")';
 					tx.executeSql(qr);
 					
 				});
 			});
-			jQuery('#emergency').modal();
+			//jQuery('#emergency').modal();
 		
 		}
 		if(typeof res['measurement']!='undefined' && typeof res['measurement']['distance']!='undefined'){
@@ -286,60 +290,16 @@ function notes(){
 	 },  
 	 error: function(response, d, a){
 		
-		jQuery('body .showmessage').remove();
+		/*jQuery('body .showmessage').remove();
 		var html='<div class="showmessage">Server Error.</div>';
 		jQuery('body').append(html);
 		setTimeout(function(){jQuery('.showmessage').slideUp();},1000);
-		return false; 
+		return false; */
 	 }
 			
    });
+   }
 }
-/*function notes2(){
-	var emergency_id=jQuery('input[name="emergency_id"]').val();
-	var url=siteurl+'/api/emergencies/getsinglemsgs';
-	 jQuery.ajax({  
-	 type: 'POST',  
-	 url: url,           
-	 dataType: 'json',  
-	 data: {emergency_id:emergency_id,seeby:'company'}, 
-	 beforeSend: function() {
-		
-	 },		
-	 complete: function() {
-	 }, 
-	 crossDomain: true,  
-	 success: function(res) { 
-		if(res['notes'] && jQuery.trim(res['notes'])!='')
-		{
-			jQuery(res['notes']).each(function(index){
-				var clsas='clinicnote';
-				var msgg=res['notes'][index]['note'];
-				if(jQuery.trim(res['notes'][index]['manager'])!=''){
-					msgg=res['notes'][index]['note']+' :'+res['notes'][index]['manager'];
-					clsas='managernote';
-				}
-				else{
-					msgg=res['notes'][index]['note'];
-				}
-				jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+'">'+msgg+'</span></div>');
-			});
-			jQuery('#emergency').modal();
-		
-		}
-		return false; 
-	 },  
-	 error: function(response, d, a){
-		
-		jQuery('body .showmessage').remove();
-		var html='<div class="showmessage">Server Error.</div>';
-		jQuery('body').append(html);
-		setTimeout(function(){jQuery('.showmessage').slideUp();},1000);
-		return false; 
-	 }
-			
-   });
-}*/
 function startchatwithmanager(manager_id,clinic_id){
 	jQuery('input[name="manager_id"]').val(manager_id);
 	jQuery('#managerdetail').modal('hide');
@@ -693,7 +653,7 @@ function getgallerysinglenote(note_id,mobilefilepath){
 				db.transaction(function(tx){
 					var qr='INSERT INTO wnh_emergency_notes (emergency_note_id, emergency_id, note, filepath, mobilefilepath, filetype, manager_id, company_id, cdate, readbycompany, readbymanager, parent_id, notify) VALUES ("'+res['emnotes'][index]['id']+'", "'+res['emnotes'][index]['emergency_id']+'", "'+res['emnotes'][index]['note']+'", "'+res['emnotes'][index]['filepath']+'", "'+mobilefilepath+'", "'+res['emnotes'][index]['filetype']+'", "'+res['emnotes'][index]['manager_id']+'", "'+res['emnotes'][index]['company_id']+'", "'+res['emnotes'][index]['cdate']+'", "1", "'+res['emnotes'][index]['readbymanager']+'", "'+res['emnotes'][index]['parent_id']+'", "'+res['emnotes'][index]['notify']+'")';
 					tx.executeSql(qr);
-					
+					quenotes.push(note_id);
 				});
 			});
 		
@@ -711,11 +671,11 @@ function getgallerysinglenote(note_id,mobilefilepath){
 	 },  
 	 error: function(response, d, a){
 		
-		jQuery('body .showmessage').remove();
+		/*jQuery('body .showmessage').remove();
 		var html='<div class="showmessage">Server Error.</div>';
 		jQuery('body').append(html);
 		setTimeout(function(){jQuery('.showmessage').slideUp();},1000);
-		return false; 
+		return false;*/ 
 	 }
 			
    });
@@ -745,24 +705,24 @@ function getgallerysinglemsg(em_id,filetrasfer){
 			});
 		
 		}else if(res['errors']){				
-			jQuery('body .showmessage').remove();
+			/*jQuery('body .showmessage').remove();
 			var html='<div class="showmessage">'+res['error']+'</div>';
 			jQuery('body').append(html);
-			setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
+			setTimeout(function(){jQuery('.showmessage').slideUp();},3000);*/
 		}
 		else
 		{
-			alert('Server error');
+			//alert('Server error');
 		}
 		return false; 
 	 },  
 	 error: function(response, d, a){
 		
-		jQuery('body .showmessage').remove();
+		/*jQuery('body .showmessage').remove();
 		var html='<div class="showmessage">Server Error.</div>';
 		jQuery('body').append(html);
 		setTimeout(function(){jQuery('.showmessage').slideUp();},1000);
-		return false; 
+		return false;*/ 
 	 }
 			
    });
@@ -842,33 +802,50 @@ jQuery(document).ready(function(){
 						getgallerysinglemsg(res['emergency_id'],'');
 					}
 					jQuery('.notelists').append('<div class="note-content"><span class="clinicnote">'+msg+'<span class="seen_'+res['emergency_id']+cls+' notseenmsg"></span></span></div>');
-					
-					jQuery('body .showmessage').remove();
-					var html='<div class="showmessage">'+res['msg']+'</div>';
-					jQuery('body').append(html);
-					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
-					jQuery('#loginuser textarea[name="note"]').val('');
 					if(parseInt(emergency_id)==0){
 						jQuery('.note_optional').remove();
 						jQuery('#loginuser textarea[name="note"]').addClass('required');
 						jQuery('input[name="emergency_id"]').val(res['emergency_id']);
 						jQuery('.submitwrap').append('<div class="pull-left"><a href="current-emergancy-detail.html?id='+res['emergency_id']+'" class="locationlink"><img src="images/locator.png" /><span>Location</span></a></div>');
 					}
+					if(parseInt(emergency_id)!='' && parseInt(emergency_id)>0){
+						jQuery(res['emnotes']).each(function(index){
+							
+							db.transaction(function(tx){
+								var qr='INSERT INTO wnh_emergency_notes (emergency_note_id, emergency_id, note, filepath, mobilefilepath, filetype, manager_id, company_id, cdate, readbycompany, readbymanager, parent_id, notify, mobilefilepath) VALUES ("'+res['emnotes'][index]['id']+'", "'+res['emnotes'][index]['emergency_id']+'", "'+res['emnotes'][index]['note']+'", "'+res['emnotes'][index]['filepath']+'", "", "'+res['emnotes'][index]['filetype']+'", "'+res['emnotes'][index]['manager_id']+'", "'+res['emnotes'][index]['company_id']+'", "'+res['emnotes'][index]['cdate']+'", "1", "'+res['emnotes'][index]['readbymanager']+'", "'+res['emnotes'][index]['parent_id']+'", "'+res['emnotes'][index]['notify']+'","")';
+								tx.executeSql(qr);
+								quenotes.push(res['emnotes'][index]['id']);
+								
+							});
+						});
+					}
+					jQuery('body .showmessage').remove();
+					var html='<div class="showmessage">'+res['msg']+'</div>';
+					jQuery('body').append(html);
+					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
+					jQuery('#loginuser textarea[name="note"]').val('');
+					
 					if(typeof inter!='undefined'){
 						clearInterval(inter);
 					}
+					if(typeof inter2!='undefined'){
+						clearInterval(inter2);
+					}
+					if(typeof inter3!='undefined'){
+						clearInterval(inter3);
+					}
 					var inter=setInterval(notes,5000);
-					setInterval(getemdetail,5000);
+					var inter2=setInterval(getemdetail,5000);
 					//jQuery('#loginuser')[0].reset();
 					//jQuery('#emergency').modal('hide');
-					setInterval(checkseenmsg,2000);
+					var inter3=setInterval(checkseenmsg,2000);
 					jQuery('.sendmsgbtn').attr('disabled',true);
 				
 				}else if(res['errors']){				
-					jQuery('body .showmessage').remove();
+					/*jQuery('body .showmessage').remove();
 					var html='<div class="showmessage">'+res['error']+'</div>';
 					jQuery('body').append(html);
-					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
+					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);*/
 				}
 				else
 				{
@@ -878,11 +855,11 @@ jQuery(document).ready(function(){
 			 },  
 			 error: function(response, d, a){
 				
-				jQuery('body .showmessage').remove();
+				/*jQuery('body .showmessage').remove();
 				var html='<div class="showmessage">Server Error.</div>';
 				jQuery('body').append(html);
 				setTimeout(function(){jQuery('.showmessage').slideUp();},1000);
-				return false; 
+				return false;*/ 
 			 }
 			        
 		   });
@@ -952,7 +929,7 @@ function uploadgallerypic() {
 						getgallerysinglemsg(cntents[1],filetrasfer);
 					}
 					else{
-						//getgallerysinglenote(cntents[1],filetrasfer);
+						getgallerysinglenote(cntents[1],filetrasfer);
 					}
 					if(typeof inter!='undefined'){
 						clearInterval(inter);
@@ -1032,7 +1009,7 @@ function uploadmyvideo(){
 						getgallerysinglemsg(cntents[1],filetrasfer);
 					}
 					else{
-						//getgallerysinglenote(cntents[1],filetrasfer);
+						getgallerysinglenote(cntents[1],filetrasfer);
 					}
 					if(typeof inter!='undefined'){
 						clearInterval(inter);
@@ -1118,7 +1095,7 @@ function uploadcamerapic() {
 						getgallerysinglemsg(cntents[1],filetrasfer);
 					}
 					else{
-						//getgallerysinglenote(cntents[1],filetrasfer);
+						getgallerysinglenote(cntents[1],filetrasfer);
 					}
 					if(typeof inter!='undefined'){
 						clearInterval(inter);

@@ -7,7 +7,7 @@ setInterval(checkonlineoffline,5000);
 function fastqueryreq(){
 	fastquery();
 }
-setInterval(fastqueryreq,2000);
+setInterval(fastqueryreq,5000);
 function fastquery(){
 	var uid=localStorage.getItem('Company_ID');
 	if(typeof uid!='undefine' && uid!='' && uid!=null){
@@ -38,10 +38,7 @@ function fastquery(){
 						 },
 						 success: Updateemergencynotedata,  
 						 error: function(response, d, a){
-							/*jQuery('body .showmessage').remove();
-							var html='<div class="showmessage">Server Error in update data5.</div>';
-							jQuery('body').append(html);
-							setTimeout(function(){jQuery('.showmessage').slideUp();},1000);*/
+							
 							
 						 } 
 					   });
@@ -393,6 +390,7 @@ function Updateemergencydata(res){
 					var q="SELECT * FROM wnh_emergencies WHERE emergency_id=?";
 					tx.executeSql(q, [res['data'][index]['id']], function(tx, rest){
 						if(parseInt(rest.rows.length)>0){
+							//alert(res['data'][index]['id']+'-'+res['data'][index]['manager_id'])
 							var qr="UPDATE wnh_emergencies SET company_id='"+res['data'][index]['company_id']+"', clinic_id='"+res['data'][index]['clinic_id']+"', manager_id='"+res['data'][index]['manager_id']+"', note='"+res['data'][index]['note']+"', status='"+res['data'][index]['status']+"', filepath='"+res['data'][index]['filepath']+"', filetype='"+res['data'][index]['filetype']+"', readbymanager='"+res['data'][index]['readbymanager']+"', deletebymanager='"+res['data'][index]['deletebymanager']+"', deletebycaompany='"+res['data'][index]['deletebycaompany']+"', showdate='"+res['data'][index]['showdate']+"', clinic='"+res['data'][index]['clinic']+"', clinicaddress='"+res['data'][index]['clinicaddress']+"', measurement='"+res['data'][index]['measurement']+"' WHERE emergency_id='"+res['data'][index]['id']+"'";
 							//alert(qr);
 							tx.executeSql(qr);	
@@ -403,7 +401,7 @@ function Updateemergencydata(res){
 							//var qr='INSERT INTO wnh_emergencies (emergency_id, company_id, clinic_id, manager_id, note, status, filepath, mobilefilepath, filetype, cdate, readbymanager, deletebymanager, deletebycaompany, showdate, clinic, clinicaddress, measurement) VALUES ("'+res['data'][index]['id']+'", "'+res['data'][index]['company_id']+'", "'+res['data'][index]['clinic_id']+'", "'+res['data'][index]['manager_id']+'", "'+res['data'][index]['note']+'", "'+res['data'][index]['status']+'", "'+res['data'][index]['filepath']+'", "", "'+res['data'][index]['filetype']+'", "'+res['data'][index]['cdate']+'", "'+res['data'][index]['readbymanager']+'", "'+res['data'][index]['deletebymanager']+'", "'+res['data'][index]['deletebycaompany']+'", "'+res['data'][index]['showdate']+'", "'+res['data'][index]['clinic']+'", "'+res['data'][index]['clinicaddress']+'", "'+res['data'][index]['measurement']+'")';
 							//jQuery('body').append(qr);
 							//alert(qr)
-							tx.executeSql(qr);	
+							//tx.executeSql(qr);	
 						}
 						
 					});
@@ -433,9 +431,9 @@ function Updateemergencynotedata(res){
 							tx.executeSql(qr);	
 						}
 						else{
-							var qr='INSERT INTO wnh_emergency_notes (emergency_note_id, emergency_id, note, filepath, mobilefilepath, filetype, manager_id, company_id, cdate, readbycompany, readbymanager, parent_id, notify) VALUES ("'+res['data'][index]['id']+'", "'+res['data'][index]['emergency_id']+'", "'+res['data'][index]['note']+'", "'+res['data'][index]['filepath']+'", "", "'+res['data'][index]['filetype']+'", "'+res['data'][index]['manager_id']+'", "'+res['data'][index]['company_id']+'", "'+res['data'][index]['cdate']+'", "'+res['data'][index]['readbycompany']+'", "'+res['data'][index]['readbymanager']+'", "'+res['data'][index]['parent_id']+'", "'+res['data'][index]['notify']+'")';
+							//var qr='INSERT INTO wnh_emergency_notes (emergency_note_id, emergency_id, note, filepath, mobilefilepath, filetype, manager_id, company_id, cdate, readbycompany, readbymanager, parent_id, notify) VALUES ("'+res['data'][index]['id']+'", "'+res['data'][index]['emergency_id']+'", "'+res['data'][index]['note']+'", "'+res['data'][index]['filepath']+'", "", "'+res['data'][index]['filetype']+'", "'+res['data'][index]['manager_id']+'", "'+res['data'][index]['company_id']+'", "'+res['data'][index]['cdate']+'", "'+res['data'][index]['readbycompany']+'", "'+res['data'][index]['readbymanager']+'", "'+res['data'][index]['parent_id']+'", "'+res['data'][index]['notify']+'")';
 							//jQuery('body').append(qr);
-							tx.executeSql(qr);	
+							//tx.executeSql(qr);	
 						}
 						
 					});
