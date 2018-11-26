@@ -800,10 +800,8 @@ function uploadmyvideo(){
 		var successtranfer=function(entry) {
 				var filetrasfer2= entry.toURL();
 				
-				var uri = encodeURI(siteurl+'/api/emergencies/saveemergencyivideo?company_id='+company_id+'&emergency_id='+emergency_id+'&add_by='+add_by+'&manager_id='+manager_id+'&clinic_id='+clinic_id);
-				if(parseInt(emergency_id)!='' && parseInt(emergency_id)>0){
-					uri = encodeURI(siteurl+'/api/emergencies/addemergencyvideomsg?company_id='+company_id+'&emergency_id='+emergency_id+'&add_by='+add_by+'&manager_id='+manager_id+'&clinic_id='+clinic_id);
-				}
+				
+				var uri = encodeURI(siteurl+'/api/emergencies/addemergencyvideomsg?company_id='+company_id+'&emergency_id='+emergency_id+'&add_by='+add_by+'&manager_id='+manager_id+'&clinic_id='+clinic_id);
 				var options = new FileUploadOptions();
 				options.fileKey="file";
 				options.fileName=filetrasfer2.substr(filetrasfer2.lastIndexOf('/')+1);
@@ -823,6 +821,7 @@ function uploadmyvideo(){
 			var t=ft.upload(filetrasfer2, uri, function(r){
 					//jQuery('.submitwrap img.justloading').remove();
 					var cntents=r.response.split('||emg||');
+					var cls='';
 					//jQuery('.notelists').append('<div class="note-content"><span class="clinicnote">'+cntents[0]+'</span></div>');
 					jQuery('.notelists').append('<div class="note-content">Me: <span class="video-wrape"><a href="javascript:;" onclick="return showvideo(\''+filetrasfer+'\');"><img src="images/video1.png" alt="video" /> Click to view</a></span><span class="seen_'+cntents[1]+cls+' notseenmsg"></span></div>');
 					jQuery('body .showmessage').remove();
