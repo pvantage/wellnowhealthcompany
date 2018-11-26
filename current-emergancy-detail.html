@@ -214,7 +214,7 @@ function openallnotes(showmsg){
 						if(parseInt(res2.rows.length)>0){
 							for(var i = 0; i < res2.rows.length; i++)
 							{
-								
+								quenotes.push(res2.rows.item(i).emergency_note_id);
 								var clsas='clinicnote';
 								var note=res2.rows.item(i).note;
 								if(jQuery.trim(note)=='' && jQuery.trim(res2.rows.item(i).filetype)!=''){
@@ -838,8 +838,14 @@ function uploadmyvideo(){
 						clearInterval(inter);
 					}
 					var inter=setInterval(notes,5000);
-					setInterval(getemdetail,5000);
-					setInterval(checkseenmsg,6000);
+					/*if(typeof inter3!='undefined'){
+						clearInterval(inter3);
+					}
+					var inter3=setInterval(getemdetail,5000);*/
+					if(typeof inter2!='undefined'){
+						clearInterval(inter2);
+					}
+					var inter2=setInterval(checkseenmsg,6000);
 						
 			}, fail, options);
 		};
