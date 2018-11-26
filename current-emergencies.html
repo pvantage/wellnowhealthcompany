@@ -75,6 +75,7 @@ if(typeof uid=='undefined' || uid=='' || uid=='undefined' || uid==null){
 jQuery(document).ready(function(){
 	
 });
+addchatnotes();
 function loademergencies(){
 	db.transaction(showlistjobs, errorDB, successDB);
 	function showlistjobs(tx){

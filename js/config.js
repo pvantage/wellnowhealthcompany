@@ -177,7 +177,17 @@ function ValidateEmail(inputText)
 }
 getLocation();
 setInterval(getLocation,30000);
-
+function showimg(imgurl){
+	//var url=siteurl+'/api/emergencies/showmdeiafile/?file='+imgurl+'&ftype=image';
+	//cordova.InAppBrowser.open('showimg.html?file='+imgurl, '_blank', 'location=yes');	
+	//cordova.InAppBrowser.open(url, '_blank', 'location=yes');	
+	//showimg('http://vantageappspro.com/wellnowhealth/uploads/emergencies/1_1542974538.jpg')
+	
+	var vd='<img src="'+imgurl+'" class="loadimage" />';
+	jQuery('#playvideos .modal-body').html(vd);
+	jQuery('#emergency').modal('hide');
+	jQuery('#playvideos').modal();
+}
 function showvideo(videourl){
 	//showvideo('http://vantageappspro.com/wellnowhealth/uploads/emergencies/1_1542891378.mp4')
 	//var url=siteurl+'/api/emergencies/showmdeiafile/?file='+videourl+'&ftype=video';
