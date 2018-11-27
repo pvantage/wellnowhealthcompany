@@ -243,8 +243,10 @@ function openallnotes(showmsg){
 										clsas='managernote';
 									}
 									
-									jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+'">'+msgg+'</span></div>');
-									showmsg='yes';
+									if(!jQuery('.notelists .note-content span').hasClass('chkrepete-'+res2.rows.item(i).emergency_note_id)){
+										jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+' chkrepete-'+res2.rows.item(i).emergency_note_id+'">'+msgg+'</span></div>');
+										showmsg='yes';
+									}
 								}
 							}
 								
@@ -301,9 +303,10 @@ function opennotes(showmsg){
 										msgg=res2.rows.item(i).note+' :'+res2.rows.item(i).manager;
 										clsas='managernote';
 									}
-									
-									jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+'">'+msgg+'</span></div>');
-									showmsg='yes';
+									if(!jQuery('.notelists .note-content span').hasClass('chkrepete-'+res2.rows.item(i).emergency_note_id)){
+										jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+' chkrepete-'+res2.rows.item(i).emergency_note_id+'">'+msgg+'</span></div>');
+										showmsg='yes';
+									}
 								}
 								
 							}
@@ -355,7 +358,11 @@ function notes(){
 				else{
 					msgg=res['notes'][index]['note'];
 				}
-				jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+'">'+msgg+'</div>');
+				//jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+'">'+msgg+'</div>');
+				if(!jQuery('.notelists .note-content span').hasClass('chkrepete-'+res['notes'][index]['emergency_note_id'])){
+					jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+' chkrepete-'+res['notes'][index]['emergency_note_id']+'">'+msgg+'</span></div>');
+					showmsg='yes';
+				}
 				
 				db.transaction(function(tx){
 					var qr='INSERT INTO wnh_emergency_notes (emergency_note_id, emergency_id, note, filepath, filetype, manager_id, company_id, cdate, readbycompany, readbymanager, parent_id, notify,mobilefilepath) VALUES ("'+res['notes'][index]['emergency_note_id']+'", "'+emergency_id+'", "'+res['notes'][index]['note']+'", "'+res['notes'][index]['filepath']+'", "'+res['notes'][index]['filetype']+'", "'+res['notes'][index]['manager_id']+'", "'+res['notes'][index]['company_id']+'", "'+res['notes'][index]['cdate']+'", "'+res['notes'][index]['readbycompany']+'", "'+res['notes'][index]['readbymanager']+'", "'+res['notes'][index]['parent_id']+'", "'+res['notes'][index]['notify']+'","")';
