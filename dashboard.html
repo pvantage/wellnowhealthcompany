@@ -401,7 +401,7 @@ function checkseenmsg(){
 			});
 		}
 	}
-	var emergencyht=jQuery('#emergency .modal-body').height();
+	var emergencyht=jQuery('#emergency .modal-body .notelists').height();
 	if(parseInt(emergencyht)>300 && !jQuery('#emergency .modal-body .notelists').hasClass('extrascroll')){
 		jQuery('#emergency .modal-body .notelists').css({'height':'300px','overflow-y':'auto'});
 		jQuery('#emergency .modal-body .notelists').addClass('extrascroll');

@@ -171,16 +171,17 @@ function checkseenmsg(){
 			});
 		}
 	}
-	var emergencyht=jQuery('#emergency .modal-body').height();
-	if(parseInt(emergencyht)>500 && !jQuery('#emergency .modal-body .notelists').hasClass('extrascroll')){
-		jQuery('#emergency .modal-body .notelists').css({'height':'500px','overflow-y':'auto'});
+	/*var emergencyht=jQuery('#emergency .modal-body .notelists').height();
+	if(parseInt(emergencyht)>400 && !jQuery('#emergency .modal-body .notelists').hasClass('extrascroll')){
+		jQuery('#emergency .modal-body .notelists').css({'height':'400px','overflow-y':'auto'});
 		jQuery('#emergency .modal-body .notelists').addClass('extrascroll');
-	}
+	}*/
 }
 
 function openallnotes(showmsg){
 	var emergency_id=gup('id');
 	jQuery('.notelists').html('');
+	quenotes=[];
 	db.transaction(showlistjobs1, errorDB, successDB);
 	function showlistjobs1(tx){
 		var q="SELECT * FROM wnh_emergencies where emergency_id=?";
@@ -219,29 +220,32 @@ function openallnotes(showmsg){
 						if(parseInt(res2.rows.length)>0){
 							for(var i = 0; i < res2.rows.length; i++)
 							{
-								quenotes.push(res2.rows.item(i).emergency_note_id);
-								var clsas='clinicnote';
-								var note=res2.rows.item(i).note;
-								if(jQuery.trim(note)=='' && jQuery.trim(res2.rows.item(i).filetype)!=''){
-									var filepath=res2.rows.item(i).mobilefilepath;
-									if(jQuery.trim(filepath)==''){
-										filepath=res2.rows.item(i).filepath;
+								var chkque=quenotes.indexOf(res2.rows.item(i).emergency_note_id);
+								if(chkque==-1){
+									quenotes.push(res2.rows.item(i).emergency_note_id);
+									var clsas='clinicnote';
+									var note=res2.rows.item(i).note;
+									if(jQuery.trim(note)=='' && jQuery.trim(res2.rows.item(i).filetype)!=''){
+										var filepath=res2.rows.item(i).mobilefilepath;
+										if(jQuery.trim(filepath)==''){
+											filepath=res2.rows.item(i).filepath;
+										}
+										if(jQuery.trim(res2.rows.item(i).filetype)=='video'){
+											note='<span class="video-wrape"><a href="javascript:;" onclick="return showvideo(\''+filepath+'\');"><img src="images/video1.png" alt="video" /> Click to view</a></span>';
+										}
+										else if(jQuery.trim(res2.rows.item(i).filetype)=='image'){
+											note='<span class="img-wrape"><a href="javascript:;" onclick="return showimg(\''+filepath+'\');"><i class="fa fa-picture-o" style="font-size:18px;"></i> Click to zoom</a></span>';
+										}
 									}
-									if(jQuery.trim(res2.rows.item(i).filetype)=='video'){
-										note='<span class="video-wrape"><a href="javascript:;" onclick="return showvideo(\''+filepath+'\');"><img src="images/video1.png" alt="video" /> Click to view</a></span>';
+									var msgg=note+' <span class="seen_'+res2.rows.item(i).emergency_note_id+' notseenmsg"></span>';
+									if(res2.rows.item(i).manager_id!='0'){
+										msgg=res2.rows.item(i).note+' :'+res2.rows.item(i).manager;
+										clsas='managernote';
 									}
-									else if(jQuery.trim(res2.rows.item(i).filetype)=='image'){
-										note='<span class="img-wrape"><a href="javascript:;" onclick="return showimg(\''+filepath+'\');"><i class="fa fa-picture-o" style="font-size:18px;"></i> Click to zoom</a></span>';
-									}
+									
+									jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+'">'+msgg+'</span></div>');
+									showmsg='yes';
 								}
-								var msgg=note+' <span class="seen_'+res2.rows.item(i).emergency_note_id+' notseenmsg"></span>';
-								if(res2.rows.item(i).manager_id!='0'){
-									msgg=res2.rows.item(i).note+' :'+res2.rows.item(i).manager;
-									clsas='managernote';
-								}
-								
-								jQuery('.notelists').append('<div class="note-content"><span class="'+clsas+'">'+msgg+'</span></div>');
-								showmsg='yes';
 							}
 								
 						}
@@ -249,7 +253,7 @@ function openallnotes(showmsg){
 				}
 			}
 		});
-		if(showmsg=='yes'){
+		if(showmsg=='yes' && !jQuery('#emergency').hasClass('show')){
 			jQuery('#emergency').modal();
 		}
 		
@@ -276,9 +280,7 @@ function opennotes(showmsg){
 							for(var i = 0; i < res2.rows.length; i++)
 							{
 								var chkque=quenotes.indexOf(res2.rows.item(i).emergency_note_id);
-								//alert(chkque);
 								if(chkque==-1){
-									//alert(res2.rows.item(i).note);
 									quenotes.push(res2.rows.item(i).emergency_note_id);
 									var clsas='clinicnote';
 									var note=res2.rows.item(i).note;
@@ -310,7 +312,7 @@ function opennotes(showmsg){
 				}
 			}
 		});
-		if(showmsg=='yes'){
+		if(showmsg=='yes' && !jQuery('#emergency').hasClass('show')){
 			jQuery('#emergency').modal();
 		}
 		if(typeof inter2!='undefined'){
@@ -359,7 +361,9 @@ function notes(){
 					var qr='INSERT INTO wnh_emergency_notes (emergency_note_id, emergency_id, note, filepath, filetype, manager_id, company_id, cdate, readbycompany, readbymanager, parent_id, notify,mobilefilepath) VALUES ("'+res['notes'][index]['emergency_note_id']+'", "'+emergency_id+'", "'+res['notes'][index]['note']+'", "'+res['notes'][index]['filepath']+'", "'+res['notes'][index]['filetype']+'", "'+res['notes'][index]['manager_id']+'", "'+res['notes'][index]['company_id']+'", "'+res['notes'][index]['cdate']+'", "'+res['notes'][index]['readbycompany']+'", "'+res['notes'][index]['readbymanager']+'", "'+res['notes'][index]['parent_id']+'", "'+res['notes'][index]['notify']+'","")';
 					tx.executeSql(qr);
 					//opennotes('yes');
-					jQuery('#emergency').modal();
+					if(!jQuery('#emergency').hasClass('show')){
+						jQuery('#emergency').modal();
+					}
 					
 				});
 			});
@@ -786,7 +790,9 @@ function uploadgallerypic() {
 }
 function uploadmyvideo(){
 	var filetrasfer=jQuery('#uploadvideopath').val();
+	if(!jQuery('#emergency').hasClass('show')){
 	   jQuery('#emergency').modal();
+	 }
 	if(filetrasfer!=''){
 		jQuery('#confirmuploadvideo').modal('hide');
 		//jQuery('.submitwrap img.justloading').remove();
