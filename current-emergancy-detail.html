@@ -171,6 +171,11 @@ function checkseenmsg(){
 			});
 		}
 	}
+	var emergencyht=jQuery('#emergency .modal-body').height();
+	if(parseInt(emergencyht)>500 && !jQuery('#emergency .modal-body .notelists').hasClass('extrascroll')){
+		jQuery('#emergency .modal-body .notelists').css({'height':'500px','overflow-y':'auto'});
+		jQuery('#emergency .modal-body .notelists').addClass('extrascroll');
+	}
 }
 
 function openallnotes(showmsg){
@@ -602,7 +607,7 @@ jQuery(document).ready(function(){
 			 dataType: 'json',  
 			 data: jQuery('#loginuser').serialize(), 
 			 beforeSend: function() {
-			 	
+			 	jQuery('#loginuser textarea[name="note"]').val('');
 			 },		
 			 complete: function() {
 			 }, 
