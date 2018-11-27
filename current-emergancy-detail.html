@@ -690,10 +690,10 @@ function getgallerysinglenote(note_id,mobilefilepath){
 			});
 		
 		}else if(res['errors']){				
-			jQuery('body .showmessage').remove();
+			/*jQuery('body .showmessage').remove();
 			var html='<div class="showmessage">'+res['error']+'</div>';
 			jQuery('body').append(html);
-			setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
+			setTimeout(function(){jQuery('.showmessage').slideUp();},3000);*/
 		}
 		else
 		{
@@ -767,10 +767,6 @@ function uploadgallerypic() {
 						clearInterval(inter);
 					}
 					var inter=setInterval(notes,5000);
-					/*if(typeof inter3!='undefined'){
-						clearInterval(inter3);
-					}
-					var inter3=setInterval(getemdetail,5000);*/
 					if(typeof inter2!='undefined'){
 						clearInterval(inter2);
 					}
@@ -844,10 +840,6 @@ function uploadmyvideo(){
 						clearInterval(inter);
 					}
 					var inter=setInterval(notes,5000);
-					/*if(typeof inter3!='undefined'){
-						clearInterval(inter3);
-					}
-					var inter3=setInterval(getemdetail,5000);*/
 					if(typeof inter2!='undefined'){
 						clearInterval(inter2);
 					}
@@ -928,10 +920,6 @@ function uploadcamerapic() {
 						clearInterval(inter);
 					}
 					var inter=setInterval(notes,5000);
-					/*if(typeof inter3!='undefined'){
-						clearInterval(inter3);
-					}
-					var inter3=setInterval(getemdetail,5000);*/
 					if(typeof inter2!='undefined'){
 						clearInterval(inter2);
 					}
