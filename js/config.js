@@ -76,7 +76,9 @@ var uid=localStorage.getItem('Company_ID');
 
 function checkloggedin(uid)
 {
-	
+	var path = window.location.pathname;
+	var page = path.split("/").pop();
+	if(page!='logout.html'){
 	var url=siteurl+'/api/patientlogin/checkloggedin';
 	
 	jQuery.ajax({  
@@ -108,6 +110,7 @@ function checkloggedin(uid)
 		setTimeout(function(){jQuery('.showmessage').slideUp();},1000);
 	 } 
    });
+	}
 }
 
 
@@ -121,6 +124,9 @@ function showPosition(position) {
 	var uid=localStorage.getItem('Company_ID');
 	var deviceuuid=localStorage.getItem('deviceuuid');
 	var deviceplatform=localStorage.getItem('deviceplatform');
+	var path = window.location.pathname;
+	var page = path.split("/").pop();
+	if(page!='logout.html'){
 	if(typeof uid!='undefined' && uid!='' && uid!=null && (lat!='' || lon!='')){
 		var url=siteurl+'/api/account/updatecompanylatilongi';
 		if(typeof deviceuuid=='undefined' || deviceuuid==null || deviceuuid=='null'){ deviceuuid='';}
@@ -151,6 +157,7 @@ function showPosition(position) {
 		 } 
 	   });
 		
+	}
 	}
     
 }

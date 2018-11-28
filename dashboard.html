@@ -53,7 +53,7 @@
     <header class="header container-fluid">
         <div class="container">
             <div class="nav-icon" onClick="openNav()"> <a id="menu_toggle"><img src="images/hamburger.png" alt=""></a> </div>
-            <div class="logo"><a href="#"><img src="images/logo.png"  alt=""></a></div>
+            <div class="logo"><a href=""><img src="images/logo.png"  alt=""></a></div>
         </div>
     </header>
     <!-----Header End-------> 
@@ -486,7 +486,7 @@ function showclinics(loop){
 								}
 								var activestatus='&nbsp;&nbsp;<span class="currentoffline">Offline</span>';
 								if(res2.rows.item(i).loggedin=='1'){activestatus='&nbsp;&nbsp;<span class="currentonline">Online</span>';}
-								html+='<li class="showinfobio"><a href="javascript:;" class="showmanagerdetail'+activemanagercls+'" data-id="'+res2.rows.item(i).manager_id+'" data-fname="'+res2.rows.item(i).name+'" data-email="'+res2.rows.item(i).email+'" data-phone="'+res2.rows.item(i).phone+'" data-bioinfo="'+res2.rows.item(i).bioinfo+'" data-image="'+res2.rows.item(i).image+'" data-clinic_id="'+res2.rows.item(i).clinic_id+'">'+res2.rows.item(i).name+'</a>'+activestatus+'</li>';
+								html+='<li class="showinfobio"><a href="javascript:;" onclick="showmanagerdetail(this)" class="showmanagerdetail'+activemanagercls+'" data-id="'+res2.rows.item(i).manager_id+'" data-fname="'+res2.rows.item(i).name+'" data-email="'+res2.rows.item(i).email+'" data-phone="'+res2.rows.item(i).phone+'" data-bioinfo="'+res2.rows.item(i).bioinfo+'" data-image="'+res2.rows.item(i).image+'" data-clinic_id="'+res2.rows.item(i).clinic_id+'">'+res2.rows.item(i).name+'</a>'+activestatus+'</li>';
 							}
 							if(jQuery.trim(phn)!='' && phn!='undefined'){
 								html+='<ul class="emcall"><li><h2 class="emcalling"><i class="fa fa-phone"></i><a href="tel:'+phn+'" onclick="addcalls('+clinic_id+', this)">Call Emergency</a></h2></li></ul>';
@@ -515,19 +515,7 @@ function showclinics(loop){
 				jQuery('.clinics input[name="clinic_id"][value="'+cid+'"]').next('ul.showmanagerlist').show();
 			}
 			if(loop=='first'){
-				jQuery('.showmanagerdetail').click(function(){
-					var ht='<ul>';
-					var img=jQuery(this).attr('data-image');
-					if(jQuery.trim(img)!=''){
-						ht+='<li><img src="'+img+'" alt="" style="max-height:100px; float:left; margin:0 5px 5px 0;" />'+jQuery(this).attr('data-bioinfo')+'</li>';
-					}
-					else{
-						ht+='<li><span>'+jQuery(this).attr('data-bioinfo')+'</span></li>';
-					}
-					ht+'</ul>';
-					jQuery('.managerlists').html(ht);
-					jQuery('#managerdetail').modal();
-				});
+				
 				jQuery('input[name="clinic_id"]').change(function(){
 					
 					var $t=jQuery('input[name="clinic_id"]:checked');
@@ -537,10 +525,24 @@ function showclinics(loop){
 					jQuery('#lastclinic_id').val(cid);
 				});
 			}
+			
 		});
 		
 	}
 	setTimeout(function(){showclinics('second');},10000);
+}
+function showmanagerdetail($this){
+	var ht='<ul>';
+	var img=jQuery($this).attr('data-image');
+	if(jQuery.trim(img)!=''){
+		ht+='<li><img src="'+img+'" alt="" style="max-height:100px; float:left; margin:0 5px 5px 0;" />'+jQuery($this).attr('data-bioinfo')+'</li>';
+	}
+	else{
+		ht+='<li><span>'+jQuery($this).attr('data-bioinfo')+'</span></li>';
+	}
+	ht+'</ul>';
+	jQuery('.managerlists').html(ht);
+	jQuery('#managerdetail').modal();
 }
 /*function showclinics2(loop){
 
