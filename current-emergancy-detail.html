@@ -842,7 +842,10 @@ function uploadmyvideo(){
 					var html='<div class="showmessage">'+cntents[2]+'</div>';
 					getgallerysinglenote(cntents[1],filetrasfer);
 					jQuery('body').append(html);
-					setTimeout(function(){jQuery('.showmessage').slideUp();jQuery('#emergency').modal('hide');},3000);
+					setTimeout(function(){jQuery('.showmessage').slideUp();
+					jQuery('#emergency').modal('hide');
+					setTimeout(function(){openallnotes('yes');},1000);
+					},3000);
 					/*if(typeof inter!='undefined'){
 						clearInterval(inter);
 					}
