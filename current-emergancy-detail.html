@@ -896,80 +896,64 @@ function uploadgalleryvideo() {
     
 }
 function uploadcamerapic() {
-	var captureSuccess = function(mediaFiles) {
-		var i, path, len;
-		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
-			path = mediaFiles[i].fullPath;
-			if(platform!='Android'){
-				var htt = "file:///";
-				if(path.indexOf(htt) == '-1'){path=htt+path;}
-			}
-			var job_id=gup('job_id');
-			var filetrasfer=path;
+	
+	navigator.camera.getPicture(function(f) {
+        var filetrasfer=f;
+		if(filetrasfer!=''){
+			//jQuery('.submitwrap img.justloading').remove();
+			//jQuery('.submitwrap').append('<img src="images/ajax-loader.gif" class="justloading" />');
+			jQuery('body .showmessage').remove();
+			var html='<div class="showmessage">Please wait while uploading image...</div>';
+			jQuery('body').append(html);
+			var company_id=jQuery('input[name="company_id"]').val();
+			var emergency_id=jQuery('input[name="emergency_id"]').val();
+			var add_by=jQuery('input[name="add_by"]').val();
+			var manager_id=jQuery('input[name="manager_id"]').val();
+			var clinic_id=jQuery('input[name="clinic_id"]:checked').val();
+			resolveLocalFileSystemURL(filetrasfer, function(entry) {
+			var filetrasfer2= entry.toURL();
 			
-			if(filetrasfer!=''){
-				//jQuery('.submitwrap img.justloading').remove();
-				//jQuery('.submitwrap').append('<img src="images/ajax-loader.gif" class="justloading" />');
-				jQuery('body .showmessage').remove();
-				var html='<div class="showmessage">Please wait while uploading image...</div>';
-				jQuery('body').append(html);
-				var company_id=jQuery('input[name="company_id"]').val();
-				var emergency_id=gup('id');
-				var add_by=jQuery('input[name="add_by"]').val();
-				var manager_id=jQuery('input[name="manager_id"]').val();
-				var clinic_id=jQuery('input[name="clinic_id"]').val();	
-				resolveLocalFileSystemURL(filetrasfer, function(entry) {
-				var filetrasfer2= entry.toURL();
-				var uri = encodeURI(siteurl+'/api/emergencies/saveemergencyimg?company_id='+company_id+'&emergency_id='+emergency_id+'&add_by='+add_by+'&manager_id='+manager_id+'&clinic_id='+clinic_id);
-				if(parseInt(emergency_id)!='' && parseInt(emergency_id)>0){
-					uri = encodeURI(siteurl+'/api/emergencies/addemergencyimgmsg?company_id='+company_id+'&emergency_id='+emergency_id+'&add_by='+add_by+'&manager_id='+manager_id+'&clinic_id='+clinic_id);
-				}
-				var options = new FileUploadOptions();
-				options.fileKey="file";
-				options.fileName=filetrasfer2.substr(filetrasfer2.lastIndexOf('/')+1);
-				//options.mimeType="image/jpeg";
-				var params = new Object();
-				 params.value1 = "test";
-				 params.value2 = "param";
-				 options.params = params;
-				 options.chunkedMode = false;
-				var headers={'headerParam':'headerValue'};
-				options.headers = headers;
-				
-				var ft = new FileTransfer();
-				
-				var t=ft.upload(filetrasfer2, uri, function(r){
+			
+			var uri = encodeURI(siteurl+'/api/emergencies/addemergencyimgmsg?company_id='+company_id+'&emergency_id='+emergency_id+'&add_by='+add_by+'&manager_id='+manager_id+'&clinic_id='+clinic_id);
+			var options = new FileUploadOptions();
+			options.fileKey="file";
+			options.fileName=filetrasfer2.substr(filetrasfer2.lastIndexOf('/')+1);
+			//options.mimeType="image/jpeg";
+			var params = new Object();
+			 params.value1 = "test";
+			 params.value2 = "param";
+			 options.params = params;
+			 options.chunkedMode = false;
+			var headers={'headerParam':'headerValue'};
+			options.headers = headers;
+			
+			var ft = new FileTransfer();
+			
+			var t=ft.upload(filetrasfer2, uri, function(r){
 					//jQuery('.submitwrap img.justloading').remove();
+					
 					var cntents=r.response.split('||emg||');
-					//jQuery('.notelists').append('<div class="note-content"><span class="clinicnote">'+cntents[0]+'</span></div>');
-					jQuery('.notelists').append('<div class="note-content"><span class="clinicnote"><div class="note-content">Me: <span class="img-wrape"><a href="javascript:;" onclick="return showimg(\''+filetrasfer+'\');"><i class="fa fa-picture-o" style="font-size:18px;"></i> Click to zoom</a></span><span class="seen_'+cntents[1]+' notseenmsg"></span></span></div>');
+					var cls='';
+					if(parseInt(emergency_id)==0){
+						cls=' emergencystart';
+					}
+					jQuery('.notelists').append('<div class="note-content"><span class="clinicnote"><div class="note-content">Me: <span class="img-wrape"><a href="javascript:;" onclick="return showimg(\''+filetrasfer+'\');"><i class="fa fa-picture-o" style="font-size:18px;"></i> Click to zoom</a></span><span class="seen_'+cntents[1]+cls+' notseenmsg"></span></span></div>');
 					jQuery('body .showmessage').remove();
 					var html='<div class="showmessage">'+cntents[2]+'</div>';
-					getgallerysinglenote(cntents[1],filetrasfer);
 					jQuery('body').append(html);
-					setTimeout(function(){
-					jQuery('.showmessage').slideUp();
-					
-					},3000);
-					/*if(typeof inter!='undefined'){
-						clearInterval(inter);
-					}
-					var inter=setInterval(notes,5000);
-					if(typeof inter2!='undefined'){
-						clearInterval(inter2);
-					}
-					var inter2=setInterval(checkseenmsg,6000);*/
-				}, fail, options);
-				});
-			}
+					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
+					getgallerysinglenote(cntents[1],filetrasfer);
+						
+			}, fail, options);
+			});
 		}
-	};
-	// capture error callback
-	var captureError = function(error) {
-		navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
-	};
-	navigator.device.capture.captureImage(captureSuccess, captureError, {limit:1});
-    
+    }, function(e) {
+    }, { 
+        quality: 70,
+		sourceType: Camera.PictureSourceType.CAMERA,
+		destinationType: Camera.DestinationType.FILE_URI,
+		allowEdit:true
+    });
     
 }
 document.addEventListener("deviceready", uploadpic, false);
