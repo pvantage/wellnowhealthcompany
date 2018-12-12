@@ -522,7 +522,7 @@ jQuery(document).ready(function(){
 	function loademergency(id){
 		db.transaction(showlistjobs2, errorDB, successDB);
 		function showlistjobs2(tx){
-			var q="SELECT e.note,m.phone,m.image, c.address_lati as clinic_lati, c.address_longi as clinic_longi, c.address as clinic_address, cm.*, e.manager_id, e.clinic_id FROM wnh_emergencies as e, wnh_managers as m, wnh_clinics as c, wnh_company as cm where e.manager_id=m.manager_id AND e.clinic_id=c.clinic_id AND e.company_id=cm.company_id AND e.emergency_id=?";
+			var q="SELECT e.note,m.phone as telephone,m.image, c.address_lati as clinic_lati, c.address_longi as clinic_longi, c.address as clinic_address, cm.*, e.manager_id, e.clinic_id FROM wnh_emergencies as e, wnh_managers as m, wnh_clinics as c, wnh_company as cm where e.manager_id=m.manager_id AND e.clinic_id=c.clinic_id AND e.company_id=cm.company_id AND e.emergency_id=?";
 			//alert(q);
 			var cond=[id];
 			tx.executeSql(q, cond, function(tx, res){
@@ -530,7 +530,7 @@ jQuery(document).ready(function(){
 					var html='';
 					for(var i = 0; i < res.rows.length; i++)
 					{
-						var phone=res.rows.item(i).phone;
+						var phone=res.rows.item(i).telephone;
 						if(jQuery.trim(phone)!=''){
 							//jQuery('.main-wrapper').append('<div class="btm-btn-sctn"><div class="text-center mb-3"><a href="tel:'+phone+'" class="btn btn-primary">CONTACT EMERGENCY</a></div><div class="text-center mb-3"><a href="javascript:;" onclick="return opennotes();" class="btn btn-primary">MESSAGES</a></div></div>');
 							
