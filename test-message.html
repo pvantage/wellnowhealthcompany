@@ -348,7 +348,7 @@ function getgallerysinglenote(note_id,mobilefilepath){
 	 dataType: 'json',  
 	 data: {note_id:note_id}, 
 	 beforeSend: function() {
-		
+		quenotes.push(note_id);
 	 },		
 	 complete: function() {
 	 }, 
@@ -359,7 +359,6 @@ function getgallerysinglenote(note_id,mobilefilepath){
 			jQuery(res['emnotes']).each(function(index){
 				db.transaction(function(tx){
 					var qr='INSERT INTO wnh_testnotes (test_note_id,note, filepath, mobilefilepath, filetype, manager_id, company_id, cdate) VALUES ("'+res['emnotes'][index]['id']+'", "'+res['emnotes'][index]['note']+'", "'+res['emnotes'][index]['filepath']+'", "'+mobilefilepath+'", "'+res['emnotes'][index]['filetype']+'", "'+res['emnotes'][index]['manager_id']+'", "'+res['emnotes'][index]['company_id']+'", "'+res['emnotes'][index]['cdate']+'")';
-					quenotes.push(note_id);
 					tx.executeSql(qr);
 					
 				});
@@ -480,23 +479,17 @@ function uploadmyvideo(){
 					jQuery('.notelists').append('<div class="note-content">Me: <span class="video-wrape"><a href="javascript:;" onclick="return showvideo(\''+filetrasfer+'\');"><img src="images/video1.png" alt="video" /> Click to view</a></span></div>');
 					jQuery('body .showmessage').remove();
 					var html='<div class="showmessage">'+cntents[2]+'</div>';
-					getgallerysinglenote(cntents[1],filetrasfer);
 					jQuery('body').append(html);
-					setTimeout(function(){jQuery('.showmessage').slideUp();
-					jQuery('#emergency').modal('hide');
-					setTimeout(function(){openallnotes('yes');},1000);
-					},3000);
+					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
+					getgallerysinglenote(cntents[1],filetrasfer);
 						
 			}, fail, options);
 		};
-		resolveLocalFileSystemURL(filetrasfer, successtranfer, function(){});
+		resolveLocalFileSystemURL(filetrasfer, successtranfer, function(){alert('fail to upload');});
     }
 }
 function uploadgalleryvideo() {
 	navigator.camera.getPicture(function(f) {
-        jQuery('#uploadvideopath').val(f);
-       jQuery('#confirmuploadvideo').modal();
-	   jQuery('#emergency').modal('hide');
 	}, function(){}, { 
         quality: 50,
 		sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
