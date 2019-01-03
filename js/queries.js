@@ -563,3 +563,73 @@ function updateerrorDB(tx, err) {
 function successDB() {
    // alert("success!");
 }
+function Updatefiletables(table,mobilepath,id,filetype){
+     db.transaction(function(tx){
+		if(mobilepath!='' && table!='' && id!='')
+		{
+			var qr="UPDATE "+table+" SET mobilefilepath='"+mobilepath+"' WHERE id='"+id+"'";
+			tx.executeSql(qr);	
+			//alert(table+'-'+mobilepath+'-'+id+'-'+filetype+'-'+'Update');
+			if(filetype=='video'){
+				jQuery('.notelists .video-wrape-'+id).html('<a href="javascript:;" onclick="return showvideo(\''+mobilepath+'\');"><img src="images/video1.png" alt="video" /> Click to view</a>');	
+			}
+			else if(filetype=='image'){
+				jQuery('.notelists .img-wrape-'+id).html('<a href="javascript:;" onclick="return showimg(\''+mobilepath+'\');"><i class="fa fa-picture-o" style="font-size:18px;"></i> Click to zoom</a>');	
+			}
+			if(filetype=='video'){
+				alert("Download done.");
+			}
+		}
+	},  importerrorDB, successDB);
+}
+document.addEventListener("deviceready", onDeviceReady, false);
+var fileTransfer;
+// use file transfer after onDeviceReady() was called         
+function onDeviceReady() {
+    fileTransfer = new FileTransfer();
+   
+}
+function downloadfiles(table,filepath,id,filetype){
+	
+	if(filetype=='video'){
+		jQuery('.notelists .video-wrape-'+id+' a').html('<img src="images/video1.png" alt="video" /> Downloading...');	
+	}
+	else if(filetype=='image'){
+		jQuery('.notelists .img-wrape-'+id+' a').html('<i class="fa fa-picture-o" style="font-size:18px;"></i> Downloading...');	
+	}
+	var filepaths=filepath.split('/');
+	var filename=filepaths[filepaths.length-1];
+	//alert(filename);
+	var fileTransfer = new FileTransfer();
+	var uri = encodeURI(filepath);
+	//var fileURL='/'+filename;
+	 
+	fileTransfer.download(
+		uri,
+		cordova.file.externalApplicationStorageDirectory+filename,
+		function(entry) {
+			if(filetype=='video'){
+				alert("Start Download ");
+			}
+			var mobilepath=entry.toURL();
+			if(filetype=='video'){
+				alert("downloading to " + mobilepath);
+			}
+			//alert(table+'-'+mobilepath+'-'+id+'-'+filetype+'-'+'add');
+			Updatefiletables(table,mobilepath,id,filetype);
+		},
+		function(error) {
+			if(filetype=='video'){
+				alert("download error source " + error.source);
+				alert("download error target " + error.target);
+				alert("download error code" + error.code);
+			}
+		},
+		null,
+		{
+			//headers: {
+				//"Authorization": "Basic dGVzdHVzZXJuYW1lOnRlc3RwYXNzd29yZA=="
+			//}
+		}
+	);
+}
