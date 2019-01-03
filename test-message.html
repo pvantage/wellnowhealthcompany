@@ -338,19 +338,13 @@ jQuery(document).ready(function(){
 				return false; 
 			 },  
 			 error: function(response, d, a){
-				
-				/*jQuery('body .showmessage').remove();
-				var html='<div class="showmessage">Server Error.</div>';
-				jQuery('body').append(html);
-				setTimeout(function(){jQuery('.showmessage').slideUp();},1000);
-				return false;*/ 
+			
 			 }
 			        
 		   });
 		 }	
 		 return false;   
 	});
-	//setInterval(getemdetail,5000);
 });
 function getgallerysinglenote(note_id,mobilefilepath){
 	var url=siteurl+'/api/emergencies/gettestsinglenote';
@@ -402,8 +396,6 @@ function uploadgallerypic() {
 	navigator.camera.getPicture(function(f) {
         var filetrasfer=f;
 		if(filetrasfer!=''){
-			//jQuery('.submitwrap img.justloading').remove();
-			//jQuery('.submitwrap').append('<img src="images/ajax-loader.gif" class="justloading" />');
 			jQuery('body .showmessage').remove();
 			var html='<div class="showmessage">Please wait while uploading image...</div>';
 			jQuery('body').append(html);
@@ -458,8 +450,6 @@ function uploadmyvideo(){
 	 }
 	if(filetrasfer!=''){
 		jQuery('#confirmuploadvideo').modal('hide');
-		//jQuery('.submitwrap img.justloading').remove();
-		//jQuery('.submitwrap').append('<img src="images/ajax-loader.gif" class="justloading" />');
 		jQuery('body .showmessage').remove();
 		var html='<div class="showmessage">Please wait while uploading video...</div>';
 		jQuery('body').append(html);
@@ -488,7 +478,7 @@ function uploadmyvideo(){
 					//jQuery('.submitwrap img.justloading').remove();
 					var cntents=r.response.split('||emg||');
 					var cls='';
-					jQuery('.notelists').append('<div class="note-content">Me: <span class="video-wrape"><a href="javascript:;" onclick="return showvideo(\''+filetrasfer+'\');"><img src="images/video1.png" alt="video" /> Click to view</a></span></div>');
+					jQuery('.notelists').append('<div class="note-content"><span class="clinicnote"><div class="note-content">Me: <span class="img-wrape"><a href="javascript:;" onclick="return showvideo(\''+filetrasfer+'\');"><img src="images/video1.png" alt="video" /> Click to view</a></span></span></div>');
 					jQuery('body .showmessage').remove();
 					var html='<div class="showmessage">'+cntents[2]+'</div>';
 					jQuery('body').append(html);
