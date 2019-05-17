@@ -101,7 +101,7 @@
                 <input type="hidden" id="uploadvideopath" value="" />
 				<h2>Do you want to upload this video?</h2>
 				<div style="width:125px; margin:0px auto;">
-                 <h2> <a href="javascript:;" onClick="uploadmyvideo();" style="float:left; border:1px solid #FFFFFF; border-radius:5px; padding:3px 5px;">Yes</a><a href="javascript:;" onClick="uploadgalleryvideo();" style="float:right; border:1px solid #FFFFFF; border-radius:5px; padding:3px 5px;">No</a></h2>   </div>
+                 <h2> <a href="javascript:;" onClick="uploadmyvideo();" style="float:left; border:1px solid #FFFFFF; border-radius:5px; padding:3px 5px;">Yes</a><a href="javascript:;" onClick="cancelupload();" style="float:right; border:1px solid #FFFFFF; border-radius:5px; padding:3px 5px;">No</a></h2>   </div>
             </div> 
         </div>
     </div>
@@ -117,6 +117,19 @@
             <div class="modal-body">
                 
             </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="confirmuploadimage" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bg-primary emergency-popup">
+            <div class="modal-body" style="border:1px solid #fff;">
+                <input type="hidden" id="uploadimagepath" value="" />
+				<h2>Do you want to upload this image?</h2>
+				<div style="width:125px; margin:0px auto;">
+                 <h2> <a href="javascript:;" onClick="uploadimage();" style="float:left; border:1px solid #FFFFFF; border-radius:5px; padding:3px 5px;">Yes</a><a href="javascript:;" onClick="cancelupload();" style="float:right; border:1px solid #FFFFFF; border-radius:5px; padding:3px 5px;">No</a>
+				 <!--<a href="javascript:;" class="uploadcamerapic" onClick="uploadcamerapic();" style="float:right; border:1px solid #FFFFFF; border-radius:5px; padding:3px 5px;">No</a>--></h2>   </div>
+            </div> 
         </div>
     </div>
 </div>
@@ -748,10 +761,69 @@ function fail(error) {
 	jQuery('body').append(html);
 	setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
 }
+function uploadimage(){
+	var filetrasfer=jQuery('#uploadimagepath').val();
+	jQuery('#emergency').modal('show');
+	if(filetrasfer!=''){
+		jQuery('#confirmuploadimage').modal('hide');
+		jQuery('body .showmessage').remove();
+		var html='<div class="showmessage">Please wait while uploading image...</div>';
+		jQuery('body').append(html);
+		var company_id=jQuery('input[name="company_id"]').val();
+		var emergency_id=gup('id');
+		var add_by=jQuery('input[name="add_by"]').val();
+		var manager_id=jQuery('input[name="manager_id"]').val();
+		var clinic_id=jQuery('input[name="clinic_id"]').val();
+		
+		resolveLocalFileSystemURL(filetrasfer, function(entry) {
+		var filetrasfer2= entry.toURL();
+		
+		var uri = encodeURI(siteurl+'/api/emergencies/addemergencyimgmsg?company_id='+company_id+'&emergency_id='+emergency_id+'&add_by='+add_by+'&manager_id='+manager_id+'&clinic_id='+clinic_id);
+		
+		var options = new FileUploadOptions();
+		options.fileKey="file";
+		options.fileName=filetrasfer2.substr(filetrasfer2.lastIndexOf('/')+1);
+		//options.mimeType="image/jpeg";
+		var params = new Object();
+		 params.value1 = "test";
+		 params.value2 = "param";
+		 options.params = params;
+		 options.chunkedMode = false;
+		var headers={'headerParam':'headerValue'};
+		options.headers = headers;
+		
+		var ft = new FileTransfer();
+		
+		var t=ft.upload(filetrasfer2, uri, function(r){
+				//jQuery('.submitwrap img.justloading').remove();
+				var cntents=r.response.split('||emg||');
+				//jQuery('.notelists').append('<div class="note-content"><span class="clinicnote">'+cntents[0]+'</span></div>');
+				jQuery('.notelists').append('<div class="note-content"><span class="clinicnote"><div class="note-content">Me: <span class="img-wrape"><a href="javascript:;" onclick="return showimg(\''+filetrasfer+'\');"><i class="fa fa-picture-o" style="font-size:18px;"></i> Click to zoom</a></span><span class="seen_'+cntents[1]+' notseenmsg"></span></span></div>');
+				jQuery('body .showmessage').remove();
+				var html='<div class="showmessage">'+cntents[2]+'</div>';
+				getgallerysinglenote(cntents[1],filetrasfer);
+				jQuery('body').append(html);
+				setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
+				/*if(typeof inter!='undefined'){
+					clearInterval(inter);
+				}
+				var inter=setInterval(notes,5000);
+				if(typeof inter2!='undefined'){
+					clearInterval(inter2);
+				}
+				var inter2=setInterval(checkseenmsg,6000);*/
+					
+		}, fail, options);
+		});
+	}
+}
 function uploadgallerypic() {
 	navigator.camera.getPicture(function(f) {
+		jQuery('#uploadimagepath').val(f);
+       jQuery('#confirmuploadimage').modal();
+	   jQuery('#emergency').modal('hide');
         var filetrasfer=f;
-		if(filetrasfer!=''){
+		if(filetrasfer!=''){/*
 			//jQuery('.submitwrap img.justloading').remove();
 			//jQuery('.submitwrap').append('<img src="images/ajax-loader.gif" class="justloading" />');
 			jQuery('body .showmessage').remove();
@@ -792,18 +864,11 @@ function uploadgallerypic() {
 					getgallerysinglenote(cntents[1],filetrasfer);
 					jQuery('body').append(html);
 					setTimeout(function(){jQuery('.showmessage').slideUp();},3000);
-					/*if(typeof inter!='undefined'){
-						clearInterval(inter);
-					}
-					var inter=setInterval(notes,5000);
-					if(typeof inter2!='undefined'){
-						clearInterval(inter2);
-					}
-					var inter2=setInterval(checkseenmsg,6000);*/
+					
 						
 			}, fail, options);
 			});
-		}
+		*/}
     }, function(e) {
     }, { 
         quality: 50,
@@ -898,8 +963,11 @@ function uploadgalleryvideo() {
 function uploadcamerapic() {
 	
 	navigator.camera.getPicture(function(f) {
+		jQuery('#uploadimagepath').val(f);
+       jQuery('#confirmuploadimage').modal();
+	   jQuery('#emergency').modal('hide');
         var filetrasfer=f;
-		if(filetrasfer!=''){
+		if(filetrasfer!=''){/*
 			//jQuery('.submitwrap img.justloading').remove();
 			//jQuery('.submitwrap').append('<img src="images/ajax-loader.gif" class="justloading" />');
 			jQuery('body .showmessage').remove();
@@ -946,7 +1014,7 @@ function uploadcamerapic() {
 						
 			}, fail, options);
 			});
-		}
+		*/}
     }, function(e) {
     }, { 
         quality: 50,
@@ -955,6 +1023,11 @@ function uploadcamerapic() {
 		allowEdit:true
     });
     
+}
+function cancelupload(){
+   jQuery('#emergency').modal();
+   jQuery('#confirmuploadimage').modal('hide');
+   jQuery('#confirmuploadvideo').modal('hide');
 }
 document.addEventListener("deviceready", uploadpic, false);
 function uploadpic() {

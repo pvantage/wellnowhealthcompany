@@ -42,7 +42,7 @@
                 <li><a  href="my-account.html">Update Info </a> </li>
                 <li><a  href="current-emergencies.html">Current Emergencies </a> </li>
 				<li><a  href="past-emergencies.html">Past Emergencies </a> </li>
-				<li><a  href="test-message.html">Test Message</a> </li>
+				<!--<li><a  href="test-message.html">Test Message</a> </li>-->
 				<li><a href="logout.html">Logout</a></li>
             </ul>
         </div>
@@ -161,7 +161,7 @@
                 <input type="hidden" id="uploadvideopath" value="" />
 				<h2>Do you want to upload this video?</h2>
 				<div style="width:125px; margin:0px auto;">
-                 <h2> <a href="javascript:;" onClick="uploadmyvideo();" style="float:left; border:1px solid #FFFFFF; border-radius:5px; padding:3px 5px;">Yes</a><a href="javascript:;" onClick="uploadgalleryvideo();" style="float:right; border:1px solid #FFFFFF; border-radius:5px; padding:3px 5px;">No</a></h2>   </div>
+                 <h2> <a href="javascript:;" onClick="uploadmyvideo();" style="float:left; border:1px solid #FFFFFF; border-radius:5px; padding:3px 5px;">Yes</a><a href="javascript:;" onClick="cancelupload();" style="float:right; border:1px solid #FFFFFF; border-radius:5px; padding:3px 5px;">No</a></h2>   </div>
             </div> 
         </div>
     </div>
@@ -187,8 +187,8 @@
                 <input type="hidden" id="uploadimagepath" value="" />
 				<h2>Do you want to upload this image?</h2>
 				<div style="width:125px; margin:0px auto;">
-                 <h2> <a href="javascript:;" onClick="uploadimage();" style="float:left; border:1px solid #FFFFFF; border-radius:5px; padding:3px 5px;">Yes</a><a href="javascript:;" class="uploadgallerypic" onClick="uploadgallerypic();" style="float:right; border:1px solid #FFFFFF; border-radius:5px; padding:3px 5px;">No</a>
-				 <a href="javascript:;" class="uploadcamerapic" onClick="uploadcamerapic();" style="float:right; border:1px solid #FFFFFF; border-radius:5px; padding:3px 5px;">No</a></h2>   </div>
+                 <h2> <a href="javascript:;" onClick="uploadimage();" style="float:left; border:1px solid #FFFFFF; border-radius:5px; padding:3px 5px;">Yes</a><a href="javascript:;" onClick="cancelupload();" style="float:right; border:1px solid #FFFFFF; border-radius:5px; padding:3px 5px;">No</a>
+				 <!--<a href="javascript:;" class="uploadcamerapic" onClick="uploadcamerapic();" style="float:right; border:1px solid #FFFFFF; border-radius:5px; padding:3px 5px;">No</a>--></h2>   </div>
             </div> 
         </div>
     </div>
@@ -980,8 +980,6 @@ function uploadgallerypic() {
 		jQuery('#uploadimagepath').val(f);
        jQuery('#confirmuploadimage').modal();
 	   jQuery('#emergency').modal('hide');
-	   jQuery('.uploadcamerapic').hide();
-	   jQuery('.uploadgallerypic').show();
         var filetrasfer=f;
 		if(filetrasfer!=''){/*
 			//jQuery('.submitwrap img.justloading').remove();
@@ -1148,8 +1146,6 @@ function uploadcamerapic() {
 	   jQuery('#confirmuploadimage').modal();
 	   jQuery('#emergency').modal('hide');
 	   jQuery('#confirmuploadvideo').modal('hide');
-	   jQuery('.uploadcamerapic').show();
-	   jQuery('.uploadgallerypic').hide();
         var filetrasfer=f;
 		if(filetrasfer!=''){/*
 			//jQuery('.submitwrap img.justloading').remove();
@@ -1223,6 +1219,11 @@ function uploadcamerapic() {
     });
     
     
+}
+function cancelupload(){
+   jQuery('#emergency').modal();
+   jQuery('#confirmuploadimage').modal('hide');
+   jQuery('#confirmuploadvideo').modal('hide');
 }
 document.addEventListener("deviceready", uploadpic, false);
 function uploadpic() {
